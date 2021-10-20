@@ -5,7 +5,7 @@ NEAR_CUTOFF <- 5 * 1000
 ALL_YEARS_IMPROVED_VAR <- F
 
 # Load Data / Create Dataset Lists ---------------------------------------------
-data <- readRDS(file.path(panel_rsdp_imp_data_file_path, "kebele", "merged_datasets", "panel_data.Rds"))
+data <- readRDS(file.path(panel_rsdp_imp_dir, "kebele", "merged_datasets", "panel_data.Rds"))
 
 # Distance improved road -------------------------------------------------------
 data$distance_improvedroad <- apply(data[,paste0("distance_improvedroad_speedafter_",c(20,25,30,35,45,50,70,120))], 1, FUN = min_na)
@@ -125,5 +125,5 @@ data$dmspols_harmon_ihs2013 <- data$dmspols_harmon_ihs
 data$dmspols_harmon_ihs2013[data$year > 2013] <- NA
 
 # Export -----------------------------------------------------------------------
-saveRDS(data, file.path(panel_rsdp_imp_data_file_path, "kebele", "merged_datasets", "panel_data_clean.Rds"))
+saveRDS(data, file.path(panel_rsdp_imp_dir, "kebele", "merged_datasets", "panel_data_clean.Rds"))
 

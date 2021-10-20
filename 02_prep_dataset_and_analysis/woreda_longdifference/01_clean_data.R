@@ -14,7 +14,7 @@ base_end_df <- data.frame(baseline = c(1996, 1996, 1996),
                           endline =  c(2012, 2009, 2016))
 
 # Load Data --------------------------------------------------------------------
-data <- readRDS(file.path(panel_rsdp_imp_data_file_path, "woreda", "merged_datasets", "panel_data_clean.Rds"))
+data <- readRDS(file.path(panel_rsdp_imp_dir, "woreda", "merged_datasets", "panel_data_clean.Rds"))
 
 data <- data[,!grepl("MA_ntl2000_|MA_poplog2000_|MA_gcu2000_|_ic_|_rural33|_rural2|_urban33|_urban2|_urban6|_rural6", names(data))]
 
@@ -60,7 +60,7 @@ for(i in 1:nrow(base_end_df)){
   #### Export
   file_name <- paste0("longdiff_data_clean_base",base_year,"_end",end_year)
   
-  saveRDS(data_clean, file.path(panel_rsdp_imp_data_file_path, "woreda", "merged_datasets", 
+  saveRDS(data_clean, file.path(panel_rsdp_imp_dir, "woreda", "merged_datasets", 
                           paste0(file_name, ".Rds")))
 }
 

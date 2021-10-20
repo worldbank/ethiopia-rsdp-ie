@@ -3,7 +3,8 @@
 # Load Data / Create Dataset Lists -----------------------------------------------
 
 #### Load dataset to merge into
-points_all <- readRDS(file.path(panel_rsdp_imp_data_file_path, "dmspols_grid_nearroad", "individual_datasets", "dmspols.Rds")) %>%
+points_all <- readRDS(file.path(panel_rsdp_imp_dir, "dmspols_grid_nearroad", 
+                                "individual_datasets", "dmspolsharmon.Rds")) %>%
   data.table()
 
 #### Names of datasets to merge in
@@ -18,13 +19,13 @@ DATASETS_TIME_INVARIANT <- c(#"distance_roads_by_rsdp_phase.Rds",
                              "distance_cities.Rds",
                              "adm_units.Rds")
 
-DATASETS_TIME_VARYING <- c("viirs.Rds",
+DATASETS_TIME_VARYING <- c(#"viirs.Rds",
                            "temperature.Rds",
                            "precipitation.Rds",
                            "ndvi.Rds",
                            "globcover.Rds",
-                           "dmspols_intercalibrated_zhang.Rds",
-                           "dmspolsharmon.Rds",
+                           #"dmspols_intercalibrated_zhang.Rds",
+                           #"dmspolsharmon.Rds",
                            #"distance_roads_improved_by_speedlimit_before.Rds",
                            "distance_roads_improved_by_speedlimit_after.Rds",
                            "distance_roads_by_speedlimit.Rds")
@@ -32,14 +33,14 @@ DATASETS_TIME_VARYING <- c("viirs.Rds",
 # Merge ------------------------------------------------------------------------
 for(dataset in DATASETS_TIME_VARYING){
   print(dataset)
-  dataset_temp <- readRDS(file.path(panel_rsdp_imp_data_file_path, "dmspols_grid_nearroad", "individual_datasets", dataset)) %>% data.table 
+  dataset_temp <- readRDS(file.path(panel_rsdp_imp_dir, "dmspols_grid_nearroad", "individual_datasets", dataset)) %>% data.table 
   points_all <- merge(points_all, dataset_temp, by=c("cell_id", "year"), all=T)
   rm(dataset_temp); gc()
 }
 
 for(dataset in DATASETS_TIME_INVARIANT){
   print(dataset)
-  dataset_temp <- readRDS(file.path(panel_rsdp_imp_data_file_path, "dmspols_grid_nearroad", "individual_datasets", dataset)) %>% data.table 
+  dataset_temp <- readRDS(file.path(panel_rsdp_imp_dir, "dmspols_grid_nearroad", "individual_datasets", dataset)) %>% data.table 
   points_all <- merge(points_all, dataset_temp, by="cell_id", all=T)
   rm(dataset_temp); gc()
 }
@@ -61,6 +62,6 @@ points_all <- points_all[points_all$distance_anyimproved_ever >= 1000,]
 points_all <- points_all[!is.na(points_all$woreda_id),]
 
 # Export -----------------------------------------------------------------------
-saveRDS(points_all, file.path(panel_rsdp_imp_data_file_path, "dmspols_grid_nearroad", "merged_datasets", "panel_data.Rds"))
+saveRDS(points_all, file.path(panel_rsdp_imp_dir, "dmspols_grid_nearroad", "merged_datasets", "panel_data.Rds"))
 
 

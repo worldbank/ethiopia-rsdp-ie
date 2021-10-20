@@ -20,7 +20,7 @@ ALL_YEARS_IMPROVED_VAR <- F # add variables indicate 2nd and 3rd year of treatme
 CHUNK_SIZE <- 200           # number of woredas in each chunk
 
 # Load Data --------------------------------------------------------------------
-data_all <- readRDS(file.path(panel_rsdp_imp_data_file_path, "dmspols_grid_nearroad", "merged_datasets", "panel_data.Rds"))
+data_all <- readRDS(file.path(panel_rsdp_imp_dir, "dmspols_grid_nearroad", "merged_datasets", "panel_data.Rds"))
 
 # Basic Cleaning ---------------------------------------------------------------
 # Need to do now as take the median value across whole dataset
@@ -150,7 +150,7 @@ for(start_i in start_ids){
   data$viirs_median <- NULL
   
   # Export Tmp Data ------------------------------------------------------------
-  saveRDS(data, file.path(panel_rsdp_imp_data_file_path, "dmspols_grid_nearroad", "merged_datasets", "temp_datasets", paste0("grid_data_clean_",start_i,".Rds")))
+  saveRDS(data, file.path(panel_rsdp_imp_dir, "dmspols_grid_nearroad", "merged_datasets", "temp_datasets", paste0("grid_data_clean_",start_i,".Rds")))
 }
 
 # Append Together --------------------------------------------------------------
@@ -158,7 +158,7 @@ rm(data)
 rm(data_all)
 gc(); gc(); gc()
 
-data_append <- file.path(panel_rsdp_imp_data_file_path, "dmspols_grid_nearroad", "merged_datasets", "temp_datasets") %>%
+data_append <- file.path(panel_rsdp_imp_dir, "dmspols_grid_nearroad", "merged_datasets", "temp_datasets") %>%
   list.files(full.names = T) %>%
   lapply(function(fpath){
     print(fpath)
@@ -168,5 +168,5 @@ data_append <- file.path(panel_rsdp_imp_data_file_path, "dmspols_grid_nearroad",
   as.data.frame()
 
 # Export -----------------------------------------------------------------------
-saveRDS(data_append, file.path(panel_rsdp_imp_data_file_path, "dmspols_grid_nearroad", "merged_datasets", "panel_data_clean.Rds"))
+saveRDS(data_append, file.path(panel_rsdp_imp_dir, "dmspols_grid_nearroad", "merged_datasets", "panel_data_clean.Rds"))
 

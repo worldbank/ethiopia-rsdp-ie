@@ -106,14 +106,10 @@ library(facetscales) # devtools::install_github("zeehio/facetscales")
 
 # Functions
 source("https://raw.githubusercontent.com/ramarty/fast-functions/master/R/functions_in_chunks.R")
+source(file.path(code_dir, "_functions", "clean_data_functions.R"))
 #source(file.path(code_dir, "Functions", "commonly_used.R"))
 #source(file.path(code_dir, "Functions", "rename_lm_vars.R"))
-#source(file.path(code_dir, "Functions", "clean_data_functions.R"))
 
-str_remove_vec <- function(x, rx){
-  # Remove items in vector "x" that contain "rx"
-  x[!grepl(rx, x)]
-}
 
 # Code =========================================================================
 RUN_CODE <- F
@@ -176,7 +172,8 @@ if(RUN_CODE){
   DATASET_TYPE <- "woreda"
   source(file.path(prep_data_code_dir, "_extract_data_main.R"))
   
-  # 2. -------------------------------------------------------------------------
+  # 2. Prep Datasets and Analysis ----------------------------------------------
+  
   
   
   
