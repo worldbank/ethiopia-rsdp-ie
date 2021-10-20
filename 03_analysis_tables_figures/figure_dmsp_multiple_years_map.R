@@ -6,13 +6,13 @@ eth_adm <- readRDS(file.path(gadm_dir, "RawData", "gadm36_ETH_0_sp.rds"))
 dmsp1996 <- raster(file.path(ntl_harmon_dir, "RawData", "Harmonized_DN_NTL_1992_calDMSP.tif")) %>% 
   crop(eth_adm) %>% mask(eth_adm)
 
-dmsp2013 <- raster(file.path(ntl_harmon_dir, "RawData",, "Harmonized_DN_NTL_2013_calDMSP.tif")) %>% 
+dmsp2013 <- raster(file.path(ntl_harmon_dir, "RawData", "Harmonized_DN_NTL_2013_calDMSP.tif")) %>% 
   crop(eth_adm) %>% mask(eth_adm)
 
-dmsp2014 <- raster(file.path(ntl_harmon_dir, "RawData",, "Harmonized_DN_NTL_2014_simVIIRS.tif")) %>% 
+dmsp2014 <- raster(file.path(ntl_harmon_dir, "RawData", "Harmonized_DN_NTL_2014_simVIIRS.tif")) %>% 
   crop(eth_adm) %>% mask(eth_adm)
 
-dmsp2018 <- raster(file.path(ntl_harmon_dir, "RawData",, "Harmonized_DN_NTL_2018_simVIIRS.tif")) %>% 
+dmsp2018 <- raster(file.path(ntl_harmon_dir, "RawData", "Harmonized_DN_NTL_2018_simVIIRS.tif")) %>% 
   crop(eth_adm) %>% mask(eth_adm)
 
 # Prep Data for Figure ---------------------------------------------------------

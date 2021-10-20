@@ -1,6 +1,8 @@
 # Create Minimal Spanning Tree
 
 # GADM: Prep Regions -----------------------------------------------------------
+# TODO: (1) Prep Regional File
+#       (2) Use woredas for regions? Or OK to use this...
 eth <- readRDS(file.path(gadm_dir, "RawData", "gadm36_ETH_1_sp.rds"))
 eth$NAME_1[eth$NAME_1 %in% "Addis Abeba"] <- "Oromia"
 eth$NAME_1[eth$NAME_1 %in% "Dire Dawa"] <- "Oromia"

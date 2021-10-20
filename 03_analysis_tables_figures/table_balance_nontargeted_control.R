@@ -5,9 +5,6 @@ NEAR_TARGETTED_LOCATION <- 5000
 RM_DISTANE_ADDIS <- 0 # (100km scale; so 1 = 100km)
 NEAR_ROAD <- 5000
 
-rsdp_type <- "rsdp123"
-dataset_type <- "kebele"
-
 # Functions --------------------------------------------------------------------
 std.error <- function(x){
   x <- x[!is.na(x)]
@@ -24,13 +21,13 @@ make_stars <- function(x){
 }
 
 # Load/Prep Data ---------------------------------------------------------------
-for(rsdp_type in c("rsdp123", "rsdp1234")){
+for(rsdp_type in c("rsdp123")){
   for(dataset_type in c("kebele", "dmspols_grid_ethiopia")){
     
     if(dataset_type %in% "kebele") round_num <- 2
     if(dataset_type %in% "dmspols_grid_ethiopia") round_num <- 4
     
-    df <- readRDS(file.path(panel_rsdp_imp_data_file_path, dataset_type, "merged_datasets", "panel_data_clean.Rds"))
+    df <- readRDS(file.path(panel_rsdp_imp_dir, dataset_type, "merged_datasets", "panel_data_clean.Rds"))
     
     # Define rsdp/iv variables
     df$far_targettedlocs <- df[[paste0("distance_",rsdp_type,"_targettedlocs")]]   > NEAR_TARGETTED_LOCATION

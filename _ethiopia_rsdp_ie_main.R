@@ -121,6 +121,11 @@ if(RUN_CODE){
   
   # 0. PREP ANCILLARY DATA =====================================================
   
+  # Download GADM --------------------------------------------------------------
+  # Download GADM Data
+  
+  source(file.path(ancil_data_code_dir, "gadm", "download_gadm.R"))
+  
   # Clean Woredas --------------------------------------------------------------
   # Clean Woreda file. Add nighttime lights and nighttime lights groups.
   
@@ -240,9 +245,6 @@ if(RUN_CODE){
   
   # Long-Diff: IV --------------------------------------------------------------
 
-  # N Units Near MST
-  source(file.path(analysis_code_dir, "table_mst_n_units_near.R"))
-  
   # Run Regressions and export tabkes
   source(file.path(analysis_code_dir, "analysis_iv_longdiff", "iv_longdiff.R"))
   
@@ -254,6 +256,15 @@ if(RUN_CODE){
   
   # MA Levels: Regressions and tables
   source(file.path(ma_code_dir, "ma_analysis_levels.R"))
+  
+  # Diff-in-Diff ---------------------------------------------------------------
+  did_code_dir <- file.path(analysis_code_dir, "analysis_did")
+  
+  # MA Long Diff: Regressions and tables
+  source(file.path(did_code_dir, "01_gt_did_results.R"))
+  
+  # MA Levels: Regressions and tables
+  source(file.path(did_code_dir, "02_gt_did_figures.R"))
   
   # SI -------------------------------------------------------------------------
   
@@ -287,6 +298,17 @@ if(RUN_CODE){
   # Figure S8: Cost surface map for MST
   source(file.path(analysis_code_dir, "figure_msts_cost_surface_map.R"))
   
+  # Figure 9/10: MST
+  # TODO: Which main and which appendix?
+  
+  # Figure S11 and S12: Speed and example travel time
+  source(file.path(analysis_code_dir, "figure_travel_time_speed_example.R"))
+  
+  # Table S4 and S5: Balance across non-targeted treated and control areas
+  source(file.path(analysis_code_dir, "table_balance_nontargeted_control.R"))
+  
+  # Table S6: N units near MSTs
+  source(file.path(analysis_code_dir, "table_mst_n_units_near.R"))
   
 }
 

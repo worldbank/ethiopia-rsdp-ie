@@ -1,4 +1,5 @@
-# Create Line for RSDP 1-3 AND endpoints, focusing on larger roads.
+# Prep files needed for creating MST of RSDP 1-3. (1) Create polyline of 
+# RSDP 1-3 and (2) create file of RSDP 1-3 endpoings.
 
 # RSDP 1-3 focused on larger roads, where phase 4 focused on URRAP. Dates of 
 # phases are as follows:
@@ -17,10 +18,11 @@ rev_df <- function(df) df[dim(df)[1]:1,]
 
 # Load and Prep Data -----------------------------------------------------------
 roads_sdf <- readRDS(file.path(rsdp_dir, "RawData", "RoadNetworkPanelData_1996_2016.Rds"))
-roads_sdf$id <- 1 # useful to have a variable the same for all obs when aggreagting roads later
+roads_sdf$id <- 1 # useful to have a variable the same for all obs when aggregating roads later
 roads_sdf <- roads_sdf %>% spTransform(CRS(UTM_ETH))
 
-# Separate into Phases ---------------------------------------------------------
+# Extract endpoints ------------------------------------------------------------
+# Roads improved during RSDP 1-3
 roads_sdf_p123 <- roads_sdf[roads_sdf$Complete_G %in% 1997:2009,]
 
 extract_line_endpoints_roadi <- function(i, road){
@@ -93,8 +95,9 @@ endpoints <- lapply(1:nrow(roads_sdf_p123),
 
 endpoints$uid <- 1:nrow(endpoints)
 
-# Add Regional Capitals --------------------------------------------------------
-regional_capitals <- read.csv(file.path(region_caps_dir, "RawData", "region_capitals.csv"), 
+# Prep Regional Capitals -------------------------------------------------------
+regional_capitals <- read.csv(file.path(region_caps_dir, "RawData", 
+                                        "region_capitals.csv"), 
                               stringsAsFactors = F)
 
 regional_capitals <- regional_capitals %>%
@@ -110,7 +113,7 @@ regional_capitals_df <- regional_capitals %>%
   dplyr::rename(X1 = longitude,
                 X2 = latitude)
 
-# Create Unique Endpoints ------------------------------------------------------
+# Append Regional Capitals and Endpoints and Make Distinct ---------------------
 endpoints_unique_df <- endpoints %>% 
   as.data.frame() %>%
   bind_rows(regional_capitals_df) %>%
@@ -120,8 +123,8 @@ coordinates(endpoints_unique_df) <- ~X1+X2
 crs(endpoints_unique_df) <- crs(roads_sdf_p123)
 
 # Export -----------------------------------------------------------------------
-roads_sdf_p123 <- spTransform(roads_sdf_p123, CRS("+init=epsg:4326"))
-endpoints <- spTransform(endpoints, CRS("+init=epsg:4326"))
+roads_sdf_p123      <- spTransform(roads_sdf_p123, CRS("+init=epsg:4326"))
+endpoints           <- spTransform(endpoints, CRS("+init=epsg:4326"))
 endpoints_unique_df <- spTransform(endpoints_unique_df, CRS("+init=epsg:4326"))
 
 saveRDS(roads_sdf_p123,      file.path(rsdp123_iv_dir, "FinalData", "roads_rsdp_i_iii.Rds"))

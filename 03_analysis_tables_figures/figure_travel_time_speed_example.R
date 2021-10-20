@@ -5,22 +5,23 @@ RESOLUTION_KM <- 3
 WALKING_SPEED <- 5
 
 # Load Data --------------------------------------------------------------------
-eth_adm <- readRDS(file.path(data_file_path, "GADM", "RawData", "gadm36_ETH_0_sp.rds"))
+eth_adm <- readRDS(file.path(gadm_dir, "RawData", "gadm36_ETH_0_sp.rds"))
 eth_adm    <- eth_adm %>% spTransform(CRS(UTM_ETH))
 
-woreda_wgs84 <- readRDS(file.path(panel_rsdp_imp_data_file_path, "woreda", "individual_datasets", "polygons_no_road_cut.Rds"))
+woreda_wgs84 <- readRDS(file.path(panel_rsdp_imp_dir, "woreda", "individual_datasets", 
+                                  "polygons_no_road_cut.Rds"))
 
-gpw <- raster(file.path(data_file_path, "Gridded Population of the World", "RawData", "gpw-v4-population-density_2000.tif"))
+gpw <- raster(file.path(gpw_dir, "RawData", "gpw-v4-population-density_2000.tif"))
 gpw <- gpw %>% crop(woreda_wgs84)
 
-roads    <- readRDS(file.path(data_file_path, "RSDP Roads", "FinalData", "RoadNetworkPanelData_1996_2016.Rds"))
+roads    <- readRDS(file.path(rsdp_dir, "RawData", "RoadNetworkPanelData_1996_2016.Rds"))
 roads$id <- 1 # useful to have a variable the same for all obs when aggreagting roads later
 roads    <- roads %>% spTransform(CRS(UTM_ETH))
 
 # Location with largest population with woreda ---------------------------------
-woreda_points <- lapply(1:nrow(woreda_wgs84), function(i){
+woreda_points <- map_df(1:nrow(woreda_wgs84), function(i){
   
-  print(i)
+  print(paste(i, "/", nrow(woreda_wgs84)))
   
   gpw_i <- gpw %>% 
     crop(woreda_wgs84[i,]) %>%
@@ -42,9 +43,9 @@ woreda_points <- lapply(1:nrow(woreda_wgs84), function(i){
   
   return(loc_df)
   
-}) %>% bind_rows()
+}) 
 
-woreda_points$uid <- woreda_wgs84$uid
+#woreda_points$uid <- 1:nrow(woreda_points)
 coordinates(woreda_points) <- ~x+y
 crs(woreda_points) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
 woreda_points$cell_id <- woreda_wgs84$cell_id
@@ -158,12 +159,6 @@ r_eth_16 <- ggplot() +
                        limits = c(10, 70)) 
 
 # Example Travel Time Raster ---------------------------------------------------
-# a <- woreda_points %>% spTransform(CRS("+init=epsg:4326"))
-# leaflet() %>%
-#   addTiles() %>%
-#   addCircles(data = a,
-#              popup = ~paste(cell_id))
-
 p_area <- woreda_points[woreda_points$cell_id %in% c(308, 728),] %>% 
   gBuffer(width = 130000, byid=T) %>%
   bbox()

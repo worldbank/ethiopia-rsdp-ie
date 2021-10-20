@@ -4,7 +4,7 @@
 p_dodge_width <- 1
 
 # Load Data --------------------------------------------------------------------
-dynamic_df <- file.path(panel_rsdp_imp_data_file_path,
+dynamic_df <- file.path(panel_rsdp_imp_dir,
                         "all_units",
                         "results_datasets",
                         "individual_datasets") %>%
@@ -12,15 +12,6 @@ dynamic_df <- file.path(panel_rsdp_imp_data_file_path,
              pattern = "*.Rds") %>%
   str_subset("dynamic_did_attgt") %>%
   map_df(readRDS)
-
-# group_df <-  file.path(panel_rsdp_imp_data_file_path,
-#                        "all_units",
-#                        "results_datasets",
-#                        "individual_datasets") %>%
-#   list.files(full.names = T,
-#              pattern = "*.Rds") %>%
-#   str_subset("group_did_attgt") %>%
-#   map_df(readRDS)
 
 # Clean Data -------------------------------------------------------------------
 dynamic_df <- dynamic_df %>%
@@ -114,13 +105,6 @@ WIDTH <- 9
 p <- make_figures_by_base_ntl("kebele", dynamic_df)
 ggsave(p,
        filename = file.path(paper_figures, paste0("eventstudy_attgt_kebele_",addis_dist,".png")),
-       height = HEIGHT, width = WIDTH)
-rm(p)
-
-
-p <- make_figures_by_base_ntl("dmspols_grid_nearroad", dynamic_df)
-ggsave(p,
-       filename = file.path(paper_figures, paste0("eventstudy_attgt_1kmgrid_",addis_dist,".png")),
        height = HEIGHT, width = WIDTH)
 rm(p)
 

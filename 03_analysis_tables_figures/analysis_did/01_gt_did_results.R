@@ -17,11 +17,11 @@ for(dataset in c("kebele")){ # "dmspols_grid_nearroad"
   
   # Define Dependent Variables -------------------------------------------------
   if(dataset %in% "kebele"){
-    dep_var_vec <- c("globcover_urban_sum_ihs", "globcover_cropland_sum_ihs", "dmspols_harmon_ihs", "dmspols_harmon_ihs2013")
+    dep_var_vec <- c("globcover_urban_sum_ihs", "globcover_cropland_sum_ihs", "dmspols_harmon_ihs")
   }           
   
   if(dataset %in% "dmspols_grid_nearroad"){
-    dep_var_vec <- c("globcover_urban", "globcover_cropland", "dmspols_harmon_ihs", "dmspols_harmon_ihs2013")
+    dep_var_vec <- c("globcover_urban", "globcover_cropland", "dmspols_harmon_ihs")
   } 
   
   for(dep_var in dep_var_vec){
@@ -33,15 +33,10 @@ for(dataset in c("kebele")){ # "dmspols_grid_nearroad"
         print(paste(dataset, dep_var, indep_var, ntl_group, sep = " - "))
         
         ## Load/Prep Data
-        data <- readRDS(file.path(panel_rsdp_imp_data_file_path, dataset, "merged_datasets", "panel_data_clean.Rds"))
+        data <- readRDS(file.path(panel_rsdp_imp_dir, dataset, "merged_datasets", "panel_data_clean.Rds"))
         data$ntl_group <- data$dmspols_harmon_1996_bin4 %>% as.character()
         
         cluster_var <- "woreda_id"
-        
-        if(dep_var %in% "dmspols_harmon_ihs_2013"){
-          data <- data %>%
-            dplyr::filter(year <= 2013)
-        }
         
         data$dep_var   <- data[[dep_var]]
         data$indep_var <- data[[indep_var]]
@@ -134,7 +129,7 @@ for(dataset in c("kebele")){ # "dmspols_grid_nearroad"
                  ntl_group = ntl_group)
         
         saveRDS(dynamic_df, 
-                file.path(panel_rsdp_imp_data_file_path,
+                file.path(panel_rsdp_imp_dir,
                           "all_units",
                           "results_datasets",
                           "individual_datasets",
@@ -152,7 +147,7 @@ for(dataset in c("kebele")){ # "dmspols_grid_nearroad"
                  ntl_group = ntl_group)
         
         saveRDS(group_df, 
-                file.path(panel_rsdp_imp_data_file_path,
+                file.path(panel_rsdp_imp_dir,
                           "all_units",
                           "results_datasets",
                           "individual_datasets",
