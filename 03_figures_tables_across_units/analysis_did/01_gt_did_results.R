@@ -7,15 +7,13 @@
 #### Parameters
 OVERWRITE_FILES <- T
 
-library(did)
-
 # Load Data --------------------------------------------------------------------
 #dataset <- "clusters_of_ntlall"
 #dep_var <- "dmspols_harmon_ihs"
 #indep_var <- "year_improvedroad_50aboveafter"
 #ntl_group <- "high"
 
-for(dataset in c("kebele", "dmspols_grid_nearroad")){
+for(dataset in c("kebele")){ # "dmspols_grid_nearroad"
   
   # Define Dependent Variables -------------------------------------------------
   if(dataset %in% "kebele"){
@@ -160,7 +158,6 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                           "individual_datasets",
                           paste0("group_did_attgt_",
                                  dataset, "_", dep_var, "_", indep_var, "_", ntl_group, ".Rds")))
-        
         
       }
     }

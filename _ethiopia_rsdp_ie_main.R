@@ -100,6 +100,7 @@ library(viridis)
 library(wesanderson)
 library(hrbrthemes)
 library(spatialEco)
+library(did)
 library(facetscales) # devtools::install_github("zeehio/facetscales")
 
 # User Defined Functions -------------------------------------------------------
