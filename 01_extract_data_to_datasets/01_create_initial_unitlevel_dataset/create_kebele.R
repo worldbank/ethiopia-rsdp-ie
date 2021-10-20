@@ -48,6 +48,10 @@ kebele_blank <- kebele
 kebele_blank@data <- kebele@data %>%
   dplyr::select(cell_id)
 
+#### Buffer by 0
+# Buffering fixes some issues with polygons
+kebele_blank <- kebele_blank %>% gBuffer_chunks(width = 0, chunk_size = 100)
+
 #kebele_blank <- spTransform(kebele_blank, CRS(UTM_ETH))
 kebele_clean <- kebele_blank
 

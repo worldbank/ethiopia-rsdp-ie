@@ -7,6 +7,7 @@
 # Defines dataset to run analysis on. Either at woreda level, grid level, or
 # grid subsample:
 # OPTIONS:
+# --"dmspols_grid_ethiopia": Grid in Ethiopia
 # --"dmspols_grid_nearroad": Near 10km of any road as of 2016
 # --"woreda": Woreda polygons
 # --"kebele": Kebele polygons
@@ -54,7 +55,7 @@ DIST_THRESH <- 2
 # ** Create Unit Level Datasets ------------------------------------------------
 if(CREATE_UNIT_LEVEL_DATASET){
   
-  source(file.path(prep_data_code_dir, 
+  source(file.path(extract_data_code_dir, 
                    "01_create_initial_unitlevel_dataset", 
                    paste0("create_",DATASET_TYPE,".R")))
   
@@ -66,14 +67,14 @@ if(EXTRACT_DATA){
   # Grab Scripts to Scrape - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
   ## Scripts for all unit types
-  scripts_all_units <- file.path(prep_data_code_dir, 
+  scripts_all_units <- file.path(extract_data_code_dir, 
                                  "02_extract_variables") %>%
     list.files(pattern = ".R", full.names = T) %>%
     sort()
   
   ## Scripts specific to units
   if(GRID_DATASET | grepl("kebele", DATASET_TYPE)){
-    scripts_unit_specific <- file.path(prep_data_code_dir, 
+    scripts_unit_specific <- file.path(extract_data_code_dir, 
                                        "02_extract_variables_grid_kebele_specific") %>%
       list.files(pattern = ".R", full.names = T) %>%
       sort()
@@ -81,14 +82,24 @@ if(EXTRACT_DATA){
     scripts_all_units <- c(scripts_all_units, scripts_unit_specific)
   } 
   
-  ## Market Access Scripts
-  if(grepl("woreda|kebele", DATASET_TYPE)){
-    scripts_market_access <- file.path(prep_data_code_dir, 
-                                       "02_extract_market_access") %>%
+  ## Woreda Only
+  if(grepl("woreda", DATASET_TYPE)){
+    scripts_unit_specific <- file.path(extract_data_code_dir, 
+                                       "02_extract_variables_woreda_specific") %>%
       list.files(pattern = ".R", full.names = T) %>%
       sort()
     
     scripts_all_units <- c(scripts_all_units, scripts_market_access)
+  }
+  
+  ## Market Access Scripts
+  if(grepl("woreda|kebele", DATASET_TYPE)){
+    scripts_unit_specific <- file.path(extract_data_code_dir, 
+                                       "02_extract_market_access") %>%
+      list.files(pattern = ".R", full.names = T) %>%
+      sort()
+    
+    scripts_all_units <- c(scripts_all_units, scripts_unit_specific)
   }
   
   # Remove certain scripts to run - - - - - - - - - - - - - - - - - - - - - - - 
@@ -102,7 +113,7 @@ if(EXTRACT_DATA){
       paste0("ds") # from .R to .Rds
     
     ## List of datasets already extracted
-    extracted_datasets <- file.path(panel_rsdp_imp_data_file_path,
+    extracted_datasets <- file.path(panel_rsdp_imp_dir,
                                     DATASET_TYPE,
                                     "individual_datasets") %>%
       list.files()

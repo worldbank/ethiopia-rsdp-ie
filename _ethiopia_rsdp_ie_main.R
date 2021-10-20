@@ -25,12 +25,14 @@ gc_dir         <- file.path(data_dir, "Globcover")
 ndvi_dir       <- file.path(data_dir, "NDVI")
 temp_dir       <- file.path(data_dir, "Temperature")
 precip_dir     <- file.path(data_dir, "Precipitation")
+elec_net_dir   <- file.path(data_dir, "Electricity Network")
 panel_rsdp_imp_dir <- file.path(data_dir, "Panel Data RSDP Impacts")
 
 ## Within code_file_path
-ancil_data_code_dir <- file.path(code_dir, "00_process_ancillary_datasets")
-prep_data_code_dir <- file.path(code_dir, "01_extract_data_to_datasets")
-analysis_code_dir  <- file.path(code_dir, "02_prep_dataset_and_analysis")
+ancil_data_code_dir   <- file.path(code_dir, "00_process_ancillary_datasets")
+extract_data_code_dir <- file.path(code_dir, "01_extract_data_to_datasets")
+clean_data_code_dir   <- file.path(code_dir, "02_clean_analysis_data")
+analysis_code_dir     <- file.path(code_dir, "03_analysis_tables_figures")
 
 ## For Tables/Figures
 #paper_figures <- file.path(overleaf_dir, "Figures")
@@ -117,16 +119,18 @@ RUN_CODE <- F
 
 if(RUN_CODE){
   
-  # 0. Clean Woredas -----------------------------------------------------------
+  # 0. PREP ANCILLARY DATA =====================================================
+  
+  # Clean Woredas --------------------------------------------------------------
   # Clean Woreda file. Add nighttime lights and nighttime lights groups.
   
   source(file.path(ancil_data_code_dir, "woreda", "clean_woreda.R"))
   
-  # 0. RSDP I-III, Road IV MSTs ------------------------------------------------
+  # RSDP I-III, Road IV MSTs ---------------------------------------------------
   # Create minimum spanning trees used as instruments
   
   rsdp123_iv_code_dir <- file.path(ancil_data_code_dir, "rsdp_123_iv")
-
+  
   # Create dataset of targeted locations (endpoints of roads and regional capitals)
   source(file.path(rsdp123_iv_code_dir, "01_phase_123_roads_targetted_locations.R"))
   
@@ -139,7 +143,7 @@ if(RUN_CODE){
   # We compute MSTs within each region; this code appends them together
   source(file.path(rsdp123_iv_code_dir, "03_append_regional_networks.R"))
   
-  # 1. Extract Data to Datasets --------------------------------------------------
+  # 1. Extract Data to Datasets ================================================
   # Scripts that (1) create datasets at different units of analysis -- grid,
   # kebeles and woreda; and (2) extracts data to these datasets. When extracting
   # data, saves a file for each different dataset. For example, saves a dataset
@@ -161,29 +165,127 @@ if(RUN_CODE){
   ## long time; whether to skip
   SKIP_MA_COMPUTE_TT <- F
   
+  ## Process grid; grid across all of Ethiopia
+  DATASET_TYPE <- "dmspols_grid_ethiopia"
+  source(file.path(extract_data_code_dir, "_extract_data_main.R"))
+  
   ## Process grid; grids within 10km of a road
   DATASET_TYPE <- "dmspols_grid_nearroad"
-  source(file.path(prep_data_code_dir, "_extract_data_main.R"))
+  source(file.path(extract_data_code_dir, "_extract_data_main.R"))
   
   ## Process Kebeles
   DATASET_TYPE <- "kebele"
-  source(file.path(prep_data_code_dir, "_extract_data_main.R"))
+  source(file.path(extract_data_code_dir, "_extract_data_main.R"))
   
   ## Process Woreda
   DATASET_TYPE <- "woreda"
-  source(file.path(prep_data_code_dir, "_extract_data_main.R"))
+  source(file.path(extract_data_code_dir, "_extract_data_main.R"))
   
-  # 2. Prep Datasets and Analysis ----------------------------------------------
+  # 2. Clean Analysis Data =====================================================
+  clean_data_code_dir
   
-  # FIGURE 1A
-  source(file.path(analysis_code_dir, "figures_road_improvement", 
-                   "sankey_speeds_rsdpyears.R"))
+  #### Panel Data
   
-  # FIGURE 1B
-  source(file.path(analysis_code_dir, "figures_road_improvement", 
-                   "prop_network_improved_region_phase.R"))
+  ## Grid - Panel
+  source(file.path(clean_data_code_dir, "grid_nearroad_panel", "01_merge_data.R"))
+  source(file.path(clean_data_code_dir, "grid_nearroad_panel", "02_clean_data.R"))
   
+  ## Kebele - Panel
+  source(file.path(clean_data_code_dir, "kebele_panel", "01_merge_data.R"))
+  source(file.path(clean_data_code_dir, "kebele_panel", "02_clean_data.R"))
   
+  ## Woreda - Panel
+  source(file.path(clean_data_code_dir, "woreda_panel", "01_merge_data.R"))
+  source(file.path(clean_data_code_dir, "woreda_panel", "02_clean_data.R"))
+  
+  #### Long Difference
+  
+  ## Kebele - Long Difference
+  source(file.path(clean_data_code_dir, "kebele_longdifference", "01_clean_data.R"))
+  
+  ## Woreda - Long Difference
+  source(file.path(clean_data_code_dir, "woreda_longdifference", "01_clean_data.R"))
+  
+  # 3. Analysis, Tables and Figures ============================================
+  
+  # Main Text: Summary Stats, Figures and Maps ---------------------------------
+  
+  # FIGURE 1A: Sankey diagram of road improvements
+  source(file.path(analysis_code_dir, "sankey_speeds_rsdpyears.R"))
+  
+  # FIGURE 1B: Bar chart of road improvements by region
+  source(file.path(analysis_code_dir, "prop_network_improved_region_phase.R"))
+  
+  # TABLE 1: Summary Stats of Dependent variables
+  source(file.path(analysis_code_dir, "table_sum_stats_dep_vars.R"))
+  
+  # FIGURE 2: Map of NTL, Globcover and RSDP
+  source(file.path(analysis_code_dir, "figure_rsdp_NTL_globcover.R"))
+  
+  # FIGURE 3 / S9,S10: MST Maps
+  source(file.path(analysis_code_dir, "figure_mst_map.R"))
+  source(file.path(analysis_code_dir, "figure_mst_map_regional.R"))
+  
+  # TWFE -----------------------------------------------------------------------
+  twfe_code_dir <- file.path(analysis_code_dir, "analysis_twfe")
+  
+  # Run regressions and save results (one .Rds file per regression)
+  source(file.path(twfe_code_dir, "01_event_study_results.R"))
+  
+  # Append results together
+  source(file.path(twfe_code_dir, "02_event_study_results_append.R"))
+  
+  # Make figures
+  source(file.path(twfe_code_dir, "03_event_study_figures.R"))
+  
+  # Long-Diff: IV --------------------------------------------------------------
+
+  # N Units Near MST
+  source(file.path(analysis_code_dir, "table_mst_n_units_near.R"))
+  
+  # Run Regressions and export tabkes
+  source(file.path(analysis_code_dir, "analysis_iv_longdiff", "iv_longdiff.R"))
+  
+  # Market Access --------------------------------------------------------------
+  ma_code_dir <- file.path(analysis_code_dir, "analysis_ma")
+  
+  # MA Long Diff: Regressions and tables
+  source(file.path(ma_code_dir, "ma_analysis_longdiff.R"))
+  
+  # MA Levels: Regressions and tables
+  source(file.path(ma_code_dir, "ma_analysis_levels.R"))
+  
+  # SI -------------------------------------------------------------------------
+  
+  # TABLE S1: Kebele Area
+  source(file.path(analysis_code_dir, "table_kebele_area.R"))
+  
+  # Figure S1: Kebele Map
+  source(file.path(analysis_code_dir, "figure_kebele_map.R"))
+  
+  # Figure S2: RSDP vs Electricity Network
+  source(file.path(analysis_code_dir, "figure_electricity_network_vs_roads_map.R"))
+  
+  # Table S2
+  # HARD CODED; NOT GENERATED BY CODE
+  
+  # Figure S3 and S4: Road improvements by baseline Woreda NTL
+  source(file.path(analysis_code_dir, "figure_road_imp_by_woreda_ntl.R"))
+  
+  # Figure S5: Trends in outcome variables
+  source(file.path(analysis_code_dir, "figure_woreda_summary_trends.R"))
+  
+  # Figure S6: Growth rate of outcome variables
+  source(file.path(analysis_code_dir, "figure_woreda_summary_histograms.R"))
+  
+  # Table S3: Globclover land cover class before changed to urban
+  source(file.path(analysis_code_dir, "table_gc_land_class_before_urban.R"))
+  
+  # Figure S7: DMSP-OLS in multiple years
+  source(file.path(analysis_code_dir, "figure_dmsp_multiple_years_map.R"))
+  
+  # Figure S8: Cost surface map for MST
+  source(file.path(analysis_code_dir, "figure_msts_cost_surface_map.R"))
   
   
 }
