@@ -175,6 +175,14 @@ if(RUN_CODE){
   
   # 2. Prep Datasets and Analysis ----------------------------------------------
   
+  # FIGURE 1A
+  source(file.path(analysis_code_dir, "figures_road_improvement", 
+                   "sankey_speeds_rsdpyears.R"))
+  
+  # FIGURE 1B
+  source(file.path(analysis_code_dir, "figures_road_improvement", 
+                   "prop_network_improved_region_phase.R"))
+  
   
   
   
