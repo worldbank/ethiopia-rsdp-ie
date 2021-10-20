@@ -1,2 +1,1 @@
-# ethiopia-rsdp-ie
-Replication Package for: The Impact of Ethiopia's Road Sector Development Program: Evidence from Satellite Data
+# Replication Package for: The Impact of Ethiopia's Road Sector Development Program: Evidence from Satellite Data
