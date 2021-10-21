@@ -27,16 +27,17 @@ if_zero_return <- function(x,
 }
 
 # Sum Stats --------------------------------------------------------------------
-data <- readRDS(file.path(panel_rsdp_imp_data_file_path, "dmspols_grid_nearroad", "merged_datasets", "grid_data_clean.Rds"))
+data <- readRDS(file.path(panel_rsdp_imp_data_file_path, "dmspols_grid_ethiopia",
+                          "merged_datasets", "panel_data_clean.Rds"))
 
 ## N cells in year
 sum(data$year %in% 1996) %>% prettyNum(big.mark=",",scientific=FALSE)
 
 sink(file.path(panel_rsdp_imp_data_file_path, 
-          "dmspols_grid_nearroad", 
+          "dmspols_grid_ethiopia", 
           "outputs",
           "tables",
-          "nearRoad_depVar_sumStats.tex"))
+          "ethiopiaGrid_depVar_sumStats.tex"))
 
 cat("\\begin{tabular}{l | lll | lll } \n")
 cat("\\hline \n")

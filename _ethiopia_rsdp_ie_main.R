@@ -11,21 +11,22 @@ if(Sys.info()[["user"]] == "robmarty"){
 
 #### Paths from Root
 ## Within project_dir
-data_dir       <- file.path(project_dir, "Data")
-gadm_dir       <- file.path(data_dir, "GADM")
-rsdp_dir       <- file.path(data_dir, "RSDP Roads")
-ntl_harmon_dir <- file.path(data_dir, "VIIRS_DMSPOLS_Intercalibrated")
-kebele_dir     <- file.path(data_dir, "Kebeles")
-woreda_dir     <- file.path(data_dir, "Woredas")
-gpw_dir        <- file.path(data_dir, "Gridded Population of the World")
-rsdp123_iv_dir <- file.path(data_dir, "RSDP Phase I-III Roads - IV - Targetted Locations")
-region_caps_dir <- file.path(data_dir, "Regional Capitals")
-elev_dir       <- file.path(data_dir, "Elevation")
-gc_dir         <- file.path(data_dir, "Globcover")
-ndvi_dir       <- file.path(data_dir, "NDVI")
-temp_dir       <- file.path(data_dir, "Temperature")
-precip_dir     <- file.path(data_dir, "Precipitation")
-elec_net_dir   <- file.path(data_dir, "Electricity Network")
+data_dir           <- file.path(project_dir, "Data")
+
+gadm_dir           <- file.path(data_dir, "GADM")
+rsdp_dir           <- file.path(data_dir, "RSDP Roads")
+ntl_harmon_dir     <- file.path(data_dir, "VIIRS_DMSPOLS_Intercalibrated")
+kebele_dir         <- file.path(data_dir, "Kebeles")
+woreda_dir         <- file.path(data_dir, "Woredas")
+gpw_dir            <- file.path(data_dir, "Gridded Population of the World")
+rsdp123_iv_dir     <- file.path(data_dir, "RSDP Phase I-III Roads - IV - Targetted Locations")
+region_caps_dir    <- file.path(data_dir, "Regional Capitals")
+elev_dir           <- file.path(data_dir, "Elevation")
+gc_dir             <- file.path(data_dir, "Globcover")
+ndvi_dir           <- file.path(data_dir, "NDVI")
+temp_dir           <- file.path(data_dir, "Temperature")
+precip_dir         <- file.path(data_dir, "Precipitation")
+elec_net_dir       <- file.path(data_dir, "Electricity Network")
 panel_rsdp_imp_dir <- file.path(data_dir, "Panel Data RSDP Impacts")
 
 ## Within code_file_path
@@ -41,19 +42,35 @@ analysis_code_dir     <- file.path(code_dir, "03_analysis_tables_figures")
 paper_figures <- file.path(project_dir, "Output", "Figures")
 paper_tables <- file.path(project_dir, "Output", "Tables")
 
+# Settings ---------------------------------------------------------------------
+
+##### EXTRACT DATA TO DATASET PARAMETERS
+
+## Whether to run code for creating unit level datasets 
+CREATE_UNIT_LEVEL_DATASET <- T
+
+# Whether to run code for extracting data to unit level datasets
+EXTRACT_DATA <- T
+
+# Checks if data already extracted. If T, re-extracts data. If F, skips 
+# extracting data
+OVERWRITE_EXTRACTED_DATA <- F 
+
+# Computing travel time between units for market access takes a particularly
+# long time; whether to skip
+SKIP_MA_COMPUTE_TT <- F
+
+##### WHETHER TO DELETE PROCESSED FILES
+
+# Whether to delete processed files; ie, data files that are created from code.
+# Doing this may be useful for fully replicating the code to ensure it works
+# from a "raw" state of only relying on RawData files.
+DELETE_PROCESSED_FILES <- F
+
 # Parameters -------------------------------------------------------------------
 
-#### YEAR SUBSETS
-# road_year <- list(all = 1996:2016,     
-#                   dmspols = 1996:2012, 
-#                   viirs = 2013:2016,  
-#                   phase1 = 1997:2002, # 1997:2002
-#                   phase2 = 2003:2007, # 2002:2007
-#                   phase3 = 2008:2010, # 2007:2010
-#                   phase4 = 2011:2016) # 2010:2015
-
 # Ethiopia UTM
-UTM_ETH <- '+init=epsg:20138' # Ethiopia UTM
+UTM_ETH <- '+init=epsg:20138'
 
 # Packages ---------------------------------------------------------------------
 library(AER)
@@ -113,6 +130,40 @@ source(file.path(code_dir, "_functions", "clean_data_functions.R"))
 #source(file.path(code_dir, "Functions", "commonly_used.R"))
 #source(file.path(code_dir, "Functions", "rename_lm_vars.R"))
 
+# Delete Processed Files -------------------------------------------------------
+# Code to delete processed files; ie, data files that are created from the code.
+# Only delete if you want to run the code from "scratch" and recreate all files.
+
+if(DELETE_PROCESSED_FILES){
+  
+  # Print warning message
+  total_time <- 30
+  for(i_seconds in total_time:1){
+    
+    if((i_seconds %% 5) %in% 0){
+      cat(paste0("***WARNING***: DATA FILES THAT ARE CREATED FROM THE CODE WILL BE DELETED IN ",
+                     i_seconds, " SECONDS. IF YOU DID NOT INTEND FOR THIS TO HAPPEN ",
+                     "STOP THE CODE FROM RUNNING AND SET 'DELETE_PROCESSED_FILES' TO FALSE."))
+      cat("\n\n")
+    }
+    
+    Sys.sleep(1)
+  }
+  
+  
+  tmp <- file.path(project_dir, "Data") %>%
+    
+    # Grab data files
+    list.files(pattern = "*.Rds|*.dta", recursive = T, full.names = T) %>%
+    
+    # Subset to folders with processed data
+    str_subset("FinalData|Panel Data RSDP Impacts") %>%
+    
+    # Remove files
+    lapply(file.remove)
+  
+  cat("DATA FILES THAT ARE CREATED FROM THE CODE HAVE BEEN DELETED.")
+}
 
 # Code =========================================================================
 RUN_CODE <- F
@@ -120,6 +171,17 @@ RUN_CODE <- F
 if(RUN_CODE){
   
   # 0. PREP ANCILLARY DATA =====================================================
+  
+  # Download Data from Google Earth Engine -------------------------------------
+  # These scripts should be run in the Google Earth Engine code editor. The data
+  # files that these scripts produce have already been downloaded and put into 
+  # "RawData" folders; consequently, these do not have to be run for the 
+  # remaining code to work. The below files create rasters of elevation,
+  # annual precipitation and annual temperature across Ethiopia.
+  
+  # [Github Repo]/00_process_ancillary_datasets/extract_from_gee/extract_elevation.js
+  # [Github Repo]/00_process_ancillary_datasets/extract_from_gee/extract_precipitation.js
+  # [Github Repo]/00_process_ancillary_datasets/extract_from_gee/extract_temperature.js
   
   # Download GADM --------------------------------------------------------------
   # Download GADM Data
@@ -140,9 +202,11 @@ if(RUN_CODE){
   source(file.path(rsdp123_iv_code_dir, "01_phase_123_roads_targetted_locations.R"))
   
   # MST between targeted locations, using Euclidean distance
+  # NOTE: This code takes a few hours to run
   source(file.path(rsdp123_iv_code_dir, "02_create_euclidean_distance.R"))
   
   # MST between targeted locations, using cost surface
+  # NOTE: This code takes a few hours to run
   source(file.path(rsdp123_iv_code_dir, "02_create_minimam_spanning_tree.R"))
   
   # We compute MSTs within each region; this code appends them together
@@ -154,21 +218,6 @@ if(RUN_CODE){
   # data, saves a file for each different dataset. For example, saves a dataset
   # for distance to roads, a separate dataset for average nighttime lights, etc.
   # In a later step, these datasets are merged together.
-  
-  #### PARAMETERS
-  
-  ## Whether to run code for creating unit level datasets and extracting data
-  ## to those datasets
-  CREATE_UNIT_LEVEL_DATASET <- T
-  EXTRACT_DATA <- T
-  
-  ## Checks if data already extracted. If T, re-extracts data. If F, skips 
-  ## extracting data
-  OVERWRITE_EXTRACTED_DATA <- F 
-  
-  ## Computing travel time between untis for market access takes a particularly
-  ## long time; whether to skip
-  SKIP_MA_COMPUTE_TT <- F
   
   ## Process grid; grid across all of Ethiopia
   DATASET_TYPE <- "dmspols_grid_ethiopia"
@@ -244,7 +293,7 @@ if(RUN_CODE){
   source(file.path(twfe_code_dir, "03_event_study_figures.R"))
   
   # Long-Diff: IV --------------------------------------------------------------
-
+  
   # Run Regressions and export tabkes
   source(file.path(analysis_code_dir, "analysis_iv_longdiff", "iv_longdiff.R"))
   

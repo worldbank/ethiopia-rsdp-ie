@@ -34,7 +34,7 @@ if(GRID_DATASET){
 MCCORS_DIST_ROADS <- 1 
 
 # Close to road threshold (kilometers)
-DIST_THRESH <- 2 
+#DIST_THRESH <- 2 
 
 # Run Script Parameters --------------------------------------------------------
 ## Whether to run code for creating unit level datasets and extracting data
@@ -67,8 +67,8 @@ if(EXTRACT_DATA){
   # Grab Scripts to Scrape - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
   ## Scripts for all unit types
-  scripts_all_units <- file.path(extract_data_code_dir, 
-                                 "02_extract_variables") %>%
+  scripts <- file.path(extract_data_code_dir, 
+                       "02_extract_variables") %>%
     list.files(pattern = ".R", full.names = T) %>%
     sort()
   
@@ -79,7 +79,7 @@ if(EXTRACT_DATA){
       list.files(pattern = ".R", full.names = T) %>%
       sort()
     
-    scripts_all_units <- c(scripts_all_units, scripts_unit_specific)
+    scripts <- c(scripts, scripts_unit_specific)
   } 
   
   ## Woreda Only
@@ -89,7 +89,7 @@ if(EXTRACT_DATA){
       list.files(pattern = ".R", full.names = T) %>%
       sort()
     
-    scripts_all_units <- c(scripts_all_units, scripts_market_access)
+    scripts <- c(scripts, scripts_unit_specific)
   }
   
   ## Market Access Scripts
@@ -99,7 +99,7 @@ if(EXTRACT_DATA){
       list.files(pattern = ".R", full.names = T) %>%
       sort()
     
-    scripts_all_units <- c(scripts_all_units, scripts_unit_specific)
+    scripts <- c(scripts, scripts_unit_specific)
   }
   
   # Remove certain scripts to run - - - - - - - - - - - - - - - - - - - - - - - 
@@ -124,7 +124,17 @@ if(EXTRACT_DATA){
   
   ## Skip Certain Scripts
   if(SKIP_MA_COMPUTE_TT){
-    scripts <- scripts[scripts != "extract_ma1_travel_times_for_market_access.R"]
+    scripts <- scripts[!grepl("extract_ma1_travel_times_for_market_access.R", scripts)]
+  }
+  
+  # If DATASET_TYPE is "dmspols_grid_ethiopia", remove certain scripts; these
+  # aren't needed for full grid and take a while to run 
+  if(DATASET_TYPE == "dmspols_grid_ethiopia"){
+    scripts_to_rm <- c("extract_gpw.R", 
+                       "extract_distance_roads_improved_by_speedlimit_after.R") %>%
+      paste(collapse = "|")
+    
+    scripts <- scripts[!grepl(scripts_to_rm, scripts)]
   }
   
   # Run Scripts - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

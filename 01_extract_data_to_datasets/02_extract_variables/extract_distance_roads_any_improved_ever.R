@@ -4,7 +4,7 @@
 # each year.
 
 # Load and Prep Data -----------------------------------------------------------
-# Load data and reporject to Ethiopia UTM. UTM better for distance calculations.
+# Load data and project to Ethiopia UTM. UTM better for distance calculations.
 
 #### Load points
 if(GRID_DATASET){

@@ -48,7 +48,10 @@ determine_distance_to_points <- function(year, points, roads){
     roads_subset <- roads_subset %>% st_as_sf() %>% st_combine() %>% as("Spatial")
     roads_subset$id <- 1
     
-    points[[paste0("distance_improvedroad_speedafter_", speed)]] <- gDistance_chunks(points, roads_subset, CHUNK_SIZE_DIST_ROADS, MCCORS_DIST_ROADS) 
+    points[[paste0("distance_improvedroad_speedafter_", speed)]] <- gDistance_chunks(points, 
+                                                                                     roads_subset, 
+                                                                                     CHUNK_SIZE_DIST_ROADS, 
+                                                                                     MCCORS_DIST_ROADS) 
   }
   
   points$year <- year
