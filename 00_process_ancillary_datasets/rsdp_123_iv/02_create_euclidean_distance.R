@@ -1,18 +1,18 @@
 # Create Minimal Spanning Tree
 
 # GADM: Prep Regions -----------------------------------------------------------
-# TODO: (1) Prep Regional File
-#       (2) Use woredas for regions? Or OK to use this...
 eth <- readRDS(file.path(gadm_dir, "RawData", "gadm36_ETH_1_sp.rds"))
+
+# Add cities to region that surrounds them
 eth$NAME_1[eth$NAME_1 %in% "Addis Abeba"] <- "Oromia"
 eth$NAME_1[eth$NAME_1 %in% "Dire Dawa"] <- "Oromia"
 eth <- raster::aggregate(eth, by = "NAME_1")
 
 # Loop through "All" and regions
-for(region in c("All", unique(eth$NAME_1))){
+for(region in c("All", sort(unique(eth$NAME_1)))){
   print(paste(region, "------------------------------------------------------"))
   
-  # Load Data --------------------------------------------------------------------
+  # Load Data ------------------------------------------------------------------
   ## Points to Connect
   points_sdf <- readRDS(file.path(rsdp123_iv_dir, "FinalData", "targetted_locations_unique.Rds"))
   
@@ -23,7 +23,7 @@ for(region in c("All", unique(eth$NAME_1))){
   points_sdf <- spTransform(points_sdf, CRS(UTM_ETH))
   points_sdf$uid <- 1:nrow(points_sdf)
   
-  # Least Cost Path --------------------------------------------------------------
+  # Least Cost Path ------------------------------------------------------------
   coords <- points_sdf %>% 
     coordinates() %>% 
     as.data.frame() %>%
@@ -33,7 +33,7 @@ for(region in c("All", unique(eth$NAME_1))){
   
   extract_path_cost <- function(i){
     
-    print(i)
+    print(paste(i, "/", nrow(points_sdf), "-", region))
     
     coords_i <- coords[i,]
     coords_noti <- coords[(i+1):(nrow(coords)),]
@@ -74,15 +74,13 @@ for(region in c("All", unique(eth$NAME_1))){
   
   # Shapefile of Minimal Spanning Tree -----------------------------------------
   minimal_spanning_tree_data <- igraph::as_data_frame(minimal_spanning_tree)
-  minimal_spanning_tree_sdf <- least_cost_paths_sdf[least_cost_paths_sdf$edge_uid %in% minimal_spanning_tree_data$edge_uid,]
+  minimal_spanning_tree_sdf <- least_cost_paths_sdf[least_cost_paths_sdf$edge_uid %in% 
+                                                      minimal_spanning_tree_data$edge_uid,]
   
   # Export -----------------------------------------------------------------------
   minimal_spanning_tree_sdf@data <- minimal_spanning_tree_sdf@data %>%
     dplyr::mutate(road_id = 1:n()) %>%
     dplyr::select(road_id,cost,origin,dest)
-  
-  #minimal_spanning_tree_sdf$road_id <- 1:nrow(minimal_spanning_tree_sdf)
-  #minimal_spanning_tree_sdf <- subset(minimal_spanning_tree_sdf, select=c(road_id,cost,origin,dest))
   
   if(region == "All"){
   saveRDS(minimal_spanning_tree_sdf,
