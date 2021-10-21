@@ -3,6 +3,9 @@
 // =============================================================
 
 // RUN THIS IN GOOGLE EARTH ENGINE ONLINE CODE EDITOR
+// ONCE DATA IS PROCESSED, PUT DATA IN:
+// [Project Directory]/Data/Precipitation/RawData
+
 // CLICK HERE FOR LINK IN GEE:
 // https://code.earthengine.google.com/db929596eb7013d0c6738020db15f358
 

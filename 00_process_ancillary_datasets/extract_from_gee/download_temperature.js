@@ -3,6 +3,9 @@
 // =============================================================
 
 // RUN THIS IN GOOGLE EARTH ENGINE ONLINE CODE EDITOR
+// ONCE DATA IS PROCESSED, PUT DATA IN:
+// [Project Directory]/Data/Temperature/RawData
+
 // CLICK HERE FOR LINK IN GEE:
 // https://code.earthengine.google.com/bf8fdec9ba1dc3d8612d2dba516454c0
 
