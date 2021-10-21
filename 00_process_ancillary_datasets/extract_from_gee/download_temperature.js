@@ -3,6 +3,8 @@
 // =============================================================
 
 // RUN THIS IN GOOGLE EARTH ENGINE ONLINE CODE EDITOR
+// CLICK HERE FOR LINK IN GEE:
+// https://code.earthengine.google.com/bf8fdec9ba1dc3d8612d2dba516454c0
 
 // Set to folder in Google Drive
 var GEE_FOLDER = 'gee_extracts';
