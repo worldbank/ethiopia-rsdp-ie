@@ -52,7 +52,6 @@ woreda_points <- spTransform(woreda_points, UTM_ETH)
 woreda        <- spTransform(woreda_wgs84, UTM_ETH)
 
 # Crete Raster BaseLayer -------------------------------------------------------
-if(DATASET_TYPE %in% "clusters_of_ntl") woreda <- gBuffer(woreda, width = 3000, byid=T)
 r <- raster(xmn=woreda@bbox[1,1], 
             xmx=woreda@bbox[1,2], 
             ymn=woreda@bbox[2,1], 
@@ -65,8 +64,6 @@ calc_travel_time <- function(year, woreda_points){
   # If SEP_ROAD_SHAPEFILES=T, then "roads" is ignored, as loads roads within
   # the function.
   
-  print(paste(year, "--------------------------------------------------------"))
-
   year_road <- year
   
   speed_var <- paste0("Speed", year_road)
@@ -111,35 +108,50 @@ calc_travel_time <- function(year, woreda_points){
   
   tt_df$year <- year
   
-  saveRDS(as.data.table(tt_df), 
-          file.path(panel_rsdp_imp_dir, DATASET_TYPE, "individual_datasets", paste0("ma1_travel_times_for_market_access_",year,".Rds")))
-  
-  return(NULL)
+  return(tt_df)
 }
 
-tmp <- lapply(2016:1996, calc_travel_time, woreda_points)
+for(year in 1996:2016){
+  
+  print(paste(year, "--------------------------------------------------------"))
+  
+  OUT_PATH <- file.path(panel_rsdp_imp_dir, DATASET_TYPE, "individual_datasets", 
+                        paste0("ma1_travel_times_for_market_access_",year,".Rds"))
+  
+  if(!file.exists(OUT_PATH) | OVERWRITE_EXTRACTED_DATA){
+    tt_df_i <- calc_travel_time(year, woreda_points) %>%
+      as.data.table()
+    
+    saveRDS(tt_df_i, OUT_PATH)
+    
+  }
+}
 
 # Calculate Linear Distance ----------------------------------------------------
-distance_df <- lapply(1:nrow(woreda_points), function(i){
-  if((i %% 100) %in% 0) print(i)
-  
-  distance <- gDistance(woreda_points[i,],
-                        woreda_points,
-                        byid=T) %>% 
-    as.vector()
-  
-  df_out <- data.frame(dest_uid = woreda_points$cell_id,
-                       distance = distance)
-  
-  df_out$orig_uid <- woreda_points$cell_id[i]
-  return(df_out)
-}) %>% 
-  bind_rows %>%
-  as.data.table()
+OUT_PATH_LD <- file.path(panel_rsdp_imp_dir, DATASET_TYPE, "individual_datasets", 
+                         "ma1_travel_times_for_market_access_lineardist.Rds")
 
-saveRDS(distance_df, file.path(panel_rsdp_imp_dir, DATASET_TYPE, "individual_datasets", "ma1_travel_times_for_market_access_lineardist.Rds"))
-
-
+if(!file.exists(OUT_PATH_LD) | OVERWRITE_EXTRACTED_DATA){
+  
+  distance_df <- lapply(1:nrow(woreda_points), function(i){
+    if((i %% 100) %in% 0) print(i)
+    
+    distance <- gDistance(woreda_points[i,],
+                          woreda_points,
+                          byid=T) %>% 
+      as.vector()
+    
+    df_out <- data.frame(dest_uid = woreda_points$cell_id,
+                         distance = distance)
+    
+    df_out$orig_uid <- woreda_points$cell_id[i]
+    return(df_out)
+  }) %>% 
+    bind_rows %>%
+    as.data.table()
+  
+  saveRDS(distance_df, OUT_PATH_LD)
+}
 
 
 

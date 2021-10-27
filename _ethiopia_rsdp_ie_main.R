@@ -58,7 +58,7 @@ OVERWRITE_EXTRACTED_DATA <- F
 
 # Computing travel time between units for market access takes a particularly
 # long time; whether to skip
-SKIP_MA_COMPUTE_TT <- F
+SKIP_MA_COMPUTE_TT <- T
 
 ##### WHETHER TO DELETE PROCESSED FILES
 
@@ -219,16 +219,16 @@ if(RUN_CODE){
   # for distance to roads, a separate dataset for average nighttime lights, etc.
   # In a later step, these datasets are merged together.
   
+  ## Process Kebeles
+  DATASET_TYPE <- "kebele"
+  source(file.path(extract_data_code_dir, "_extract_data_main.R"))
+  
   ## Process grid; grid across all of Ethiopia
   DATASET_TYPE <- "dmspols_grid_ethiopia"
   source(file.path(extract_data_code_dir, "_extract_data_main.R"))
   
   ## Process grid; grids within 10km of a road
   DATASET_TYPE <- "dmspols_grid_nearroad"
-  source(file.path(extract_data_code_dir, "_extract_data_main.R"))
-  
-  ## Process Kebeles
-  DATASET_TYPE <- "kebele"
   source(file.path(extract_data_code_dir, "_extract_data_main.R"))
   
   ## Process Woreda
