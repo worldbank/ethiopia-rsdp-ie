@@ -25,7 +25,8 @@ if(OVERWRITE_EXTRACTED_DATA){
 for(year in 1996:2016){ # 1996:2016
   for(uids_i in orig_uids_list){
     
-    OUT_PATH <- file.path(panel_rsdp_imp_dir, DATASET_TYPE, "individual_datasets", paste0("ma2_market_access_",year,"_uidgroup",uids_i[1],".Rds"))    
+    OUT_PATH <- file.path(panel_rsdp_imp_dir, DATASET_TYPE, "individual_datasets", 
+                          paste0("ma2_market_access_",year,"_uidgroup",uids_i[1],".Rds"))    
     
     print(paste0(year, " ", uids_i[1], "/", max(unlist(orig_uids_list))))
     
@@ -87,15 +88,9 @@ for(year in 1996:2016){ # 1996:2016
       # Pop Divided by TT ------------------------------------------------------------
       location_traveltimes <- location_traveltimes %>%
         dplyr::rename(
-          ## y_vars
           pop = dest_pop2000,
           poplog = dest_poplog2000,
-          #  ntl = dest_ntl1996,
-          # gcu = dest_gc_urban1996,
-          
-          ## tt_var
-          tt = travel_time#,
-          #ic = iceberg_cost
+          tt = travel_time
         )
       
       for(y_var in c("pop", "poplog")){
@@ -145,11 +140,10 @@ for(year in 1996:2016){ # 1996:2016
         return(MA_df_out)
       }
       
-      
       MA_all_df <- calc_MA(location_traveltimes, "")
       
       for(dist in c(10, 20, 50, 100)){
-        print(dist)
+        print(paste0(dist, "km"))
         
         MA_all_df <- calc_MA(location_traveltimes %>%
                                dplyr::filter(distance > dist*1000), 
@@ -159,8 +153,8 @@ for(year in 1996:2016){ # 1996:2016
         
       }
       
-      # Export -----------------------------------------------------------------------
-      saveRDS(MA_all_df, file.path(panel_rsdp_imp_dir, DATASET_TYPE, "individual_datasets", paste0("ma2_market_access_",year,"_uidgroup",uids_i[1],".Rds")))
+      # Export ------------------------------------------------------------------
+      saveRDS(MA_all_df, OUT_PATH)
       
       rm(location_traveltimes)
       gc(); gc()
