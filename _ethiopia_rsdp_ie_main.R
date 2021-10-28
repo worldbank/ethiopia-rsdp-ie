@@ -47,7 +47,7 @@ paper_tables <- file.path(project_dir, "Output", "Tables")
 ##### EXTRACT DATA TO DATASET PARAMETERS
 
 ## Whether to run code for creating unit level datasets 
-CREATE_UNIT_LEVEL_DATASET <- T
+CREATE_UNIT_LEVEL_DATASET <- F
 
 # Whether to run code for extracting data to unit level datasets
 EXTRACT_DATA <- T
