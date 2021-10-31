@@ -28,13 +28,6 @@ woreda$woreda_dmspols96_max <- dmsp96$extract(sp=woreda_wgs84,
 #### Woreda NTL Groupings
 ntl_values_pos <- woreda$woreda_dmspols96_max[woreda$woreda_dmspols96_max > 0]
 
-## 2 bins (above/below median)
-ntl_values_pos_med <- median(ntl_values_pos)
-
-woreda$wor_ntlgroup_2bin <- NA
-woreda$wor_ntlgroup_2bin[woreda$woreda_dmspols96_max >= ntl_values_pos_med] <- 2
-woreda$wor_ntlgroup_2bin[woreda$woreda_dmspols96_max < ntl_values_pos_med] <- 1
-
 ## 4 bins
 ntl_values_pos_q2 <- quantile(ntl_values_pos, c(1/3, 2/3))
 
@@ -43,6 +36,12 @@ woreda$wor_ntlgroup_4bin[woreda$woreda_dmspols96_max < ntl_values_pos_q2[1]] <- 
 woreda$wor_ntlgroup_4bin[woreda$woreda_dmspols96_max >= ntl_values_pos_q2[1]] <- 3
 woreda$wor_ntlgroup_4bin[woreda$woreda_dmspols96_max > ntl_values_pos_q2[2]] <- 4
 woreda$wor_ntlgroup_4bin[woreda$woreda_dmspols96_max %in% 0:1] <- 1
+
+## 2 bins (dark vs lit)
+woreda$wor_ntlgroup_2bin <- as.numeric(woreda$wor_ntlgroup_4bin %in% c(2,3,4))
+
+#### ID
+woreda$cell_id <- 1:nrow(woreda)
 
 # Export -----------------------------------------------------------------------
 saveRDS(woreda, file.path(woreda_dir, "FinalData", "woreda.Rds"))

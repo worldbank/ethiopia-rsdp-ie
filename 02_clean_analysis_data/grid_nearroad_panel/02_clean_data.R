@@ -15,7 +15,6 @@
 # fully within a chunk
 
 #### Parameters
-NEAR_CUTOFF <- 5 * 1000     # meters distance for "close to road"
 ALL_YEARS_IMPROVED_VAR <- F # add variables indicate 2nd and 3rd year of treatment
 CHUNK_SIZE <- 200           # number of woredas in each chunk
 
@@ -69,7 +68,7 @@ data_all$dmspols_harmon_ihs2013[data_all$year > 2013] <- NA
 # Set Up Loop Over Chunks ------------------------------------------------------
 
 ## Delete previous temp files
-file.path(panel_rsdp_imp_data_file_path, "dmspols_grid_nearroad", "merged_datasets", "temp_datasets") %>%
+file.path(panel_rsdp_imp_dir, "dmspols_grid_nearroad", "merged_datasets", "temp_datasets") %>%
   list.files(full.names = T) %>%
   lapply(function(file) file.remove(file))
 

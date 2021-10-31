@@ -72,6 +72,9 @@ DELETE_PROCESSED_FILES <- F
 # Ethiopia UTM
 UTM_ETH <- '+init=epsg:20138'
 
+# Meters distance for "close to road"
+NEAR_CUTOFF <- 5 * 1000     
+
 # Packages ---------------------------------------------------------------------
 library(AER)
 library(did)
@@ -236,8 +239,7 @@ if(RUN_CODE){
   source(file.path(extract_data_code_dir, "_extract_data_main.R"))
   
   # 2. Clean Analysis Data =====================================================
-  clean_data_code_dir
-  
+
   #### Panel Data
   
   ## Grid - Panel

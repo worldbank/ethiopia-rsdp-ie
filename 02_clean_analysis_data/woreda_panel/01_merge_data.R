@@ -39,8 +39,8 @@ DATASETS_TIME_VARYING <- c(#"viirs.Rds",
                            "temperature.Rds",
                            "precipitation.Rds",
                            "road_length.Rds",
-                           "ndvi.Rds",
-                           "ma2_market_access.Rds", #TODO: Should this be ma3_market_access.Rds?
+                           #"ndvi.Rds",
+                           "ma3_market_access.Rds", #TODO: Should this be ma3_market_access.Rds?
                            "globcover.Rds",
                            #"dmspols.Rds",
                            "dmspolsharmon.Rds",

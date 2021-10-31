@@ -5,9 +5,9 @@
 
 # Load Data --------------------------------------------------------------------
 #### Woredas
-woreda <- readOGR(file.path(woreda_dir, "RawData", "Ethioworeda.shp"))
-woreda <- spTransform(woreda, CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
-woreda$cell_id <- 1:nrow(woreda)
+woreda <- readRDS(file.path(woreda_dir, "FinalData", "woreda.Rds"))
+#woreda <- spTransform(woreda, CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+woreda <- spTransform(woreda, CRS(UTM_ETH))
 
 woreda_blank <- woreda
 woreda_blank@data <- woreda@data %>%
@@ -42,25 +42,20 @@ woreda_clean <- lapply(1:nrow(woreda_blank), function(i){
   
   roads_1km_buff_i <- raster::intersect(roads_1km_buff, woreda_blank_i)
   
-  # Catch errors in removing roads from polygons. An error occurs when, through
-  # this process, no part of the woreda is left. If that occurs, we return NULL,
-  # so that polygon is excluded
-  woreda_blank_i_e <- woreda_blank_i # default to blank road
-  tryCatch({  
+  # If doesn't intersect with any roads, keep whole woreda
+  if(is.null(roads_1km_buff_i)){ 
+    woreda_blank_i_e <- woreda_blank_i
     
-    # If doesn't intersect with any roads, keep whole woreda
-    if(is.null(roads_1km_buff_i)){ 
+    # If does intersect with roads, cut out the road
+  } else{
+    woreda_blank_i_e <- erase(woreda_blank_i, roads_1km_buff_i)
+    
+    # Check if fully removes polygon; if does, use full Woreda
+    if(nrow(woreda_blank_i_e) %in% 0){
       woreda_blank_i_e <- woreda_blank_i
-      
-      # If does intersect with roads, cut out the road
-    } else{
-      woreda_blank_i_e <- erase(woreda_blank_i, roads_1km_buff_i)
     }
     
-    return(woreda_blank_i_e)
-  }, 
-  error = function(e) return(NULL)
-  )
+  }
   
   return(woreda_blank_i_e)
   
