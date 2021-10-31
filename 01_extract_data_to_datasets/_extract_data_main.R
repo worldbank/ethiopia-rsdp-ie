@@ -131,7 +131,8 @@ if(EXTRACT_DATA){
   # aren't needed for full grid and take a while to run 
   if(DATASET_TYPE == "dmspols_grid_ethiopia"){
     scripts_to_rm <- c("extract_gpw.R", 
-                       "extract_distance_roads_improved_by_speedlimit_after.R") %>%
+                       "extract_distance_roads_improved_by_speedlimit_after.R",
+                       "extract_distance_roads_by_speedlimit.R") %>%
       paste(collapse = "|")
     
     scripts <- scripts[!grepl(scripts_to_rm, scripts)]

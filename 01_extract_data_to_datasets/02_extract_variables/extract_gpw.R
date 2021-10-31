@@ -10,17 +10,23 @@ gpw <- crop(gpw, sdf)
 # Add woreda population from gpw. First, use geometry, then centroid. If population
 # from geometry is NA, then use centroid
 
-## Population using geometry
-gpw <- crop(gpw, sdf)
-sdf$pop_geom <- velox(gpw)$extract(sp = sdf, fun = function(x) sum(x, na.rm=T)) %>% as.vector()
-
-## Population using centroid
-# Use when geometry returns NA
-sdf_pop_centroid <- gCentroid(sdf, byid=T)
-sdf$pop_centroid <- raster::extract(gpw, sdf_pop_centroid)
-
-## If population using geometry is NA, use from centroid
-sdf$pop_geom[is.na(sdf$pop_geom)] <- sdf$pop_centroid[is.na(sdf$pop_geom)]
+if(grepl("grid", DATASET_TYPE)){
+  sdf$pop_geom <- raster::extract(gpw, sdf) %>% as.numeric()
+  
+} else {
+  
+  sdf$pop_geom <- velox(gpw)$extract(sp = sdf, fun = function(x) sum(x, na.rm=T), 
+                                     small = T) %>% 
+    as.vector()
+  
+  ## Population using centroid
+  # Use when geometry returns NA
+  sdf_pop_centroid <- gCentroid(sdf, byid=T)
+  sdf$pop_centroid <- raster::extract(gpw, sdf_pop_centroid)
+  
+  ## If population using geometry is NA, use from centroid
+  sdf$pop_geom[is.na(sdf$pop_geom)] <- sdf$pop_centroid[is.na(sdf$pop_geom)]
+}
 
 ## Cleanup
 sdf@data <- sdf@data %>%

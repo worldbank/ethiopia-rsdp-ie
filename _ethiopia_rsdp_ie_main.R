@@ -58,7 +58,7 @@ OVERWRITE_EXTRACTED_DATA <- F
 
 # Computing travel time between units for market access takes a particularly
 # long time; whether to skip
-SKIP_MA_COMPUTE_TT <- T
+SKIP_MA_COMPUTE_TT <- F
 
 ##### WHETHER TO DELETE PROCESSED FILES
 
