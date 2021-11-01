@@ -28,9 +28,9 @@ DATASETS_TIME_INVARIANT <- c("woreda_details.Rds",
                              "distance_roads_by_rsdp_phase.Rds",
                              "distance_roads_any_improved_ever.Rds",
                              "distance_roads_any_2016_ever.Rds",
-                             "distance_hypothetical_road_least_cost_mst.Rds",
+                             #"distance_hypothetical_road_least_cost_mst.Rds",
                              "distance_rsdp_iii_roads_mst_and_targetted_areas.Rds",
-                             "distance_rsdp_iv_roads_mst_and_targetted_areas.Rds",
+                             #"distance_rsdp_iv_roads_mst_and_targetted_areas.Rds",
                              #"distance_cities.Rds",
                              "gpw.Rds",
                              "area.Rds")
@@ -46,7 +46,7 @@ DATASETS_TIME_VARYING <- c(#"viirs.Rds",
                            "dmspolsharmon.Rds",
                            #"dmspols_intercalibrated_zhang.Rds",
                            #"distance_roads_improved_by_speedlimit_before.Rds",
-                           "distance_roads_improved_by_speedlimit_after.Rds",
+                           #"distance_roads_improved_by_speedlimit_after.Rds",
                            "distance_roads_by_speedlimit.Rds")
 
 # Merge ------------------------------------------------------------------------

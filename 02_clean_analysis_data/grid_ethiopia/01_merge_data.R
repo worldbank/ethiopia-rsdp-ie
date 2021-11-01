@@ -20,13 +20,13 @@ points_all <- points_all[points_all$year %in% YEARS_USE,]
 #  -- time varying (merge by cell_id and year)
 
 DATASETS_TIME_INVARIANT <- c("distance_roads_any_improved_ever.Rds",
-                             "distance_roads_any_improved_by2012.Rds",
-                             "distance_roads_any_2012_ever.Rds",
+                             #"distance_roads_any_improved_by2012.Rds",
+                             #"distance_roads_any_2012_ever.Rds",
                              "distance_roads_any_2016_ever.Rds",
                              "distance_rsdp_iii_roads_mst_and_targetted_areas.Rds",
-                             "distance_cities.Rds",
-                             "adm_units.Rds",
-                             "ddistance_woreda_populous_location.Rds")
+                             "distance_addis.Rds",
+                             "adm_units.Rds")
+# "ddistance_woreda_populous_location.Rds"
 
 DATASETS_TIME_VARYING <- c("temperature.Rds",
                            "precipitation.Rds",

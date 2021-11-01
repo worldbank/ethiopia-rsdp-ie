@@ -254,6 +254,10 @@ if(RUN_CODE){
   source(file.path(clean_data_code_dir, "woreda_panel", "01_merge_data.R"))
   source(file.path(clean_data_code_dir, "woreda_panel", "02_clean_data.R"))
   
+  ## Grid - All Ethiopia
+  source(file.path(clean_data_code_dir, "grid_ethiopia", "01_merge_data.R"))
+  source(file.path(clean_data_code_dir, "grid_ethiopia", "02_clean_data.R"))
+  
   #### Long Difference
   
   ## Kebele - Long Difference
@@ -261,6 +265,9 @@ if(RUN_CODE){
   
   ## Woreda - Long Difference
   source(file.path(clean_data_code_dir, "woreda_longdifference", "01_clean_data.R"))
+  
+  ## Grid/All Ethiopia - Long Difference
+  source(file.path(clean_data_code_dir, "grid_ethiopia_longdifference", "01_clean_data.R"))
   
   # 3. Analysis, Tables and Figures ============================================
   
@@ -281,6 +288,15 @@ if(RUN_CODE){
   # FIGURE 3 / S9,S10: MST Maps
   source(file.path(analysis_code_dir, "figure_mst_map.R"))
   source(file.path(analysis_code_dir, "figure_mst_map_regional.R"))
+  
+  # Diff-in-Diff ---------------------------------------------------------------
+  did_code_dir <- file.path(analysis_code_dir, "analysis_did")
+  
+  # MA Long Diff: Regressions and tables
+  source(file.path(did_code_dir, "01_gt_did_results.R"))
+  
+  # MA Levels: Regressions and tables
+  source(file.path(did_code_dir, "02_gt_did_figures.R"))
   
   # TWFE -----------------------------------------------------------------------
   twfe_code_dir <- file.path(analysis_code_dir, "analysis_twfe")
@@ -307,15 +323,6 @@ if(RUN_CODE){
   
   # MA Levels: Regressions and tables
   source(file.path(ma_code_dir, "ma_analysis_levels.R"))
-  
-  # Diff-in-Diff ---------------------------------------------------------------
-  did_code_dir <- file.path(analysis_code_dir, "analysis_did")
-  
-  # MA Long Diff: Regressions and tables
-  source(file.path(did_code_dir, "01_gt_did_results.R"))
-  
-  # MA Levels: Regressions and tables
-  source(file.path(did_code_dir, "02_gt_did_figures.R"))
   
   # SI -------------------------------------------------------------------------
   

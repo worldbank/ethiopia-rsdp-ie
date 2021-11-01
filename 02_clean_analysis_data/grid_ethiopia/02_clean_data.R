@@ -22,13 +22,13 @@ data <- data %>%
                 far_addis = as.numeric(distance_city_addisababa >= 100*1000),
                 
                 near_anyimproved_ever_5km = as.numeric(distance_anyimproved_ever <= 5*1000),
-                near_anyimproved_by2012_5km = as.numeric(distance_anyimproved_by2012 <= 5*1000),
+                #near_anyimproved_by2012_5km = as.numeric(distance_anyimproved_by2012 <= 5*1000),
                 
-                near_anyroad2012_5km = as.numeric(distance_anyroad2012 <= 5*1000),
+                #near_anyroad2012_5km = as.numeric(distance_anyroad2012 <= 5*1000),
                 near_anyroad2016_5km = as.numeric(distance_anyroad2016 <= 5*1000),
                 
-                near_mst_5km = as.numeric(distance_mst <= 5*1000),
-                near_mst_mindist_5km = as.numeric(distance_mst_mindist <= 5*1000),
+                #near_mst_5km = as.numeric(distance_mst <= 5*1000),
+                #near_mst_mindist_5km = as.numeric(distance_mst_mindist <= 5*1000),
                 
                 endline = as.numeric(year %in% c(2012, 2016))) %>%
   dplyr::group_by(cell_id) %>%
