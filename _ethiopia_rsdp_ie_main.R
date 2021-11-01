@@ -313,16 +313,19 @@ if(RUN_CODE){
   # Long-Diff: IV --------------------------------------------------------------
   
   # Run Regressions and export tabkes
-  source(file.path(analysis_code_dir, "analysis_iv_longdiff", "iv_longdiff.R"))
+  source(file.path(analysis_code_dir, "analysis_iv_longdiff", "iv_longdiff_ntlgroups2.R"))
+  source(file.path(analysis_code_dir, "analysis_iv_longdiff", "iv_longdiff_ntlgroups4.R"))
   
   # Market Access --------------------------------------------------------------
   ma_code_dir <- file.path(analysis_code_dir, "analysis_ma")
   
   # MA Long Diff: Regressions and tables
-  source(file.path(ma_code_dir, "ma_analysis_longdiff.R"))
+  source(file.path(ma_code_dir, "ma_analysis_longdiff_ntlgroups2.R"))
+  source(file.path(ma_code_dir, "ma_analysis_longdiff_ntlgroups4.R"))
   
   # MA Levels: Regressions and tables
-  source(file.path(ma_code_dir, "ma_analysis_levels.R"))
+  source(file.path(ma_code_dir, "ma_analysis_levels_ntlgroups2.R"))
+  source(file.path(ma_code_dir, "ma_analysis_levels_ntlgroups4.R"))
   
   # SI -------------------------------------------------------------------------
   

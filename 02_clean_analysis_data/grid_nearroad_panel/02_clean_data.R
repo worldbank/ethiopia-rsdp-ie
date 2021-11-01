@@ -15,6 +15,7 @@
 # fully within a chunk
 
 #### Parameters
+NEAR_CUTOFF <- 5 * 1000
 ALL_YEARS_IMPROVED_VAR <- F # add variables indicate 2nd and 3rd year of treatment
 CHUNK_SIZE <- 200           # number of woredas in each chunk
 

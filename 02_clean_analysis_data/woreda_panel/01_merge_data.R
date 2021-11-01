@@ -31,7 +31,7 @@ DATASETS_TIME_INVARIANT <- c("woreda_details.Rds",
                              #"distance_hypothetical_road_least_cost_mst.Rds",
                              "distance_rsdp_iii_roads_mst_and_targetted_areas.Rds",
                              #"distance_rsdp_iv_roads_mst_and_targetted_areas.Rds",
-                             #"distance_cities.Rds",
+                             "distance_addis.Rds",
                              "gpw.Rds",
                              "area.Rds")
 

@@ -8,19 +8,19 @@ ALL_YEARS_IMPROVED_VAR <- F
 data <- readRDS(file.path(panel_rsdp_imp_dir, "woreda", "merged_datasets", "panel_data.Rds"))
 
 # Distance improved road -------------------------------------------------------
-data$distance_improvedroad <- apply(data[,paste0("distance_improvedroad_speedafter_",c(20,25,30,35,45,50,70,120))], 1, FUN = min_na)
-data$distance_improvedroad_50aboveafter <- apply(data[,paste0("distance_improvedroad_speedafter_",c(50,70,120))], 1, FUN = min_na)
-data$distance_improvedroad_below50after <- apply(data[,paste0("distance_improvedroad_speedafter_",c(20,25,30,35,45))], 1, FUN = min_na)
+#data$distance_improvedroad <- apply(data[,paste0("distance_improvedroad_speedafter_",c(20,25,30,35,45,50,70,120))], 1, FUN = min_na)
+#data$distance_improvedroad_50aboveafter <- apply(data[,paste0("distance_improvedroad_speedafter_",c(50,70,120))], 1, FUN = min_na)
+#data$distance_improvedroad_below50after <- apply(data[,paste0("distance_improvedroad_speedafter_",c(20,25,30,35,45))], 1, FUN = min_na)
 
 # Years Since / Post Improved Variables --------------------------------------
-roadimproved_df <- lapply(c("distance_improvedroad", 
-                            "distance_improvedroad_50aboveafter", 
-                            "distance_improvedroad_below50after"),
-                          generate_road_improved_variables, 
-                          data, 
-                          ALL_YEARS_IMPROVED_VAR,
-                          NEAR_CUTOFF) %>% bind_cols()
-data <- bind_cols(data, roadimproved_df)
+# roadimproved_df <- lapply(c("distance_improvedroad", 
+#                             "distance_improvedroad_50aboveafter", 
+#                             "distance_improvedroad_below50after"),
+#                           generate_road_improved_variables, 
+#                           data, 
+#                           ALL_YEARS_IMPROVED_VAR,
+#                           NEAR_CUTOFF) %>% bind_cols()
+# data <- bind_cols(data, roadimproved_df)
 
 # Road Variables ---------------------------------------------------------------
 # Variables for road length above Xkm in each year
