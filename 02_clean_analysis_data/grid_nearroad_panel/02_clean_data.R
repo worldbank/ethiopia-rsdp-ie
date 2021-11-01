@@ -126,16 +126,17 @@ for(start_i in start_ids){
   # Years Since / Post Improved Variables --------------------------------------
   roadimproved_df <- lapply(c("distance_improvedroad", 
                               "distance_improvedroad_50aboveafter", 
-                              "distance_improvedroad_below50after",
-                              "distance_road", 
-                              "distance_road_50above", 
-                              "distance_road_below50"),
+                              "distance_improvedroad_below50after"),
                             generate_road_improved_variables, 
                             data, 
                             ALL_YEARS_IMPROVED_VAR,
                             NEAR_CUTOFF) %>% bind_cols()
   data <- bind_cols(data, roadimproved_df)
-
+  
+  #"distance_road", 
+  #"distance_road_50above", 
+  #"distance_road_below50"
+  
   # Remove Stuff Don't Need ----------------------------------------------------
   # Reduces dataset size if grid dataset where need to trim size of dataset
   data$distance_city_popsize_3groups_g1 <- NULL
@@ -147,6 +148,27 @@ for(start_i in start_ids){
   data$viirs_mean_2 <- NULL
   data$viirs_mean_6 <- NULL
   data$viirs_median <- NULL
+  data$dmspols_harmon_2 <- NULL
+  data$dmspols_harmon_6 <- NULL
+  data$dmspols_harmon_10 <- NULL
+  data$dmspols_harmon_2_1996 <- NULL
+  data$dmspols_harmon_6_1996 <- NULL
+  data$dmspols_harmon_10_1996 <- NULL
+  data$distance_improvedroad <- NULL
+  data$distance_improvedroad_50aboveafter <- NULL
+  data$distance_improvedroad_below50after <- NULL
+  data$distance_road <- NULL
+  data$distance_road_50above <- NULL
+  data$distance_road_below50 <- NULL
+  data$year_road <- NULL
+  data$years_since_road <- NULL
+  data$post_road <- NULL
+  data$year_road_50above <- NULL
+  data$years_since_road_50above <- NULL
+  data$post_road_50above <- NULL
+  data$year_road_below50 <- NULL
+  data$years_since_road_below50 <- NULL
+  data$post_road_below50 <- NULL
   
   # Export Tmp Data ------------------------------------------------------------
   saveRDS(data, file.path(panel_rsdp_imp_dir, "dmspols_grid_nearroad", "merged_datasets", "temp_datasets", paste0("grid_data_clean_",start_i,".Rds")))
@@ -162,6 +184,8 @@ data_append <- file.path(panel_rsdp_imp_dir, "dmspols_grid_nearroad", "merged_da
   lapply(function(fpath){
     print(fpath)
     data_i <- readRDS(fpath) %>% data.table()
+    
+    return(data_i)
   }) %>%
   bind_rows() %>%
   as.data.frame()
