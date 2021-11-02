@@ -25,10 +25,8 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
     dep_var_vec <- c("globcover_urban", "globcover_cropland", "dmspols_harmon_ihs")
   } 
   
-  # Load Data --------------------------------------------------------------------
+  # Load Data ------------------------------------------------------------------
   data <- readRDS(file.path(panel_rsdp_imp_dir, dataset, "merged_datasets", "panel_data_clean.Rds"))
-  
-  data$ntl_group <- data$dmspols_harmon_1996_bin4 %>% as.character()
   
   for(dep_var in dep_var_vec){
     for(indep_var in c("years_since_improvedroad", "years_since_improvedroad_50aboveafter", "years_since_improvedroad_below50after")){
@@ -48,7 +46,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                 next
               }
               
-              ## Check if exists  
+              ## Check if model already estimated ------------------------------  
               filename <- paste0("twowayFE_", 
                                  dataset, "-", 
                                  dep_var, "-", 
@@ -66,7 +64,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
               
               if(!file.exists(file) | OVERWRITE_FILES){
                 
-                ### Prep Data
+                # Prep Data ----------------------------------------------------
                 data_temp <- data
                 
                 if(ntl_num_groups %in% 2){
@@ -81,7 +79,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                 if(ntl_group %in% "3")        data_temp <- data_temp[data_temp$ntl_group %in% 3,]
                 if(ntl_group %in% "4")        data_temp <- data_temp[data_temp$ntl_group %in% 4,]
                 
-                ### Run model
+                # Run model ----------------------------------------------------
                 results_df_temp <- tryCatch({     
                   
                   paste(dep_var, "~", indep_var, controls, "| year + cell_id | 0 | woreda_id") %>%

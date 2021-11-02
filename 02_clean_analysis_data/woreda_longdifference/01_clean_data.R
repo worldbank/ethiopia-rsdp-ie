@@ -52,7 +52,8 @@ for(i in 1:nrow(base_end_df)){
                     contains("distance_rsdp123"),
                     ends_with("_pretnd96_92"),
                     cell_id, R_CODE, Z_CODE, Pop2007, 
-                    area_polygon, distance_city_addisababa)) 
+                    area_polygon, distance_city_addisababa,
+                    wor_ntlgroup_2bin)) 
   
   ## Merge
   data_clean <- merge(data_first_diff, data_time_invar, by = "cell_id")

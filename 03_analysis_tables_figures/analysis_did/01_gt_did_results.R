@@ -5,14 +5,14 @@
 # https://cran.r-project.org/web/packages/did/vignettes/did-basics.html
 
 #### Parameters
-OVERWRITE_FILES <- F
+OVERWRITE_FILES <- T
 
-# Load Data --------------------------------------------------------------------
 #dataset <- "clusters_of_ntlall"
 #dep_var <- "dmspols_harmon_ihs"
 #indep_var <- "year_improvedroad_50aboveafter"
 #ntl_group <- "high"
 
+# Loop through datasets, variables & subsets -----------------------------------
 for(dataset in c("kebele", "dmspols_grid_nearroad")){ # "dmspols_grid_nearroad"
   
   # Define Dependent Variables -------------------------------------------------
@@ -30,144 +30,176 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){ # "dmspols_grid_nearroad"
                        "year_improvedroad_below50after")){
       for(addis_distance in c("All", "Far")){
         for(ntl_num_groups in c(2,4)){
-          
-          if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "1", "2")
-          if(ntl_num_groups %in% 4) ntl_group_vec <- c("all", "1", "2", "3", "4")
-          
-          for(ntl_group in ntl_group_vec){
+          for(controls in c("none", "temp_precip")){
             
-            # Skip certain subsets ---------------------------------------------
-            # For road type, only calculate for all groups
-            if((indep_var %in% c("year_improvedroad_50aboveafter", "year_improvedroad_below50after")) &
-               (ntl_group != "all")){
-              next
-            }
+            if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "1", "2")
+            if(ntl_num_groups %in% 4) ntl_group_vec <- c("all", "1", "2", "3", "4")
             
-            # For road type, only calculate for all units / dont restrict by addis
-            if((indep_var %in% c("year_improvedroad_50aboveafter", "year_improvedroad_below50after")) &
-               (addis_distance == "Far")){
-              next
-            }
-            
-            # Analysis -----------------------------------------------------------
-            OUT_PATH_SUFFIX <- paste0(dataset, "_", 
-                                      dep_var, "_", 
-                                      indep_var, "_", 
-                                      addis_distance, "_numgroups", 
-                                      ntl_num_groups, "_group", 
-                                      ntl_group)
-            
-            file_to_check <- file.path(panel_rsdp_imp_dir,
-                                       "all_units",
-                                       "results_datasets",
-                                       "individual_datasets",
-                                       paste0("group_did_attgt_",OUT_PATH_SUFFIX, ".Rds"))
-            if(OVERWRITE_FILES | !file.exists(file_to_check)){
+            for(ntl_group in ntl_group_vec){
               
-              print(OUT_PATH_SUFFIX)
-              
-              # Load/Prep Data ---------------------------------------------------
-              data <- readRDS(file.path(panel_rsdp_imp_dir, dataset, "merged_datasets", "panel_data_clean.Rds"))
-              
-              if(ntl_num_groups %in% 2){
-                data$ntl_group <- data$wor_ntlgroup_2bin
-              } else{
-                data$ntl_group <- data$wor_ntlgroup_4bin
+              # Skip certain subsets ---------------------------------------------
+              # For road type, only calculate for all groups
+              if((indep_var %in% c("year_improvedroad_50aboveafter", "year_improvedroad_below50after")) &
+                 (ntl_group != "all")){
+                next
               }
               
-              cluster_var <- "woreda_id"
+              # For above/below 50km/hr roads, dont restrict by addis
+              if((indep_var %in% c("year_improvedroad_50aboveafter", "year_improvedroad_below50after")) &
+                 (addis_distance == "Far")){
+                next
+              }
               
-              data$dep_var   <- data[[dep_var]]
-              data$indep_var <- data[[indep_var]]
+              # Check if model already estimated ---------------------------------
+              OUT_PATH_SUFFIX <- paste0(dataset, "_", 
+                                        dep_var, "_", 
+                                        indep_var, "_", 
+                                        controls, "_",
+                                        addis_distance, "_numgroups", 
+                                        ntl_num_groups, "_group", 
+                                        ntl_group)
               
-              # Addis subset
-              if(addis_distance %in% "Far") data <- data[data$far_addis %in% 1,]
-              
-              ## If by ntl_group, subset by group
-              if(ntl_group %in% "1") data <- data[data$ntl_group %in% 1,]
-              if(ntl_group %in% "2") data <- data[data$ntl_group %in% 2,]
-              if(ntl_group %in% "3") data <- data[data$ntl_group %in% 3,]
-              if(ntl_group %in% "4") data <- data[data$ntl_group %in% 4,]
-              
-              ## Subset
-              data = data %>%
-                ungroup() %>%
-                dplyr::filter(year >= 1992,
-                              year <= 2018,
-                              !is.na(indep_var))
-              
-              # This way of selecting specific variables is robust to some names (ie, woreda_id)
-              # not being in all the datasets
-              data <- data[,names(data) %in% c("dep_var", "indep_var", "cell_id", "year", "woreda_id")]
-              
-              # Estimate Model ---------------------------------------------------
-              example_attgt <- att_gt(yname = "dep_var",
-                                      tname = "year",
-                                      idname = "cell_id",
-                                      gname = "indep_var",
-                                      xformla = ~1,
-                                      data = data,
-                                      control_group = "notyettreated",
-                                      clustervars = cluster_var,
-                                      print_details = T
-              )
-              
-              ## Aggregate ATTs
-              agg.simple.dynamic <- aggte(example_attgt, type = "dynamic")
-              p_dynamic <- ggdid(agg.simple.dynamic)
-              
-              agg.simple.group <- aggte(example_attgt, type = "group")
-              p_group <- ggdid(agg.simple.group)
-              
-              # Save Results -----------------------------------------------------
-              #### Figure
-              # TODO: Send figures to another place; or maybe just remove this? Remove later on!!
-              p_all <- ggarrange(p_dynamic, 
-                                 p_group,
-                                 nrow = 1)
-              
-              ggsave(p_all, filename = file.path(project_dir, "Output", "Figures", "did",
-                                                 paste0("did_attgt_", OUT_PATH_SUFFIX, ".png")),
-                     height = 3, width = 10)
-              
-              #### Dynamic
-              dynamic_df <- data.frame(time               = agg.simple.dynamic$egt,
-                                       att                = agg.simple.dynamic$att.egt,
-                                       se                 = agg.simple.dynamic$se.egt,
-                                       critical_value_95p = as.numeric(agg.simple.dynamic$crit.val.egt)) %>%
-                mutate(dataset = dataset,
-                       dep_var = dep_var,
-                       indep_var = indep_var,
-                       ntl_group = ntl_group,
-                       ntl_num_groups = ntl_num_groups,
-                       addis_distance = addis_distance)
-              
-              saveRDS(dynamic_df, 
-                      file.path(panel_rsdp_imp_dir,
-                                "all_units",
-                                "results_datasets",
-                                "individual_datasets",
-                                paste0("dynamic_did_attgt_",OUT_PATH_SUFFIX, ".Rds")))
-              
-              #### Group
-              group_df <- data.frame(group              = agg.simple.group$egt,
-                                     att                = agg.simple.group$att.egt,
-                                     se                 = agg.simple.group$se.egt,
-                                     critical_value_95p = as.numeric(agg.simple.group$crit.val.egt)) %>%
-                mutate(dataset = dataset,
-                       dep_var = dep_var,
-                       indep_var = indep_var,
-                       ntl_group = ntl_group,
-                       ntl_num_groups = ntl_num_groups,
-                       addis_distance = addis_distance)
-              
-              saveRDS(group_df, 
-                      file.path(panel_rsdp_imp_dir,
-                                "all_units",
-                                "results_datasets",
-                                "individual_datasets",
-                                paste0("group_did_attgt_",OUT_PATH_SUFFIX, ".Rds")))
-              
+              file_to_check <- file.path(panel_rsdp_imp_dir,
+                                         "all_units",
+                                         "results_datasets",
+                                         "individual_datasets",
+                                         paste0("group_did_attgt_",OUT_PATH_SUFFIX, ".Rds"))
+              if(OVERWRITE_FILES | !file.exists(file_to_check)){
+                
+                print(OUT_PATH_SUFFIX)
+                
+                # Load/Prep Data ---------------------------------------------------
+                data <- readRDS(file.path(panel_rsdp_imp_dir, dataset, "merged_datasets", "panel_data_clean.Rds"))
+                
+                if(ntl_num_groups %in% 2){
+                  data$ntl_group <- data$wor_ntlgroup_2bin
+                } else{
+                  data$ntl_group <- data$wor_ntlgroup_4bin
+                }
+                
+                cluster_var <- "woreda_id"
+                
+                data$dep_var   <- data[[dep_var]]
+                data$indep_var <- data[[indep_var]]
+                
+                ## Addis subset
+                if(addis_distance %in% "Far") data <- data[data$far_addis %in% 1,]
+                
+                ## If by ntl_group, subset by group
+                if(ntl_group %in% "1") data <- data[data$ntl_group %in% 1,]
+                if(ntl_group %in% "2") data <- data[data$ntl_group %in% 2,]
+                if(ntl_group %in% "3") data <- data[data$ntl_group %in% 3,]
+                if(ntl_group %in% "4") data <- data[data$ntl_group %in% 4,]
+                
+                ## Subset
+                data = data %>%
+                  ungroup() %>%
+                  dplyr::filter(year >= 1992,
+                                year <= 2018,
+                                !is.na(indep_var))
+                
+                # This way of selecting specific variables is robust to some names (ie, woreda_id)
+                # not being in all the datasets
+                if(controls %in% "none"){
+                  data <- data[,names(data) %in% c("dep_var", "indep_var", "cell_id", "year", "woreda_id")]
+                  
+                } else if (controls %in% "temp_precip"){
+                  data <- data[,names(data) %in% c("dep_var", "indep_var", "cell_id", "year", "woreda_id", 
+                                                   "temp_avg", "precipitation")]
+                  
+                  data <- data %>%
+                    dplyr::filter(!is.na(temp_avg),
+                                  !is.na(precipitation))
+                }
+                
+                # Estimate Model -----------------------------------------------
+                if(controls %in% "none"){
+                  example_attgt <- att_gt(yname = "dep_var",
+                                          tname = "year",
+                                          idname = "cell_id",
+                                          gname = "indep_var",
+                                          xformla = ~1,
+                                          data = data,
+                                          control_group = "notyettreated",
+                                          clustervars = cluster_var,
+                                          print_details = T
+                  )
+                } else if(controls %in% "temp_precip"){
+                  example_attgt <- att_gt(yname = "dep_var",
+                                          tname = "year",
+                                          idname = "cell_id",
+                                          gname = "indep_var",
+                                          xformla = ~temp_avg+precipitation,
+                                          data = data,
+                                          control_group = "notyettreated",
+                                          clustervars = cluster_var,
+                                          print_details = T
+                                          
+                  )
+                }
+                
+                ## Aggregate ATTs
+                agg.simple.dynamic <- aggte(example_attgt, type = "dynamic")
+                p_dynamic <- ggdid(agg.simple.dynamic)
+                
+                agg.simple.group <- aggte(example_attgt, type = "group")
+                p_group <- ggdid(agg.simple.group)
+                
+                # Save Results -----------------------------------------------------
+                #### Figure
+                # TODO: Send figures to another place; or maybe just remove this? Remove later on!!
+                p_all <- ggarrange(p_dynamic, 
+                                   p_group,
+                                   nrow = 1)
+                
+                ggsave(p_all, filename = file.path(project_dir, "Output", "Figures", "did",
+                                                   paste0("did_attgt_", OUT_PATH_SUFFIX, ".png")),
+                       height = 3, width = 10)
+                
+                #### Dynamic
+                dynamic_df <- data.frame(time               = agg.simple.dynamic$egt,
+                                         att                = agg.simple.dynamic$att.egt,
+                                         se                 = agg.simple.dynamic$se.egt,
+                                         critical_value_95p = as.numeric(agg.simple.dynamic$crit.val.egt)) %>%
+                  mutate(dataset = dataset,
+                         dep_var = dep_var,
+                         indep_var = indep_var,
+                         ntl_group = ntl_group,
+                         ntl_num_groups = ntl_num_groups,
+                         addis_distance = addis_distance,
+                         controls = controls)
+                
+                saveRDS(dynamic_df, 
+                        file.path(panel_rsdp_imp_dir,
+                                  "all_units",
+                                  "results_datasets",
+                                  "individual_datasets",
+                                  paste0("dynamic_did_attgt_",OUT_PATH_SUFFIX, ".Rds")))
+                
+                #### Group
+                group_df <- data.frame(group              = agg.simple.group$egt,
+                                       att                = agg.simple.group$att.egt,
+                                       se                 = agg.simple.group$se.egt,
+                                       critical_value_95p = as.numeric(agg.simple.group$crit.val.egt)) %>%
+                  mutate(dataset = dataset,
+                         dep_var = dep_var,
+                         indep_var = indep_var,
+                         ntl_group = ntl_group,
+                         ntl_num_groups = ntl_num_groups,
+                         addis_distance = addis_distance,
+                         controls = controls)
+                
+                saveRDS(group_df, 
+                        file.path(panel_rsdp_imp_dir,
+                                  "all_units",
+                                  "results_datasets",
+                                  "individual_datasets",
+                                  paste0("group_did_attgt_",OUT_PATH_SUFFIX, ".Rds")))
+                
+                ## Cleanup
+                rm(example_attgt)
+                gc()
+              }
             }
           }
         }

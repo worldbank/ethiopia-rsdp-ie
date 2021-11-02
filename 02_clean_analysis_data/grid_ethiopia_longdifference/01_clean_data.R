@@ -50,7 +50,8 @@ for(i in 1:nrow(base_end_df)){
                     contains("distance_rsdp123"),
                     contains("distance_anyimproved"),
                     contains("distance_anyroad"),
-                    cell_id, woreda_id, R_CODE, Z_CODE, distance_city_addisababa))
+                    cell_id, woreda_id, R_CODE, Z_CODE, distance_city_addisababa,
+                    wor_ntlgroup_2bin))
   
   ## Merge
   data_clean <- merge(data_first_diff, data_time_invar, by = "cell_id")
