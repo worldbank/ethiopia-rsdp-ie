@@ -105,18 +105,18 @@ for(rsdp_type in c("rsdp123")){
   lm_globcover_urban_g <- as.formula(paste("dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log | 0 | 0 | ", "cluster_var")) %>% felm(data = df_grid)
   lm_globcover_crop_g  <- as.formula(paste("dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log | 0 | 0 | ", "cluster_var")) %>% felm(data = df_grid)
   
-  lm_dmspols_ihs_basentl_g     <- as.formula(paste("dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + wor_ntlgroup_2bin | 0 | 0 | ", "cluster_var")) %>% felm(data = df_grid)
-  lm_globcover_urban_basentl_g <- as.formula(paste("dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + wor_ntlgroup_2bin | 0 | 0 | ", "cluster_var")) %>% felm(data = df_grid)
-  lm_globcover_crop_basentl_g  <- as.formula(paste("dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + wor_ntlgroup_2bin | 0 | 0 | ", "cluster_var")) %>% felm(data = df_grid)
+  lm_dmspols_ihs_basentl_g     <- as.formula(paste("dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin | 0 | 0 | ", "cluster_var")) %>% felm(data = df_grid)
+  lm_globcover_urban_basentl_g <- as.formula(paste("dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin | 0 | 0 | ", "cluster_var")) %>% felm(data = df_grid)
+  lm_globcover_crop_basentl_g  <- as.formula(paste("dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin | 0 | 0 | ", "cluster_var")) %>% felm(data = df_grid)
   
   ## Kebele
   lm_dmspols_ihs_k     <- as.formula(paste("dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
   lm_globcover_urban_k <- as.formula(paste("dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
   lm_globcover_crop_k  <- as.formula(paste("dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
   
-  lm_dmspols_ihs_basentl_k     <- as.formula(paste("dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + wor_ntlgroup_2bin | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
-  lm_globcover_urban_basentl_k <- as.formula(paste("dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + wor_ntlgroup_2bin | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
-  lm_globcover_crop_basentl_k  <- as.formula(paste("dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + wor_ntlgroup_2bin | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
+  lm_dmspols_ihs_basentl_k     <- as.formula(paste("dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
+  lm_globcover_urban_basentl_k <- as.formula(paste("dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
+  lm_globcover_crop_basentl_k  <- as.formula(paste("dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
   
   # MST - Cost Distance --------------------------------------------------------
   ## Grid
