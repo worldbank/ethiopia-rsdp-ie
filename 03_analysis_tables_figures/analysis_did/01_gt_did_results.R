@@ -5,7 +5,7 @@
 # https://cran.r-project.org/web/packages/did/vignettes/did-basics.html
 
 #### Parameters
-OVERWRITE_FILES <- T
+OVERWRITE_FILES <- F
 
 #dataset <- "clusters_of_ntlall"
 #dep_var <- "dmspols_harmon_ihs"
@@ -32,7 +32,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){ # "dmspols_grid_nearroad"
         for(ntl_num_groups in c(2,4)){
           for(controls in c("none", "temp_precip")){
             
-            if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "1", "2")
+            if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "0", "1")
             if(ntl_num_groups %in% 4) ntl_group_vec <- c("all", "1", "2", "3", "4")
             
             for(ntl_group in ntl_group_vec){
