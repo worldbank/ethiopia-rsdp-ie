@@ -36,8 +36,8 @@ clean_data_code_dir   <- file.path(code_dir, "02_clean_analysis_data")
 analysis_code_dir     <- file.path(code_dir, "03_analysis_tables_figures")
 
 ## For Tables/Figures
-#paper_figures <- file.path(overleaf_dir, "Figures")
-#paper_tables <- file.path(overleaf_dir, "Tables")
+paper_figures <- file.path(overleaf_dir, "Figures")
+paper_tables <- file.path(overleaf_dir, "Tables")
 
 paper_figures <- file.path(project_dir, "Output", "Figures")
 paper_tables <- file.path(project_dir, "Output", "Tables")

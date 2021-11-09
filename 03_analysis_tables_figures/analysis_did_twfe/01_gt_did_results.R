@@ -13,7 +13,7 @@ OVERWRITE_FILES <- F
 #ntl_group <- "high"
 
 # Loop through datasets, variables & subsets -----------------------------------
-for(dataset in c("kebele", "dmspols_grid_nearroad")){ # "dmspols_grid_nearroad"
+for(dataset in c("kebele", "dmspols_grid_nearroad")){ 
   
   # Define Dependent Variables -------------------------------------------------
   if(dataset %in% "kebele"){
@@ -30,7 +30,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){ # "dmspols_grid_nearroad"
                        "year_improvedroad_below50after")){
       for(addis_distance in c("All", "Far")){
         for(ntl_num_groups in c(2,4)){
-          for(controls in c("none", "temp_precip")){
+          for(controls in c("none")){ # temp_precip
             
             if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "0", "1")
             if(ntl_num_groups %in% 4) ntl_group_vec <- c("all", "1", "2", "3", "4")
@@ -86,6 +86,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){ # "dmspols_grid_nearroad"
                 if(addis_distance %in% "Far") data <- data[data$far_addis %in% 1,]
                 
                 ## If by ntl_group, subset by group
+                if(ntl_group %in% "0") data <- data[data$ntl_group %in% 0,]
                 if(ntl_group %in% "1") data <- data[data$ntl_group %in% 1,]
                 if(ntl_group %in% "2") data <- data[data$ntl_group %in% 2,]
                 if(ntl_group %in% "3") data <- data[data$ntl_group %in% 3,]

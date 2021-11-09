@@ -34,15 +34,21 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
         for(addis_distance in c("All", "Far")){
           for(ntl_num_groups in c(2,4)){
             
-            if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "1", "2")
+            if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "0", "1")
             if(ntl_num_groups %in% 4) ntl_group_vec <- c("all", "1", "2", "3", "4")
             
             for(ntl_group in ntl_group_vec){
-              #for(ntl_group in c("All", "1", "2")){
-              
+
+              # Skip certain subsets ---------------------------------------------
               # For road type, only calculate for all groups
               if((indep_var %in% c("year_improvedroad_50aboveafter", "year_improvedroad_below50after")) &
                  (ntl_group != "all")){
+                next
+              }
+              
+              # For above/below 50km/hr roads, dont restrict by addis
+              if((indep_var %in% c("year_improvedroad_50aboveafter", "year_improvedroad_below50after")) &
+                 (addis_distance == "Far")){
                 next
               }
               
