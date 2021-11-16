@@ -1,5 +1,1 @@
-# Variables
-
-## 02_extract_variables_grid_specific
-
-* __extract_adm_units:__ Determine which adm unit cell falls in and extract population of that adm
+# Replication Package for: The Impact of Ethiopia's Road Sector Development Program: Evidence from Satellite Data
