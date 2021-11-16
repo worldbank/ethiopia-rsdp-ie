@@ -1,4 +1,5 @@
-# The Impact of Ethiopia's Road Sector Development Program: Evidence from Satellite Data
+# The Impact of Ethiopia's Road Investment Program on Economic Development and 
+# Land Use: Evidence from Satellite Data
 # Main R Script
 
 # OUTLINE
@@ -52,11 +53,11 @@ clean_data_code_dir   <- file.path(code_dir, "02_clean_analysis_data")
 analysis_code_dir     <- file.path(code_dir, "03_analysis_tables_figures")
 
 ## For Tables/Figures
-paper_figures <- file.path(overleaf_dir, "Figures")
-paper_tables  <- file.path(overleaf_dir, "Tables")
+#paper_figures <- file.path(overleaf_dir, "Figures")
+#paper_tables  <- file.path(overleaf_dir, "Tables")
 
-#paper_figures <- file.path(project_dir, "Output", "Figures")
-#paper_tables  <- file.path(project_dir, "Output", "Tables")
+paper_figures <- file.path(project_dir, "Output", "Figures")
+paper_tables  <- file.path(project_dir, "Output", "Tables")
 
 # 2. Settings ------------------------------------------------------------------
 # The below settings define which code to run. Time estimates are given, which
@@ -71,7 +72,7 @@ RUN_CODE <- T
 # and skips code for estimating difference-in-difference & TWFE models (this 
 # script takes a long time (1+ week), and saves data that is used to generate
 # the figures). 
-# TIME: Only generating figures & tables takes less than 1 hour
+# TIME: Only generating figures & tables takes ~1 hour to run
 ONLY_GEN_FIGURES_TABLES <- T
 
 ##### EXTRACT DATA TO DATASET PARAMETERS - - - - - - - - - - - - - - - - - - - -
@@ -81,15 +82,15 @@ ONLY_GEN_FIGURES_TABLES <- T
 OVERWRITE_EXTRACTED_DATA <- F 
 
 # Whether to run code for creating unit level datasets. 
-# Takes less than 1 hour to run.
+# TIME: Takes less than 1 hour to run.
 CREATE_UNIT_LEVEL_DATASET <- T
 
 # Whether to run code for extracting data to unit level datasets. 
-# Takes ~1+ day to run
+# TIME: Takes ~1+ day to run
 EXTRACT_DATA <- T
 
 # Computing travel time between units for calculating market access.
-# Takes 3+ days to run
+# TIME: Takes 3+ days to run
 SKIP_MA_COMPUTE_TT <- T
 
 ##### WHETHER TO DELETE PROCESSED FILES - - - - - - - - - -  - - - - - - - - - - 
@@ -107,64 +108,68 @@ DELETE_PROCESSED_FILES <- F
 UTM_ETH <- '+init=epsg:20138'
 
 # Meters distance for "close to road"
-NEAR_CUTOFF <- 5 * 1000     
+NEAR_CUTOFF <- 5000 # meters    
 
 # 4. Packages ------------------------------------------------------------------
-#library(devtools)
-#install_github("hunzikp/velox")
-#devtools::install_github("zeehio/facetscales")
+#### Install select packages from Github
+if(!require("velox"))       install_github("hunzikp/velox")
+if(!require("facetscales")) install_github("zeehio/facetscales")
 
-library(AER)
-library(estimatr)
-library(labelled)
-library(clusterSEs)
-library(rgdal)
-library(raster)
-library(terra)
-library(velox)
-library(rgeos)
-library(parallel)
-library(pbmcapply)
-library(haven)
-library(spex)
-library(RColorBrewer)
-library(sf)
-library(tidyr)
-library(lfe)
-library(reshape)
-library(dplyr)
-library(tibble)
-library(ggplot2)
-library(data.table)
-library(coefplot)
-library(stringr)
-library(spdep)
-library(doBy)
-library(stargazer)
-library(scales)
-library(rasterVis)
-library(ggpubr)
-library(readr)
-library(gdistance)
-library(shp2graph)
-library(riverplot)
-library(leaflet)
-library(TTR)
-library(tidyselect)
-library(dvmisc)
-library(purrr)
-library(viridis)
-library(wesanderson)
-library(hrbrthemes)
-library(spatialEco)
-library(did)
-library(facetscales)
+#### Packages from CRAN
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load(AER, 
+               clusterSEs,
+               coefplot,
+               data.table,
+               devtools,
+               did,
+               doBy,
+               dplyr,
+               dvmisc,
+               estimatr,
+               facetscales,
+               gdistance,
+               ggplot2,
+               ggpubr,
+               haven,
+               hrbrthemes,
+               labelled,
+               leaflet,
+               lfe,
+               parallel,
+               pbmcapply,
+               purrr,
+               raster,
+               rasterVis,
+               RColorBrewer,
+               readr,
+               reshape,
+               rgdal,
+               rgeos,
+               riverplot,
+               scales,
+               sf,
+               shp2graph,
+               spatialEco,
+               spdep,
+               spex,
+               stargazer,
+               stringr,
+               terra,
+               tibble,
+               tidyr,
+               tidyselect,
+               TTR,
+               velox,
+               viridis,
+               wesanderson)
 
 # 5. User Defined Functions ----------------------------------------------------
 
 # Functions
 source("https://raw.githubusercontent.com/ramarty/fast-functions/master/R/functions_in_chunks.R")
 source(file.path(code_dir, "_functions", "clean_data_functions.R"))
+source(file.path(code_dir, "_functions", "update_iv_coef_name.R"))
 
 # 6. Delete Processed Files ----------------------------------------------------
 # Code to delete processed files; ie, data files that are created from the code.
@@ -352,7 +357,7 @@ if(RUN_CODE){
   source(file.path(ma_code_dir, "ma_analysis_levels_ntlgroups2.R"))
   source(file.path(ma_code_dir, "ma_analysis_levels_ntlgroups4.R"))
   
-  # **** SI --------------------------------------------------------------------
+  # **** Supplementary Information ---------------------------------------------
   
   ### SECTION: Road Improvements by Baseline Nighttime Lights
   
@@ -421,13 +426,3 @@ if(RUN_CODE){
   source(file.path(analysis_code_dir, "table_mst_n_units_near.R"))
   
 }
-
-
-
-
-
-
-
-
-
-

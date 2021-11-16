@@ -22,8 +22,6 @@ prep_data <- function(unit, log, theta, exclude){
   data$MA_var     <- data[[paste0("MA_pop2000_tt_theta",theta, log)]]
   data$MA_var_exc <- data[[paste0("MA_pop2000_tt_theta",theta,exclude, log)]]
   
-  data <- data[data$MA_var != Inf,] # CAN DELETE ME!
-  
   # 100km
   data$distance_city_addisababa <- data$distance_city_addisababa / 1000 / 100
   

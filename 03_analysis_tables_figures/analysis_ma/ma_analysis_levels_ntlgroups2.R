@@ -22,8 +22,6 @@ prep_data <- function(unit, log, theta, exclude){
   data$MA_var     <- data[[paste0("MA_pop2000_tt_theta",theta, log)]]
   data$MA_var_exc <- data[[paste0("MA_pop2000_tt_theta",theta,exclude, log)]]
   
-  data <- data[data$MA_var != Inf,] # CAN DELETE ME!
-  
   # 100km
   data$distance_city_addisababa <- data$distance_city_addisababa / 1000 / 100
   
@@ -33,7 +31,7 @@ prep_data <- function(unit, log, theta, exclude){
   data$MA_varXdistance_city_addisababa     <- data$MA_var * data$distance_city_addisababa
   data$MA_varXglobcover_urban_sum_ihs_1996 <- data$MA_var * data$globcover_urban_sum_ihs_1996
   
-  data$MA_varXwor_ntlgroup_2bin <- data$MA_var * data$wor_ntlgroup_2bin
+  data$MA_varXwor_ntlgroup_2bin            <- data$MA_var * data$wor_ntlgroup_2bin
   
   ## Interaction Vars - MA_exclude
   data$MA_var_excXdmspols_harmon_ihs_1996      <- data$MA_var_exc * data$dmspols_harmon_ihs_1996
@@ -48,7 +46,7 @@ prep_data <- function(unit, log, theta, exclude){
 
 # Regressions ------------------------------------------------------------------
 unit <- "kebeleworeda"
-#for(unit in c("woreda", "kebele")){ 
+
 for(log in c("_log")){
   for(theta in c("1","2","3_8","5","8")){ # 
     for(exclude in c("_exclude20km", "_exclude50km", "_exclude100km")){ 
@@ -57,23 +55,23 @@ for(log in c("_log")){
       data_woreda <- prep_data("woreda", log, theta, exclude)
       
       ## OLS - Kebele
-      ols1k <- felm(dmspols_harmon_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_kebele)
+      ols1k <- felm(dmspols_harmon_ihs ~ MA_var                            + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_kebele)
       ols2k <- felm(dmspols_harmon_ihs ~ MA_var + MA_varXwor_ntlgroup_2bin + temp_avg + precipitation | year + cell_id | 0  | cluster_var, data = data_kebele)
       
-      ols3k <- felm(globcover_urban_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_kebele)
+      ols3k <- felm(globcover_urban_sum_ihs ~ MA_var                            + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_kebele)
       ols4k <- felm(globcover_urban_sum_ihs ~ MA_var + MA_varXwor_ntlgroup_2bin + temp_avg + precipitation | year + cell_id | 0  | cluster_var, data = data_kebele)
       
-      ols5k <- felm(globcover_cropland_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_kebele)
+      ols5k <- felm(globcover_cropland_sum_ihs ~ MA_var                            + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_kebele)
       ols6k <- felm(globcover_cropland_sum_ihs ~ MA_var + MA_varXwor_ntlgroup_2bin + temp_avg + precipitation | year + cell_id | 0  | cluster_var, data = data_kebele)
       
       ## OLS - Woreda
-      ols1w <- felm(dmspols_harmon_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_woreda)
+      ols1w <- felm(dmspols_harmon_ihs ~ MA_var                            + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_woreda)
       ols2w <- felm(dmspols_harmon_ihs ~ MA_var + MA_varXwor_ntlgroup_2bin + temp_avg + precipitation | year + cell_id | 0  | cluster_var, data = data_woreda)
       
-      ols3w <- felm(globcover_urban_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_woreda)
+      ols3w <- felm(globcover_urban_sum_ihs ~ MA_var                            + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_woreda)
       ols4w <- felm(globcover_urban_sum_ihs ~ MA_var + MA_varXwor_ntlgroup_2bin + temp_avg + precipitation | year + cell_id | 0  | cluster_var, data = data_woreda)
       
-      ols5w <- felm(globcover_cropland_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_woreda)
+      ols5w <- felm(globcover_cropland_sum_ihs ~ MA_var                            + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_woreda)
       ols6w <- felm(globcover_cropland_sum_ihs ~ MA_var + MA_varXwor_ntlgroup_2bin + temp_avg + precipitation | year + cell_id | 0  | cluster_var, data = data_woreda)
       
       ## IV - Kebele

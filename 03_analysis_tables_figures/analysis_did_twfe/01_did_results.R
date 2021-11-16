@@ -21,7 +21,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                        "year_improvedroad_below50after")){
       for(addis_distance in c("All", "Far")){
         for(ntl_num_groups in c(2,4)){
-          for(controls in c("none")){ # temp_precip
+          for(controls in c("none", "temp_precip")){ 
             
             if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "0", "1")
             if(ntl_num_groups %in% 4) ntl_group_vec <- c("all", "1", "2", "3", "4")
@@ -133,23 +133,13 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                 }
                 
                 ## Aggregate ATTs
-                agg.simple.dynamic <- aggte(example_attgt, type = "dynamic")
+                agg.simple.dynamic <- aggte(example_attgt, type = "dynamic", na.rm = TRUE)
                 p_dynamic <- ggdid(agg.simple.dynamic)
                 
-                agg.simple.group <- aggte(example_attgt, type = "group")
-                p_group <- ggdid(agg.simple.group)
+                #agg.simple.group <- aggte(example_attgt, type = "group", na.rm = TRUE)
+                #p_group <- ggdid(agg.simple.group)
                 
-                # Save Results -----------------------------------------------------
-                #### Figure
-                # TODO: Send figures to another place; or maybe just remove this? Remove later on!!
-                p_all <- ggarrange(p_dynamic, 
-                                   p_group,
-                                   nrow = 1)
-                
-                ggsave(p_all, filename = file.path(project_dir, "Output", "Figures", "did",
-                                                   paste0("did_attgt_", OUT_PATH_SUFFIX, ".png")),
-                       height = 3, width = 10)
-                
+                # Save Results -------------------------------------------------
                 #### Dynamic
                 dynamic_df <- data.frame(time               = agg.simple.dynamic$egt,
                                          att                = agg.simple.dynamic$att.egt,
@@ -171,24 +161,24 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                                   paste0("dynamic_did_attgt_",OUT_PATH_SUFFIX, ".Rds")))
                 
                 #### Group
-                group_df <- data.frame(group              = agg.simple.group$egt,
-                                       att                = agg.simple.group$att.egt,
-                                       se                 = agg.simple.group$se.egt,
-                                       critical_value_95p = as.numeric(agg.simple.group$crit.val.egt)) %>%
-                  mutate(dataset = dataset,
-                         dep_var = dep_var,
-                         indep_var = indep_var,
-                         ntl_group = ntl_group,
-                         ntl_num_groups = ntl_num_groups,
-                         addis_distance = addis_distance,
-                         controls = controls)
-                
-                saveRDS(group_df, 
-                        file.path(panel_rsdp_imp_dir,
-                                  "all_units",
-                                  "results_datasets",
-                                  "individual_datasets",
-                                  paste0("group_did_attgt_",OUT_PATH_SUFFIX, ".Rds")))
+                # group_df <- data.frame(group              = agg.simple.group$egt,
+                #                        att                = agg.simple.group$att.egt,
+                #                        se                 = agg.simple.group$se.egt,
+                #                        critical_value_95p = as.numeric(agg.simple.group$crit.val.egt)) %>%
+                #   mutate(dataset = dataset,
+                #          dep_var = dep_var,
+                #          indep_var = indep_var,
+                #          ntl_group = ntl_group,
+                #          ntl_num_groups = ntl_num_groups,
+                #          addis_distance = addis_distance,
+                #          controls = controls)
+                # 
+                # saveRDS(group_df, 
+                #         file.path(panel_rsdp_imp_dir,
+                #                   "all_units",
+                #                   "results_datasets",
+                #                   "individual_datasets",
+                #                   paste0("group_did_attgt_",OUT_PATH_SUFFIX, ".Rds")))
                 
                 ## Cleanup
                 rm(example_attgt)
