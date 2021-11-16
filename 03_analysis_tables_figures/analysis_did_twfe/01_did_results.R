@@ -1,16 +1,7 @@
 # Analysis: Coefficient Each Year - Results
 
-# Exports dataframe of results, to be used to make figures
-
-# https://cran.r-project.org/web/packages/did/vignettes/did-basics.html
-
 #### Parameters
 OVERWRITE_FILES <- F
-
-#dataset <- "clusters_of_ntlall"
-#dep_var <- "dmspols_harmon_ihs"
-#indep_var <- "year_improvedroad_50aboveafter"
-#ntl_group <- "high"
 
 # Loop through datasets, variables & subsets -----------------------------------
 for(dataset in c("kebele", "dmspols_grid_nearroad")){ 

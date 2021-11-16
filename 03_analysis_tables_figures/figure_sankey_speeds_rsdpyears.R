@@ -142,30 +142,39 @@ riverplot_obj <- makeRiver(nodes1, edges1_2,
                            node_labels=labels,
                            node_styles=styles)
 
-#png(file.path(paper_figures, "sankey_speed_rsdpyears.png"),
-#    width = 4*480, height = 4*480,res=300, bg=PLOT_BACKGROUND_COLOR)
-png(file.path(paper_figures, "sankey_speed_rsdpyears.png"),
-    width = 4*480, height = 4*480,res=300, bg=PLOT_BACKGROUND_COLOR)
-riverplot(riverplot_obj, nsteps=100, fix.pdf=T, plot_area=0.9, xscale=.9)
-text(.025,-.05,"1996",font=1,col=TEXT_COLOR) 
-text(.25,-.05,"2002",font=1,col=TEXT_COLOR)
-text(.45,-.05,"2007",font=1,col=TEXT_COLOR)
-text(.65,-.05,"2010",font=1,col=TEXT_COLOR) 
-text(.85,-.05,"2016",font=1,col=TEXT_COLOR) 
+# Make figure ------------------------------------------------------------------
+# Y location of text
+year_y <- 0.125
+phase_y <- 0.075
+note_y <- 0.025
 
-text(0.1375,-.11,"Phase I",font=2,col=TEXT_COLOR) 
-text(0.35,-.11,"Phase II",font=2,col=TEXT_COLOR)
-text(0.55,-.11,"Phase III",font=2,col=TEXT_COLOR)
-text(0.75,-.11,"Phase IV",font=2,col=TEXT_COLOR) 
-text(-.12,-.17, "Note: Width of lines corresponds to road segment length.",
+# X location of text
+year_start <- 0.175
+year_inc <- 0.16 # Space between year text
+
+phase_start <- 0.25
+phase_inc <- 0.162
+
+png(file.path(paper_figures, "sankey_speed_rsdpyears.png"),
+    width = 5*480, 
+    height = 5*480,
+    res=300, 
+    bg=PLOT_BACKGROUND_COLOR) 
+riverplot(riverplot_obj, nsteps=100, fix.pdf=T, plot_area=c(0.75, 0.75), xscale=.9)
+text(year_start + year_inc*0, year_y,"1996",font=1,col=TEXT_COLOR) 
+text(year_start + year_inc*1, year_y,"2002",font=1,col=TEXT_COLOR)
+text(year_start + year_inc*2, year_y,"2007",font=1,col=TEXT_COLOR)
+text(year_start + year_inc*3, year_y,"2010",font=1,col=TEXT_COLOR) 
+text(year_start + year_inc*4, year_y,"2016",font=1,col=TEXT_COLOR) 
+
+text(phase_start + phase_inc*0, phase_y,"Phase I",font=2,col=TEXT_COLOR) 
+text(phase_start + phase_inc*1, phase_y,"Phase II",font=2,col=TEXT_COLOR)
+text(phase_start + phase_inc*2, phase_y,"Phase III",font=2,col=TEXT_COLOR)
+text(phase_start + phase_inc*3, phase_y,"Phase IV",font=2,col=TEXT_COLOR) 
+
+text(0.032, note_y, "Note: Width of lines corresponds to road segment length.",
      font=1,cex=.7,adj=0)
 dev.off()
-
-
-
-
-
-
 
 
 

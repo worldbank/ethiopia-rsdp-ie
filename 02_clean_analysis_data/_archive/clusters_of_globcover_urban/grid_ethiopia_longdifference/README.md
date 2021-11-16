@@ -1,1 +1,0 @@
-# Grid All Ethiopia Long Difference

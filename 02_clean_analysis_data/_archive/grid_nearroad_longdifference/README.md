@@ -1,1 +1,0 @@
-# Grid Near Road Long Difference
