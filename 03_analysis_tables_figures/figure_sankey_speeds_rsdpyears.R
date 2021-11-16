@@ -142,6 +142,8 @@ riverplot_obj <- makeRiver(nodes1, edges1_2,
                            node_labels=labels,
                            node_styles=styles)
 
+#png(file.path(paper_figures, "sankey_speed_rsdpyears.png"),
+#    width = 4*480, height = 4*480,res=300, bg=PLOT_BACKGROUND_COLOR)
 png(file.path(paper_figures, "sankey_speed_rsdpyears.png"),
     width = 4*480, height = 4*480,res=300, bg=PLOT_BACKGROUND_COLOR)
 riverplot(riverplot_obj, nsteps=100, fix.pdf=T, plot_area=0.9, xscale=.9)

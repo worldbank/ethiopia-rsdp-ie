@@ -18,7 +18,7 @@ for(year in 1993:2015){
 
 for(year in 2016:2018){
   print(year)
-  urban_yyyy <- raster(file.path(gc_dir, "2016_2018_data", paste0("C3S-LC-L4-LCCS-Map-300m-P1Y-",year,"-v2.1.1.tif"))) %>% crop(extent(woreda))
+  urban_yyyy <- raster(file.path(gc_dir, "RawData", "2016_2018_data", paste0("C3S-LC-L4-LCCS-Map-300m-P1Y-",year,"-v2.1.1.tif"))) %>% crop(extent(woreda))
   urban_constant[] <- as.numeric((urban_constant[] %in% 1) | (urban_yyyy[] %in% c(190))) 
 }
 

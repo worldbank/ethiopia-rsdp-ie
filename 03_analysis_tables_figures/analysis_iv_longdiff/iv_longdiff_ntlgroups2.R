@@ -1,6 +1,9 @@
 # Long-Difference IV Estimation
 
-# TODO: Could remove any reference to rsdp1234
+# Grab names of objects before running code. At end of code, delete new objects
+# created; code is memory intensive cleaning up avoids memory issues for
+# subsequent scripts.
+OBJECTS_BEFORE_CODE <- ls()
 
 #### Parameters
 NEAR_TARGETTED_LOCATION <- 5000
@@ -482,6 +485,11 @@ for(rsdp_type in c("rsdp123")){
   
   
 }
-#}
-#}
+
+# Cleanup ----------------------------------------------------------------------
+OBJECTS_AFTER_CODE <- ls()
+OBJECTS_TO_DELETE <- setdiff(OBJECTS_AFTER_CODE, OBJECTS_BEFORE_CODE)
+rm(list = OBJECTS_TO_DELETE)
+
+gc(); gc(); gc()
 

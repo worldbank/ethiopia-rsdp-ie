@@ -1,10 +1,11 @@
 # Market Access Analysis
 
-#unit  <- "woreda"
-#log = "_log"
-#theta = "3_8"
-#exclude = "_exclude50km"
+# Grab names of objects before running code. At end of code, delete new objects
+# created; code is memory intensive cleaning up avoids memory issues for
+# subsequent scripts.
+OBJECTS_BEFORE_CODE <- ls()
 
+# Functions --------------------------------------------------------------------
 update_iv_coef_name <- function(reg){
   # IV includes (fit) in dependent variable name; remove so name is 
   # consistent with OLS results.
@@ -309,5 +310,10 @@ for(log in c("_log")){
 }
 #}
 
+# Cleanup ----------------------------------------------------------------------
+OBJECTS_AFTER_CODE <- ls()
+OBJECTS_TO_DELETE <- setdiff(OBJECTS_AFTER_CODE, OBJECTS_BEFORE_CODE)
+rm(list = OBJECTS_TO_DELETE)
 
+gc(); gc(); gc()
 

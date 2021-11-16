@@ -1,9 +1,21 @@
 # Analysis: Coefficient Each Year - Figures
 
-#### Parameters
-p_dodge_width <- 1
-fig_height = 4
-fig_width = 12
+#### Figure parameters
+
+## Main
+p_dodge_width_main <- 1
+fig_height_main    <- 8
+fig_width_main     <- 7
+fig_nrow_main      <- 3
+
+## SI
+p_dodge_width_si <- 1
+fig_height_si    <- 3
+fig_width_si     <- 12
+fig_nrow_si      <- 1
+
+## General params
+dpi = 600
 
 # Load Data --------------------------------------------------------------------
 did_df <- file.path(panel_rsdp_imp_dir,
@@ -92,11 +104,40 @@ df <- df %>%
   dplyr::filter(abs(years_since_improved) <= 10)
 
 # Loop over figures ------------------------------------------------------------
-for(dataset_i in "kebele"){
+for(dataset_i in c("kebele", "dmspols_grid_nearroad")){
   for(addis_dist_i in c("All", "Far")){
-    for(controls in c("none")){
+    for(controls_i in c("none")){
       for(est_type_i in c("did", "tw")){
-
+        
+        # Skip certain parameter combinations ----------------------------------
+        if((dataset_i == "dmspols_grid_nearroad") & (addis_dist_i == "Far")){
+          next
+        }
+        
+        # Parameters -----------------------------------------------------------
+        # Vary parameters by whether the figures will go in the main text or be 
+        # part of the SI
+        
+        if((dataset_i == "kebele") & 
+           (addis_dist_i == "All") & 
+           (controls_i == "none") &
+           (est_type_i == "did")){
+          
+          ## Main text
+          p_dodge_width <- p_dodge_width_main
+          fig_height <- fig_height_main
+          fig_width <- fig_width_main
+          fig_nrow <- fig_nrow_main
+          
+        } else{
+          
+          ## SI
+          p_dodge_width <- p_dodge_width_si
+          fig_height <- fig_height_si
+          fig_width <- fig_width_si
+          fig_nrow <- fig_nrow_si
+        }
+        
         # Figure: By Road Type -------------------------------------------------
         p <- df %>%
           dplyr::filter(dataset %in% dataset_i,
@@ -117,22 +158,22 @@ for(dataset_i in "kebele"){
           geom_hline(yintercept=0,size=.5,alpha=0.5) +
           labs(x="Years Since Road Improved",
                y="Coefficient (+/- 95% CI)",
-               color="Road Type",
-               title = title) +
+               color="Road Type") +
           scale_alpha_manual(values = c(0.1, 1)) +
           scale_color_manual(values = c("dodgerblue1", "darkorange", "black"),
                              guide = guide_legend(reverse = TRUE)) +
           theme_minimal() +
-          theme(plot.title = element_text(hjust = 0.5, face = "bold", size=10),
-                strip.text = element_text(face = "bold", color = "black")) +
+          theme(strip.text = element_text(face = "bold", color = "black")) +
           facet_wrap(~dep_var,
                      scales = "free_y",
-                     nrow = 1)
+                     nrow = fig_nrow)
         
         ggsave(p,
                filename = file.path(paper_figures, 
                                     paste0(est_type_i,"_byroad_",dataset_i,"_",addis_dist_i,".png")),
-               height = fig_height, width = fig_width)
+               height = fig_height, 
+               width = fig_width,
+               dpi = dpi)
         
         # Figure: By 4 Speeds --------------------------------------------------
         p <- df %>%
@@ -155,60 +196,65 @@ for(dataset_i in "kebele"){
           geom_hline(yintercept=0,size=.5,alpha=0.5) +
           labs(x="Years Since Road Improved",
                y="Coefficient (+/- 95% CI)",
-               color="Baseline\nNighttime\nLights",
-               title = title) +
+               color="Baseline\nNighttime\nLights") +
           scale_alpha_manual(values = c(0.1, 1)) +
           scale_color_manual(values = c("gray20", "gray60", "darkorange", "firebrick2"),
                              guide = guide_legend(reverse = TRUE)) +
           theme_minimal() +
-          theme(plot.title = element_text(hjust = 0.5, face = "bold", size=10),
-                strip.text = element_text(face = "bold", color = "black")) +
+          theme(strip.text = element_text(face = "bold", color = "black")) +
           facet_wrap(~dep_var,
                      scales = "free_y",
-                     nrow = 1)
+                     nrow = fig_nrow)
         
         ggsave(p,
                filename = file.path(paper_figures, 
                                     paste0(est_type_i,"_by4ntlgroups_",dataset_i,"_",addis_dist_i,".png")),
-               height = fig_height, width = fig_width)
+               height = fig_height, 
+               width = fig_width,
+               dpi = dpi)
         
         # Figure: By 2 Speeds --------------------------------------------------
-        p <- df %>%
-          dplyr::filter(dataset %in% dataset_i,
-                        addis_distance %in% addis_dist_i,
-                        ntl_num_groups %in% 2,
-                        ntl_group != "all",
-                        indep_var %in% "All",
-                        controls == controls_i,
-                        est_type == est_type_i) %>%
-          ggplot(aes(x = years_since_improved, 
-                     y = b, 
-                     ymin = p025, 
-                     ymax=p975,
-                     group = ntl_group, 
-                     color = ntl_group)) +
-          geom_point(position = position_dodge(width = p_dodge_width),size=1) + 
-          geom_linerange(position = position_dodge(width = p_dodge_width),size=0.5) +
-          geom_vline(xintercept=0,size=.5,alpha=0.5) +
-          geom_hline(yintercept=0,size=.5,alpha=0.5) +
-          labs(x="Years Since Road Improved",
-               y="Coefficient (+/- 95% CI)",
-               color="Baseline\nNighttime\nLights",
-               title = title) +
-          scale_alpha_manual(values = c(0.1, 1)) +
-          scale_color_manual(values = c("gray20", "darkorange"),
-                             guide = guide_legend(reverse = TRUE)) +
-          theme_minimal() +
-          theme(plot.title = element_text(hjust = 0.5, face = "bold", size=10),
-                strip.text = element_text(face = "bold", color = "black")) +
-          facet_wrap(~dep_var,
-                     scales = "free_y",
-                     nrow = 1)
         
-        ggsave(p,
-               filename = file.path(paper_figures, 
-                                    paste0(est_type_i,"_by2ntlgroups_",dataset_i,"_",addis_dist_i,".png")),
-               height = fig_height, width = fig_width)
+        # Don't create for diff-in-diff with 1km grid
+        if(! ((est_type_i == "did") | (dataset_i == "dmspols_grid_nearroad")) ){
+
+          p <- df %>%
+            dplyr::filter(dataset %in% dataset_i,
+                          addis_distance %in% addis_dist_i,
+                          ntl_num_groups %in% 2,
+                          ntl_group != "all",
+                          indep_var %in% "All",
+                          controls == controls_i,
+                          est_type == est_type_i) %>%
+            ggplot(aes(x = years_since_improved, 
+                       y = b, 
+                       ymin = p025, 
+                       ymax=p975,
+                       group = ntl_group, 
+                       color = ntl_group)) +
+            geom_point(position = position_dodge(width = p_dodge_width_si),size=1) + 
+            geom_linerange(position = position_dodge(width = p_dodge_width_si),size=0.5) +
+            geom_vline(xintercept=0,size=.5,alpha=0.5) +
+            geom_hline(yintercept=0,size=.5,alpha=0.5) +
+            labs(x="Years Since Road Improved",
+                 y="Coefficient (+/- 95% CI)",
+                 color="Baseline\nNighttime\nLights") +
+            scale_alpha_manual(values = c(0.1, 1)) +
+            scale_color_manual(values = c("gray20", "darkorange"),
+                               guide = guide_legend(reverse = TRUE)) +
+            theme_minimal() +
+            theme(strip.text = element_text(face = "bold", color = "black")) +
+            facet_wrap(~dep_var,
+                       scales = "free_y",
+                       nrow = fig_nrow_si)
+          
+          ggsave(p,
+                 filename = file.path(paper_figures, 
+                                      paste0(est_type_i,"_by2ntlgroups_",dataset_i,"_",addis_dist_i,".png")),
+                 height = fig_height_si, 
+                 width = fig_width_si,
+                 dpi = dpi)
+        }
         
         
       }

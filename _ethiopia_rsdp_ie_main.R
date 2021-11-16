@@ -39,8 +39,8 @@ analysis_code_dir     <- file.path(code_dir, "03_analysis_tables_figures")
 paper_figures <- file.path(overleaf_dir, "Figures")
 paper_tables <- file.path(overleaf_dir, "Tables")
 
-paper_figures <- file.path(project_dir, "Output", "Figures")
-paper_tables <- file.path(project_dir, "Output", "Tables")
+#paper_figures <- file.path(project_dir, "Output", "Figures")
+#paper_tables <- file.path(project_dir, "Output", "Tables")
 
 # Settings ---------------------------------------------------------------------
 
@@ -60,6 +60,10 @@ OVERWRITE_EXTRACTED_DATA <- F
 # long time; whether to skip
 SKIP_MA_COMPUTE_TT <- F
 
+##### Only generate figures & tables
+# If TRUE, only runs code to generate figures & tables.
+ONLY_GEN_FIGURES_TABLES <- T
+
 ##### WHETHER TO DELETE PROCESSED FILES
 
 # Whether to delete processed files; ie, data files that are created from code.
@@ -76,6 +80,9 @@ UTM_ETH <- '+init=epsg:20138'
 NEAR_CUTOFF <- 5 * 1000     
 
 # Packages ---------------------------------------------------------------------
+#library(devtools)
+#install_github("hunzikp/velox")
+
 library(AER)
 library(did)
 library(estimatr)
@@ -145,8 +152,8 @@ if(DELETE_PROCESSED_FILES){
     
     if((i_seconds %% 5) %in% 0){
       cat(paste0("***WARNING***: DATA FILES THAT ARE CREATED FROM THE CODE WILL BE DELETED IN ",
-                     i_seconds, " SECONDS. IF YOU DID NOT INTEND FOR THIS TO HAPPEN ",
-                     "STOP THE CODE FROM RUNNING AND SET 'DELETE_PROCESSED_FILES' TO FALSE."))
+                 i_seconds, " SECONDS. IF YOU DID NOT INTEND FOR THIS TO HAPPEN ",
+                 "STOP THE CODE FROM RUNNING AND SET 'DELETE_PROCESSED_FILES' TO FALSE."))
       cat("\n\n")
     }
     
@@ -173,142 +180,136 @@ RUN_CODE <- F
 
 if(RUN_CODE){
   
-  # 0. PREP ANCILLARY DATA =====================================================
-  
-  # Download Data from Google Earth Engine -------------------------------------
-  # These scripts should be run in the Google Earth Engine code editor. The data
-  # files that these scripts produce have already been downloaded and put into 
-  # "RawData" folders; consequently, these do not have to be run for the 
-  # remaining code to work. The below files create rasters of elevation,
-  # annual precipitation and annual temperature across Ethiopia.
-  
-  # [Github Repo]/00_process_ancillary_datasets/extract_from_gee/extract_elevation.js
-  # [Github Repo]/00_process_ancillary_datasets/extract_from_gee/extract_precipitation.js
-  # [Github Repo]/00_process_ancillary_datasets/extract_from_gee/extract_temperature.js
-  
-  # Download GADM --------------------------------------------------------------
-  # Download GADM Data
-  
-  source(file.path(ancil_data_code_dir, "gadm", "download_gadm.R"))
-  
-  # Clean Woredas --------------------------------------------------------------
-  # Clean Woreda file. Add nighttime lights and nighttime lights groups.
-  
-  source(file.path(ancil_data_code_dir, "woreda", "clean_woreda.R"))
-  
-  # RSDP I-III, Road IV MSTs ---------------------------------------------------
-  # Create minimum spanning trees used as instruments
-  
-  rsdp123_iv_code_dir <- file.path(ancil_data_code_dir, "rsdp_123_iv")
-  
-  # Create dataset of targeted locations (endpoints of roads and regional capitals)
-  source(file.path(rsdp123_iv_code_dir, "01_phase_123_roads_targetted_locations.R"))
-  
-  # MST between targeted locations, using Euclidean distance
-  # NOTE: This code takes a few hours to run
-  source(file.path(rsdp123_iv_code_dir, "02_create_euclidean_distance.R"))
-  
-  # MST between targeted locations, using cost surface
-  # NOTE: This code takes a few hours to run
-  source(file.path(rsdp123_iv_code_dir, "02_create_minimam_spanning_tree.R"))
-  
-  # We compute MSTs within each region; this code appends them together
-  source(file.path(rsdp123_iv_code_dir, "03_append_regional_networks.R"))
-  
-  # 1. Extract Data to Datasets ================================================
-  # Scripts that (1) create datasets at different units of analysis -- grid,
-  # kebeles and woreda; and (2) extracts data to these datasets. When extracting
-  # data, saves a file for each different dataset. For example, saves a dataset
-  # for distance to roads, a separate dataset for average nighttime lights, etc.
-  # In a later step, these datasets are merged together.
-  
-  ## Process Kebeles
-  DATASET_TYPE <- "kebele"
-  source(file.path(extract_data_code_dir, "_extract_data_main.R"))
-  
-  ## Process grid; grid across all of Ethiopia
-  DATASET_TYPE <- "dmspols_grid_ethiopia"
-  source(file.path(extract_data_code_dir, "_extract_data_main.R"))
-  
-  ## Process grid; grids within 10km of a road
-  DATASET_TYPE <- "dmspols_grid_nearroad"
-  source(file.path(extract_data_code_dir, "_extract_data_main.R"))
-  
-  ## Process Woreda
-  DATASET_TYPE <- "woreda"
-  source(file.path(extract_data_code_dir, "_extract_data_main.R"))
-  
-  # 2. Clean Analysis Data =====================================================
-
-  #### Panel Data
-  
-  ## Grid - Panel
-  source(file.path(clean_data_code_dir, "grid_nearroad_panel", "01_merge_data.R"))
-  source(file.path(clean_data_code_dir, "grid_nearroad_panel", "02_clean_data.R"))
-  
-  ## Kebele - Panel
-  source(file.path(clean_data_code_dir, "kebele_panel", "01_merge_data.R"))
-  source(file.path(clean_data_code_dir, "kebele_panel", "02_clean_data.R"))
-  
-  ## Woreda - Panel
-  source(file.path(clean_data_code_dir, "woreda_panel", "01_merge_data.R"))
-  source(file.path(clean_data_code_dir, "woreda_panel", "02_clean_data.R"))
-  
-  ## Grid - All Ethiopia
-  source(file.path(clean_data_code_dir, "grid_ethiopia", "01_merge_data.R"))
-  source(file.path(clean_data_code_dir, "grid_ethiopia", "02_clean_data.R"))
-  
-  #### Long Difference
-  
-  ## Kebele - Long Difference
-  source(file.path(clean_data_code_dir, "kebele_longdifference", "01_clean_data.R"))
-  
-  ## Woreda - Long Difference
-  source(file.path(clean_data_code_dir, "woreda_longdifference", "01_clean_data.R"))
-  
-  ## Grid/All Ethiopia - Long Difference
-  source(file.path(clean_data_code_dir, "grid_ethiopia_longdifference", "01_clean_data.R"))
+  if(ONLY_GEN_FIGURES_TABLES %in% F){
+    # 0. PREP ANCILLARY DATA =====================================================
+    
+    # Download Data from Google Earth Engine -------------------------------------
+    # These scripts should be run in the Google Earth Engine code editor. The data
+    # files that these scripts produce have already been downloaded and put into 
+    # "RawData" folders; consequently, these do not have to be run for the 
+    # remaining code to work. The below files create rasters of elevation,
+    # annual precipitation and annual temperature across Ethiopia.
+    
+    # [Github Repo]/00_process_ancillary_datasets/extract_from_gee/extract_elevation.js
+    # [Github Repo]/00_process_ancillary_datasets/extract_from_gee/extract_precipitation.js
+    # [Github Repo]/00_process_ancillary_datasets/extract_from_gee/extract_temperature.js
+    
+    # Download GADM --------------------------------------------------------------
+    # Download GADM Data
+    
+    source(file.path(ancil_data_code_dir, "gadm", "download_gadm.R"))
+    
+    # Clean Woredas --------------------------------------------------------------
+    # Clean Woreda file. Add nighttime lights and nighttime lights groups.
+    
+    source(file.path(ancil_data_code_dir, "woreda", "clean_woreda.R"))
+    
+    # RSDP I-III, Road IV MSTs ---------------------------------------------------
+    # Create minimum spanning trees used as instruments
+    
+    rsdp123_iv_code_dir <- file.path(ancil_data_code_dir, "rsdp_123_iv")
+    
+    # Create dataset of targeted locations (endpoints of roads and regional capitals)
+    source(file.path(rsdp123_iv_code_dir, "01_phase_123_roads_targetted_locations.R"))
+    
+    # MST between targeted locations, using Euclidean distance
+    # NOTE: This code takes a few hours to run
+    source(file.path(rsdp123_iv_code_dir, "02_create_euclidean_distance.R"))
+    
+    # MST between targeted locations, using cost surface
+    # NOTE: This code takes a few hours to run
+    source(file.path(rsdp123_iv_code_dir, "02_create_minimam_spanning_tree.R"))
+    
+    # We compute MSTs within each region; this code appends them together
+    source(file.path(rsdp123_iv_code_dir, "03_append_regional_networks.R"))
+    
+    # 1. Extract Data to Datasets ================================================
+    # Scripts that (1) create datasets at different units of analysis -- grid,
+    # kebeles and woreda; and (2) extracts data to these datasets. When extracting
+    # data, saves a file for each different dataset. For example, saves a dataset
+    # for distance to roads, a separate dataset for average nighttime lights, etc.
+    # In a later step, these datasets are merged together.
+    
+    ## Process Kebeles
+    DATASET_TYPE <- "kebele"
+    source(file.path(extract_data_code_dir, "_extract_data_main.R"))
+    
+    ## Process grid; grid across all of Ethiopia
+    DATASET_TYPE <- "dmspols_grid_ethiopia"
+    source(file.path(extract_data_code_dir, "_extract_data_main.R"))
+    
+    ## Process grid; grids within 10km of a road
+    DATASET_TYPE <- "dmspols_grid_nearroad"
+    source(file.path(extract_data_code_dir, "_extract_data_main.R"))
+    
+    ## Process Woreda
+    DATASET_TYPE <- "woreda"
+    source(file.path(extract_data_code_dir, "_extract_data_main.R"))
+    
+    # 2. Clean Analysis Data =====================================================
+    
+    #### Panel Data
+    
+    ## Grid - Panel
+    source(file.path(clean_data_code_dir, "grid_nearroad_panel", "01_merge_data.R"))
+    source(file.path(clean_data_code_dir, "grid_nearroad_panel", "02_clean_data.R"))
+    
+    ## Kebele - Panel
+    source(file.path(clean_data_code_dir, "kebele_panel", "01_merge_data.R"))
+    source(file.path(clean_data_code_dir, "kebele_panel", "02_clean_data.R"))
+    
+    ## Woreda - Panel
+    source(file.path(clean_data_code_dir, "woreda_panel", "01_merge_data.R"))
+    source(file.path(clean_data_code_dir, "woreda_panel", "02_clean_data.R"))
+    
+    ## Grid - All Ethiopia
+    source(file.path(clean_data_code_dir, "grid_ethiopia", "01_merge_data.R"))
+    source(file.path(clean_data_code_dir, "grid_ethiopia", "02_clean_data.R"))
+    
+    #### Long Difference
+    
+    ## Kebele - Long Difference
+    source(file.path(clean_data_code_dir, "kebele_longdifference", "01_clean_data.R"))
+    
+    ## Woreda - Long Difference
+    source(file.path(clean_data_code_dir, "woreda_longdifference", "01_clean_data.R"))
+    
+    ## Grid/All Ethiopia - Long Difference
+    source(file.path(clean_data_code_dir, "grid_ethiopia_longdifference", "01_clean_data.R"))
+  }
   
   # 3. Analysis, Tables and Figures ============================================
   
   # Main Text: Summary Stats, Figures and Maps ---------------------------------
   
   # FIGURE 1A: Sankey diagram of road improvements
-  source(file.path(analysis_code_dir, "sankey_speeds_rsdpyears.R"))
+  # NOTE: Figure produced using R version 3.6.1 (R version 4.0.5 displayed differently)
+  source(file.path(analysis_code_dir, "figure_sankey_speeds_rsdpyears.R"))
   
   # FIGURE 1B: Bar chart of road improvements by region
-  source(file.path(analysis_code_dir, "prop_network_improved_region_phase.R"))
+  source(file.path(analysis_code_dir, "figure_prop_network_improved_region_phase.R"))
   
   # TABLE 1: Summary Stats of Dependent variables
   source(file.path(analysis_code_dir, "table_sum_stats_dep_vars.R"))
   
   # FIGURE 2: Map of NTL, Globcover and RSDP
-  source(file.path(analysis_code_dir, "figure_rsdp_NTL_globcover.R"))
+  source(file.path(analysis_code_dir, "figure_rsdp_NTL_globcover_map.R"))
   
   # FIGURE 3 / S9,S10: MST Maps
   source(file.path(analysis_code_dir, "figure_mst_map.R"))
   source(file.path(analysis_code_dir, "figure_mst_map_regional.R"))
   
-  # Diff-in-Diff ---------------------------------------------------------------
-  did_code_dir <- file.path(analysis_code_dir, "analysis_did")
+  # Diff-in-Diff & TWFE --------------------------------------------------------
+  did_twfe_code_dir <- file.path(analysis_code_dir, "analysis_did_twfe")
   
-  # MA Long Diff: Regressions and tables
-  source(file.path(did_code_dir, "01_gt_did_results.R"))
-  
-  # MA Levels: Regressions and tables
-  source(file.path(did_code_dir, "02_gt_did_figures.R"))
-  
-  # TWFE -----------------------------------------------------------------------
-  twfe_code_dir <- file.path(analysis_code_dir, "analysis_twfe")
-  
-  # Run regressions and save results (one .Rds file per regression)
-  source(file.path(twfe_code_dir, "01_event_study_results.R"))
-  
-  # Append results together
-  source(file.path(twfe_code_dir, "02_event_study_results_append.R"))
+  # Estimate models and save dataframes of results
+  if(ONLY_GEN_FIGURES_TABLES %in% F){
+    source(file.path(did_twfe_code_dir, "01_did_results.R")) # REQUIRES R Version >4
+    source(file.path(did_twfe_code_dir, "01_twfe_results.R"))
+  }
   
   # Make figures
-  source(file.path(twfe_code_dir, "03_event_study_figures.R"))
+  source(file.path(did_twfe_code_dir, "02_did_twfe_figures.R"))
   
   # Long-Diff: IV --------------------------------------------------------------
   
@@ -341,8 +342,11 @@ if(RUN_CODE){
   # Table S2
   # HARD CODED; NOT GENERATED BY CODE
   
-  # Figure S3 and S4: Road improvements by baseline Woreda NTL
-  source(file.path(analysis_code_dir, "figure_road_imp_by_woreda_ntl.R"))
+  # Figure S3: Road improvements by baseline Woreda NTL
+  source(file.path(analysis_code_dir, "figure_road_imp_by_woreda_ntl_length_above.R"))
+  
+  # Figure S4: Proportion of road types over time, by baseline Woreda NTL
+  source(file.path(analysis_code_dir, "figure_road_imp_by_woreda_ntl_proportion.R"))
   
   # Figure S5: Trends in outcome variables
   source(file.path(analysis_code_dir, "figure_woreda_summary_trends.R"))
@@ -370,6 +374,9 @@ if(RUN_CODE){
   
   # Table S6: N units near MSTs
   source(file.path(analysis_code_dir, "table_mst_n_units_near.R"))
+  
+  # Table [CHECK]: Check in roads 50km and above
+  source(file.path(analysis_code_dir, "table_woreda_growth_prop_road_network.R"))
   
 }
 

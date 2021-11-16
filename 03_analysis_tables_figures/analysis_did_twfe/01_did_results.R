@@ -43,10 +43,12 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                  (ntl_group != "all")){
                 next
               }
+            
+              if((dataset == "dmspols_grid_nearroad") & (addis_distance == "Far")){
+                next
+              }
               
-              # For above/below 50km/hr roads, dont restrict by addis
-              if((indep_var %in% c("year_improvedroad_50aboveafter", "year_improvedroad_below50after")) &
-                 (addis_distance == "Far")){
+              if((dataset == "dmspols_grid_nearroad") & (ntl_num_groups == 2)){
                 next
               }
               

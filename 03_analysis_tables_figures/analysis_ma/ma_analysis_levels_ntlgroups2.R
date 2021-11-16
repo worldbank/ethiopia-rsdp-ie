@@ -1,10 +1,11 @@
 # Market Access Analysis
 
-#unit <- "woreda"
-#theta <- "3_8"
-#log <- "_log"
-#exclude <- "_exclude50km"
+# Grab names of objects before running code. At end of code, delete new objects
+# created; code is memory intensive cleaning up avoids memory issues for
+# subsequent scripts.
+OBJECTS_BEFORE_CODE <- ls()
 
+# Functions --------------------------------------------------------------------
 prep_data <- function(unit, log, theta, exclude){
   
   #### Load/Subset Data
@@ -170,7 +171,13 @@ for(log in c("_log")){
     }
   }
 }
-#}
+
+# Cleanup ----------------------------------------------------------------------
+OBJECTS_AFTER_CODE <- ls()
+OBJECTS_TO_DELETE <- setdiff(OBJECTS_AFTER_CODE, OBJECTS_BEFORE_CODE)
+rm(list = OBJECTS_TO_DELETE)
+
+gc(); gc(); gc()
 
 
 
