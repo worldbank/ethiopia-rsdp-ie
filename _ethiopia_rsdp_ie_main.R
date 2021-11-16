@@ -71,7 +71,7 @@ RUN_CODE <- T
 # and skips code for estimating difference-in-difference & TWFE models (this 
 # script takes a long time (1+ week), and saves data that is used to generate
 # the figures). 
-# Only generating figures & tables takes less than 1 hour
+# TIME: Only generating figures & tables takes less than 1 hour
 ONLY_GEN_FIGURES_TABLES <- T
 
 ##### EXTRACT DATA TO DATASET PARAMETERS - - - - - - - - - - - - - - - - - - - -
@@ -89,7 +89,7 @@ CREATE_UNIT_LEVEL_DATASET <- T
 EXTRACT_DATA <- T
 
 # Computing travel time between units for calculating market access.
-# Tabes ~3 days to run
+# Takes 3+ days to run
 SKIP_MA_COMPUTE_TT <- T
 
 ##### WHETHER TO DELETE PROCESSED FILES - - - - - - - - - -  - - - - - - - - - - 
