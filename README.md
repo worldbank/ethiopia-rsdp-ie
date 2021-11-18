@@ -6,6 +6,9 @@
 * `_ethiopia_rsdp_ie_main.R`: Main script that runs all code
 
 #### Organization
+
+Code is organized into the below folders:
+
 * `_functions`: User-defined functions that are used throughout
 * `00_process_ancillary_datasets`: Processes datasets that are used in subsequent scripts
 * `01_extract_data_to_datasets`: Extracts data to different datasets (e.g., nighttime lights in 1x1km grid, Kebeles and Woredas)
