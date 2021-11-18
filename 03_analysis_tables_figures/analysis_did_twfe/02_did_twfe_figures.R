@@ -43,6 +43,7 @@ tw_df <- file.path(panel_rsdp_imp_dir,
   mutate(est_type = "tw") %>%
   mutate(controls = case_when(
     controls == "" ~ "none",
+    controls == "+temp_avg+precipitation" ~ "temp_precip",
     TRUE ~ controls
   ))
 
@@ -104,9 +105,9 @@ df <- df %>%
   dplyr::filter(abs(years_since_improved) <= 10)
 
 # Loop over figures ------------------------------------------------------------
-for(dataset_i in c("kebele", "dmspols_grid_nearroad")){
+for(dataset_i in c("kebele", "dmspols_grid_nearroad")){ 
   for(addis_dist_i in c("All", "Far")){
-    for(controls_i in c("none")){
+    for(controls_i in c("none")){ 
       for(est_type_i in c("did", "tw")){
         
         # Skip certain parameter combinations ----------------------------------

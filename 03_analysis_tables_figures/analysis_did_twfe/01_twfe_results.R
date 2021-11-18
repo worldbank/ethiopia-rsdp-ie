@@ -5,14 +5,6 @@
 #### Parameters
 OVERWRITE_FILES <- F
 
-#### Default
-# dataset <- "dmspols_grid_nearroad"
-# dep_var <- "globcover_urban"
-# indep_var <- "years_since_improvedroad"
-# controls <- ""
-# addis_distance <- "All"
-# ntl_group <- "All"
-
 # Loop Over Datasets -----------------------------------------------------------
 for(dataset in c("kebele", "dmspols_grid_nearroad")){
   
@@ -30,7 +22,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
   
   for(dep_var in dep_var_vec){
     for(indep_var in c("years_since_improvedroad", "years_since_improvedroad_50aboveafter", "years_since_improvedroad_below50after")){
-      for(controls in c("", "+temp_avg+precipitation")){
+      for(controls in c("")){ # "+temp_avg+precipitation"
         for(addis_distance in c("All", "Far")){
           for(ntl_num_groups in c(2,4)){
             

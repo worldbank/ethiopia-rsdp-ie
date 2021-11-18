@@ -7,11 +7,15 @@ OBJECTS_BEFORE_CODE <- ls()
 
 #### Parameters
 NEAR_TARGETTED_LOCATION <- 5000
-RM_DISTANE_ADDIS <- 0 # (100km scale; so 1 = 100km)
+RM_DISTANE_ADDIS <- 0
 NEAR_ROAD <- 5000
 ROUND_NUM <- 1 # number of digits to round numbers
 
+# For naming files
+rsdp_type <- "rsdp123"
+
 # Prep Data Function -----------------------------------------------------------
+
 # Function that preps data for a specific dataset
 prep_data <- function(DATASET_TYPE){
   

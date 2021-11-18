@@ -9,13 +9,17 @@ OBJECTS_BEFORE_CODE <- ls()
 NEAR_TARGETTED_LOCATION <- 5000
 RM_DISTANE_ADDIS <- 0 
 NEAR_ROAD <- 5000
-ROUND_NUM <- 1 
+ROUND_NUM <- 1 # number of digits to round numbers
+
+# For naming files
+rsdp_type <- "rsdp123"
 
 # Prep Data Function -----------------------------------------------------------
 
 # Function that preps data for a specific dataset
 prep_data <- function(DATASET_TYPE){
   
+  # Load Data ----------------------------------------------------------------
   df <- readRDS(file.path(panel_rsdp_imp_dir, DATASET_TYPE, "merged_datasets", 
                           paste0("longdiff_data_clean_base", 
                                  1996,

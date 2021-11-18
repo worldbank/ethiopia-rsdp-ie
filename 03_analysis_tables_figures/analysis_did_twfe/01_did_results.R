@@ -21,7 +21,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                        "year_improvedroad_below50after")){
       for(addis_distance in c("All", "Far")){
         for(ntl_num_groups in c(2,4)){
-          for(controls in c("none", "temp_precip")){ 
+          for(controls in c("none")){ 
             
             if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "0", "1")
             if(ntl_num_groups %in% 4) ntl_group_vec <- c("all", "1", "2", "3", "4")
