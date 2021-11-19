@@ -24,7 +24,7 @@
 if(Sys.info()[["user"]] == "robmarty"){
   project_dir  <- "~/Dropbox/World Bank/Replication Packages/Impact of Ethiopia RSDP"
   code_dir     <- "~/Documents/Github/ethiopia-rsdp-ie"
-  overleaf_dir <- "~/Dropbox/Apps/Overleaf/The Impact of Ethiopia RSDP Evidence from Satellite Data"
+  #overleaf_dir <- "~/Dropbox/Apps/Overleaf/The Impact of Ethiopia RSDP Evidence from Satellite Data"
 }
 
 #### Paths from Root
@@ -54,11 +54,11 @@ clean_data_code_dir   <- file.path(code_dir, "02_clean_analysis_data")
 analysis_code_dir     <- file.path(code_dir, "03_analysis_tables_figures")
 
 ## For Tables/Figures
-paper_figures <- file.path(overleaf_dir, "Figures")
-paper_tables  <- file.path(overleaf_dir, "Tables")
+#paper_figures <- file.path(overleaf_dir, "Figures")
+#paper_tables  <- file.path(overleaf_dir, "Tables")
 
-#paper_figures <- file.path(project_dir, "Output", "Figures")
-#paper_tables  <- file.path(project_dir, "Output", "Tables")
+paper_figures <- file.path(project_dir, "Output", "Figures")
+paper_tables  <- file.path(project_dir, "Output", "Tables")
 
 # 2. Settings ------------------------------------------------------------------
 # The below settings define which code to run. Time estimates are given, which
@@ -92,7 +92,7 @@ EXTRACT_DATA <- T
 
 # Computing travel time between units for calculating market access.
 # TIME: Takes 3+ days to run
-SKIP_MA_COMPUTE_TT <- T
+SKIP_MA_COMPUTE_TT <- F
 
 ##### WHETHER TO DELETE PROCESSED FILES - - - - - - - - - -  - - - - - - - - - - 
 
@@ -313,7 +313,6 @@ if(RUN_CODE){
   # **** Main Text: Summary Stats, Figures and Maps ----------------------------
   
   # FIGURE 1A: Sankey diagram of road improvements
-  # NOTE: Figure produced using R version 3.6.1 (R version 4.0.5 displayed differently)
   source(file.path(analysis_code_dir, "figure_sankey_speeds_rsdpyears.R"))
   
   # FIGURE 1B: Bar chart of road improvements by region

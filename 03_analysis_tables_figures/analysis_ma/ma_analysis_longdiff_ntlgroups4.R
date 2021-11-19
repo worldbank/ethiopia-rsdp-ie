@@ -63,9 +63,9 @@ theta <- "1"
 exclude <- "_exclude20km"
 #for(unit in c("woreda", "kebele")){ # "woreda", "clusters_of_ntl"
 for(log in c("_log")){
-  for(theta in c("1", "2", "3_8", "5", "8")){ # 
+  for(theta in c("2", "3_8", "5", "8")){ # 
     for(exclude in c("_exclude20km", "_exclude50km", "_exclude100km")){ # "_exclude20km", "_exclude50km", "_exclude100km"
-      for(end_year in c("2009", "2012", "2016")){
+      for(end_year in c("2016")){
         
         data_kebele <- prep_data("kebele", log, theta, exclude, end_year)
         data_woreda <- prep_data("woreda", log, theta, exclude, end_year)

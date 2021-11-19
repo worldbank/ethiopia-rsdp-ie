@@ -217,7 +217,7 @@ for(dataset_i in c("kebele", "dmspols_grid_nearroad")){
         # Figure: By 2 Speeds --------------------------------------------------
         
         # Don't create for diff-in-diff with 1km grid
-        if(! ((est_type_i == "did") | (dataset_i == "dmspols_grid_nearroad")) ){
+        if(! ((est_type_i == "did") & (dataset_i == "dmspols_grid_nearroad")) ){
 
           p <- df %>%
             dplyr::filter(dataset %in% dataset_i,

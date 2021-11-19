@@ -48,7 +48,7 @@ prep_data <- function(unit, log, theta, exclude){
 unit <- "kebeleworeda"
 
 for(log in c("_log")){
-  for(theta in c("1","2","3_8","5","8")){ # 
+  for(theta in c("3_8")){ # 
     for(exclude in c("_exclude20km", "_exclude50km", "_exclude100km")){ 
       
       data_kebele <- prep_data("kebele", log, theta, exclude)
