@@ -3,6 +3,14 @@
 #### Parameters
 OVERWRITE_FILES <- F
 
+dataset = "kebele"
+dep_var = "dmspols_harmon_ihs"
+indep_var = "year_improvedroad"
+ntl_group = "all"
+ntl_num_groups = 4
+addis_distance = "All"
+controls = "none"
+
 # Loop through datasets, variables & subsets -----------------------------------
 for(dataset in c("kebele", "dmspols_grid_nearroad")){ 
   
@@ -21,7 +29,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                        "year_improvedroad_below50after")){
       for(addis_distance in c("All", "Far")){
         for(ntl_num_groups in c(2,4)){
-          for(controls in c("none")){ 
+          for(controls in c("none", "precip")){ # temp_precip 
             
             if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "0", "1")
             if(ntl_num_groups %in% 4) ntl_group_vec <- c("all", "1", "2", "3", "4")
@@ -34,7 +42,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                  (ntl_group != "all")){
                 next
               }
-            
+              
               if((dataset == "dmspols_grid_nearroad") & (addis_distance == "Far")){
                 next
               }
@@ -56,13 +64,27 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                                          "all_units",
                                          "results_datasets",
                                          "individual_datasets",
-                                         paste0("group_did_attgt_",OUT_PATH_SUFFIX, ".Rds"))
+                                         paste0("dynamic_did_attgt_wald_test_pvalue_",OUT_PATH_SUFFIX, ".Rds"))
+              
               if(OVERWRITE_FILES | !file.exists(file_to_check)){
                 
                 print(OUT_PATH_SUFFIX)
                 
                 # Load/Prep Data ---------------------------------------------------
                 data <- readRDS(file.path(panel_rsdp_imp_dir, dataset, "merged_datasets", "panel_data_clean.Rds"))
+                
+                
+                if(F){
+                  data_s <- data[!is.na(data$year_improvedroad),]
+                  data_s$cell_id %>% unique() %>% length()
+                  
+                  data_ss <- data_s[!(data_s$year_improvedroad %in% c(2004, 2005, 2006, 2012, 2013, 2014, 2015)),]
+                  data_ss$cell_id %>% unique() %>% length()
+                  
+                  6166/14933
+                }
+                
+                data <- data[!(data$year_improvedroad %in% c(2004, 2005, 2006, 2012, 2013, 2014, 2015)),]
                 
                 if(ntl_num_groups %in% 2){
                   data$ntl_group <- data$wor_ntlgroup_2bin
@@ -104,6 +126,12 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                   data <- data %>%
                     dplyr::filter(!is.na(temp_avg),
                                   !is.na(precipitation))
+                } else if (controls %in% "precip"){
+                  data <- data[,names(data) %in% c("dep_var", "indep_var", "cell_id", "year", "woreda_id", 
+                                                   "precipitation")]
+                  
+                  data <- data %>%
+                    dplyr::filter(!is.na(precipitation))
                 }
                 
                 # Estimate Model -----------------------------------------------
@@ -130,11 +158,45 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                                           print_details = T
                                           
                   )
+                } else if(controls %in% "precip"){
+                  example_attgt <- att_gt(yname = "dep_var",
+                                          tname = "year",
+                                          idname = "cell_id",
+                                          gname = "indep_var",
+                                          xformla = ~precipitation,
+                                          data = data,
+                                          control_group = "notyettreated",
+                                          clustervars = cluster_var,
+                                          print_details = T
+                                          
+                  )
                 }
+                
+                if(F){
+                  df <- data.frame(group = example_attgt$group,
+                                   time = example_attgt$t,
+                                   att = example_attgt$att,
+                                   se = example_attgt$se)
+                  
+                  df$lb <- df$att - df$se * as.numeric(example_attgt$c)
+                  df$ub <- df$att + df$se * as.numeric(example_attgt$c)
+                  
+                  df <- df %>%
+                    dplyr::mutate(sig = ((lb > 0) & (ub > 0)) | ((lb < 0) & (ub < 0)))
+                  
+                  df_p <- df %>%
+                    dplyr::filter(sig %in% T,
+                                  group > time)
+                  
+                  df_p$group %>% unique()
+                }
+                
+                ## Grab Wald p-value
+                wald_pvalue <- example_attgt$Wpval %>% as.numeric()
+                if(length(wald_pvalue) %in% 0) wald_pvalue <- NA
                 
                 ## Aggregate ATTs
                 agg.simple.dynamic <- aggte(example_attgt, type = "dynamic", na.rm = TRUE)
-                p_dynamic <- ggdid(agg.simple.dynamic)
                 
                 #agg.simple.group <- aggte(example_attgt, type = "group", na.rm = TRUE)
                 #p_group <- ggdid(agg.simple.group)
@@ -160,6 +222,23 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                                   "individual_datasets",
                                   paste0("dynamic_did_attgt_",OUT_PATH_SUFFIX, ".Rds")))
                 
+                #### Wald Test p-value
+                wald_df <- data.frame(wald_pvalue = wald_pvalue) %>%
+                  mutate(dataset = dataset,
+                         dep_var = dep_var,
+                         indep_var = indep_var,
+                         ntl_group = ntl_group,
+                         ntl_num_groups = ntl_num_groups,
+                         addis_distance = addis_distance,
+                         controls = controls)
+                
+                saveRDS(wald_df, 
+                        file.path(panel_rsdp_imp_dir,
+                                  "all_units",
+                                  "results_datasets",
+                                  "individual_datasets",
+                                  paste0("dynamic_did_attgt_wald_test_pvalue_",OUT_PATH_SUFFIX, ".Rds")))
+                
                 #### Group
                 # group_df <- data.frame(group              = agg.simple.group$egt,
                 #                        att                = agg.simple.group$att.egt,
@@ -182,6 +261,8 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                 
                 ## Cleanup
                 rm(example_attgt)
+                rm(wald_pvalue)
+                rm(wald_df)
                 gc()
               }
             }

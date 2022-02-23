@@ -32,6 +32,7 @@ if(Sys.info()[["user"]] == "robmarty"){
 data_dir           <- file.path(project_dir, "Data")
 
 gadm_dir           <- file.path(data_dir, "GADM")
+wb_boundaries_dir  <- file.path(data_dir, "World Bank Boundaries")
 rsdp_dir           <- file.path(data_dir, "RSDP Roads")
 ntl_harmon_dir     <- file.path(data_dir, "VIIRS_DMSPOLS_Intercalibrated")
 kebele_dir         <- file.path(data_dir, "Kebeles")
@@ -66,7 +67,7 @@ paper_tables  <- file.path(project_dir, "Output", "Tables")
 # processor & (b) 16 GB RAM.
 
 ##### RUN ANY CODE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-RUN_CODE <- T
+RUN_CODE <- F
 
 ##### WHETHER TO ONLY RUN CODE TO GENERATE FIGURES & TABLES - - - - - - - - - - 
 # If TRUE, only generates tables and figures; skips code for cleaning datasets
