@@ -8,7 +8,7 @@ MAP_BACKGROUND_FILL <- "gray91" # darkseagreen
 
 # Load Data --------------------------------------------------------------------
 roads <- readRDS(file.path(rsdp_dir, "RawData", "RoadNetworkPanelData_1996_2016.Rds"))
-eth_adm <- readRDS(file.path(gadm_dir, "RawData", "gadm36_ETH_0_sp.rds"))
+eth_adm <- readRDS(file.path(wb_boundaries_dir, "FinalData", "ethiopia.Rds"))
 
 dmsp1996 <- raster(file.path(ntl_harmon_dir, "RawData", "Harmonized_DN_NTL_1992_calDMSP.tif")) %>% 
   crop(eth_adm) %>% mask(eth_adm)

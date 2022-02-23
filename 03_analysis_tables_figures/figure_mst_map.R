@@ -11,7 +11,7 @@ mst_dist <- spTransform(mst_dist, CRS("+init=epsg:4326"))
 roads <- readRDS(file.path(rsdp_dir, "RawData", "RoadNetworkPanelData_1996_2016.Rds"))
 improved_roads <- roads[roads$Complete_G %in% 1997:2009,]
 
-eth <- readRDS(file.path(gadm_dir, "RawData", "gadm36_ETH_0_sp.rds")) 
+eth <- readRDS(file.path(wb_boundaries_dir, "FinalData", "ethiopia.Rds"))
 
 lc_mst <- ggplot() +
   geom_polygon(data = eth,

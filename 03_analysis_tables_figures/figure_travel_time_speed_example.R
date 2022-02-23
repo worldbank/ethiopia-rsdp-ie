@@ -5,8 +5,8 @@ RESOLUTION_KM <- 3
 WALKING_SPEED <- 5
 
 # Load Data --------------------------------------------------------------------
-eth_adm <- readRDS(file.path(gadm_dir, "RawData", "gadm36_ETH_0_sp.rds"))
-eth_adm    <- eth_adm %>% spTransform(CRS(UTM_ETH))
+eth_adm <- readRDS(file.path(wb_boundaries_dir, "FinalData", "ethiopia.Rds"))
+eth_adm <- eth_adm %>% spTransform(CRS(UTM_ETH))
 
 woreda_wgs84 <- readRDS(file.path(panel_rsdp_imp_dir, "woreda", "individual_datasets", 
                                   "polygons_no_road_cut.Rds"))
@@ -139,7 +139,10 @@ r_eth_96 <- ggplot() +
   theme(plot.title = element_text(hjust = 0.5, face = "bold")) +
   scale_color_manual(values = "gray20") +
   scale_fill_gradientn(colours = pal,
-                       limits = c(10, 70)) 
+                       limits = c(10, 70),
+                       labels = c("10", "20", "30", "40", "50", "60", "\u2265 70")) +
+  guides(fill = guide_colorbar(order = 1),
+         colour = guide_legend(order = 2)) 
 
 r_eth_16 <- ggplot() +
   geom_polygon(data = eth_adm,
@@ -156,7 +159,10 @@ r_eth_16 <- ggplot() +
   theme(plot.title = element_text(hjust = 0.5, face = "bold")) +
   scale_color_manual(values = "gray20") +
   scale_fill_gradientn(colours = pal,
-                       limits = c(10, 70)) 
+                       limits = c(10, 70),
+                       labels = c("10", "20", "30", "40", "50", "60", "\u2265 70")) +
+  guides(fill = guide_colorbar(order = 1),
+         colour = guide_legend(order = 2)) 
 
 # Example Travel Time Raster ---------------------------------------------------
 p_area <- woreda_points[woreda_points$cell_id %in% c(308, 728),] %>% 
@@ -230,7 +236,10 @@ r_eth_96_c <- ggplot() +
   theme(plot.title = element_text(hjust = 0.5, face = "bold")) +
   scale_color_manual(values = "gray20") +
   scale_fill_gradientn(colours = pal,
-                       limits = c(10, 70)) 
+                       limits = c(10, 70),
+                       labels = c("10", "20", "30", "40", "50", "60", "\u2265 70")) +
+  guides(fill = guide_colorbar(order = 1),
+         colour = guide_legend(order = 2)) 
 
 r_eth_16_c <- ggplot() +
   geom_polygon(data = eth_adm_c,
@@ -258,7 +267,10 @@ r_eth_16_c <- ggplot() +
   theme(plot.title = element_text(hjust = 0.5, face = "bold")) +
   scale_color_manual(values = "gray20") +
   scale_fill_gradientn(colours = pal,
-                       limits = c(10, 70)) 
+                       limits = c(10, 70),
+                       labels = c("10", "20", "30", "40", "50", "60", "\u2265 70")) +
+  guides(fill = guide_colorbar(order = 1),
+         colour = guide_legend(order = 2))
 
 p <- ggarrange(r_eth_96_c,
                r_eth_16_c,

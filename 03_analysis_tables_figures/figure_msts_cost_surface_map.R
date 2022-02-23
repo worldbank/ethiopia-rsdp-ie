@@ -7,8 +7,10 @@ slope <- terrain(elevation, opt="slope", unit="degrees",neighbors=8)
 
 ## Ethiopia ADM boundary
 # The "woreda" file has holes for water bodies
-eth <- readRDS(file.path(gadm_dir, "RawData", "gadm36_ETH_0_sp.rds")) %>%
-  gBuffer(width = 10/111.12)
+eth <- readRDS(file.path(wb_boundaries_dir, "FinalData", "ethiopia.Rds"))
+
+#eth <- readRDS(file.path(gadm_dir, "RawData", "gadm36_ETH_0_sp.rds")) %>%
+#  gBuffer(width = 10/111.12)
 
 ## Globcover
 land_cover <- raster(file.path(gc_dir, "RawData", "1992_2015_data", "ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992_2015-v2.0.7.tif"), 1) %>%

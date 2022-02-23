@@ -6,13 +6,16 @@ elec_sp <- readOGR(file.path(elec_net_dir, "RawData",
 
 rsdp_sp <- readRDS(file.path(rsdp_dir, "RawData", "RoadNetworkPanelData_1996_2016.Rds"))
 
-eth <- readRDS(file.path(gadm_dir, "RawData", "gadm36_ETH_0_sp.Rds"))
+eth <- readRDS(file.path(wb_boundaries_dir, "FinalData", "ethiopia.Rds"))
 
 # Map --------------------------------------------------------------------------
 rsdp_sp <- rsdp_sp[rsdp_sp$Speed2016 >= rsdp_sp$Speed2005,]
 
 elec_sp <- elec_sp[elec_sp$STATUS %in% c("Planned",
                                          "Under Construction"),]
+
+rsdp_sp <- crop(rsdp_sp, eth)
+elec_sp <- crop(elec_sp, eth)
 
 elec_sp$id <- row.names(elec_sp)
 elec_sp_tidy <- tidy(elec_sp)

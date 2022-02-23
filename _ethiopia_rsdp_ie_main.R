@@ -24,7 +24,7 @@
 if(Sys.info()[["user"]] == "robmarty"){
   project_dir  <- "~/Dropbox/World Bank/Replication Packages/Impact of Ethiopia RSDP"
   code_dir     <- "~/Documents/Github/ethiopia-rsdp-ie"
-  #overleaf_dir <- "~/Dropbox/Apps/Overleaf/The Impact of Ethiopia RSDP Evidence from Satellite Data"
+  overleaf_dir <- "~/Dropbox/Apps/Overleaf/The Impact of Ethiopia RSDP Evidence from Satellite Data"
 }
 
 #### Paths from Root
@@ -55,11 +55,11 @@ clean_data_code_dir   <- file.path(code_dir, "02_clean_analysis_data")
 analysis_code_dir     <- file.path(code_dir, "03_analysis_tables_figures")
 
 ## For Tables/Figures
-#paper_figures <- file.path(overleaf_dir, "Figures")
-#paper_tables  <- file.path(overleaf_dir, "Tables")
+paper_figures <- file.path(overleaf_dir, "Figures")
+paper_tables  <- file.path(overleaf_dir, "Tables")
 
-paper_figures <- file.path(project_dir, "Output", "Figures")
-paper_tables  <- file.path(project_dir, "Output", "Tables")
+#paper_figures <- file.path(project_dir, "Output", "Figures")
+#paper_tables  <- file.path(project_dir, "Output", "Tables")
 
 # 2. Settings ------------------------------------------------------------------
 # The below settings define which code to run. Time estimates are given, which
