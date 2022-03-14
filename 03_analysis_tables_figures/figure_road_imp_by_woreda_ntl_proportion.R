@@ -53,7 +53,7 @@ p <- data_yr %>%
   theme_minimal() +
   labs(x = NULL,
        y = "Proportion of Road Network",
-       fill = "Speed\n(km/hr)",
+       fill = "Speed\n(km/h)",
        title = "Length of Roads by Estiamted Speed Limit",
        subtitle = "Across Woredas by Baseline Nightime Lights") +
   scale_fill_manual(values = wes_palette("FantasticFox1", n = 10, type = "continuous"))

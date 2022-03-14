@@ -75,12 +75,12 @@ df <- df %>%
   
   mutate(indep_var = case_when(
     indep_var == "year_improvedroad" ~ "All",
-    indep_var == "year_improvedroad_50aboveafter" ~ ">=50 km/hr",
-    indep_var == "year_improvedroad_below50after" ~ "<50 km/hr",
+    indep_var == "year_improvedroad_50aboveafter" ~ ">=50 km/h",
+    indep_var == "year_improvedroad_below50after" ~ "<50 km/h",
     
     indep_var == "years_since_improvedroad" ~ "All",
-    indep_var == "years_since_improvedroad_50aboveafter" ~ ">=50 km/hr",
-    indep_var == "years_since_improvedroad_below50after" ~ "<50 km/hr"
+    indep_var == "years_since_improvedroad_50aboveafter" ~ ">=50 km/h",
+    indep_var == "years_since_improvedroad_below50after" ~ "<50 km/h"
   )) %>%
   
   mutate(ntl_group = case_when(

@@ -49,7 +49,7 @@ for(speed_i in speeds_vec){
     apply(1, sum_na)
   
   var_label(data[[paste0("road_length_",speed_i,"above")]]) <- 
-    paste0("Road length of  ", speed_i, "km/hr and above")
+    paste0("Road length of  ", speed_i, "km/h and above")
   
   ### Minumum distance to road
   # Minimum distance to road with speed limit of X and above
@@ -60,7 +60,7 @@ for(speed_i in speeds_vec){
     apply(1, min, na.rm=T)
   
   var_label(data[[paste0("distance_road_speed_",speed_i,"above")]]) <- 
-    paste0("Min distance to road of ", speed_i, "km/hr and above")
+    paste0("Min distance to road of ", speed_i, "km/h and above")
 }
 
 # Log Variables ----------------------------------------------------------------

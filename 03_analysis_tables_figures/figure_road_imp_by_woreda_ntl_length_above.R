@@ -28,7 +28,7 @@ data_yr <- data %>%
                              "High: 9+")))
 
 # [Figure] Above Select Speeds -------------------------------------------------
-data_yr$name_full <- paste0("Road Length \u2265 ", data_yr$name, "km/hr")
+data_yr$name_full <- paste0("Road Length \u2265 ", data_yr$name, "km/h")
 
 p <- data_yr %>%
   filter(name %in% c("30", "50", "70")) %>%

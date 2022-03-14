@@ -1,7 +1,7 @@
 # Create Varibles for Analysis
 
 # The code implements the following cleaning steps
-# 1. Distance to road categories (e.g., min distance to improved road >50km/hr)
+# 1. Distance to road categories (e.g., min distance to improved road >50km/h)
 # 2. Create (1) years since improved and (2) binary improved variables
 # 3. Add grouped, lagged treatment (dummy for 2-5 & 6-10 years before treatment)
 # 4. Dependent variable transformations
@@ -92,7 +92,7 @@ for(start_i in start_ids){
   
   # Distance to aggregate road categories --------------------------------------
   # We calculate distance to roads by speed limit. Here we calculate distance
-  # to any road, road 50 km/hr and above and roads less than 50 km/hr
+  # to any road, road 50 km/h and above and roads less than 50 km/h
   
   ## Distance improved road
   data$distance_improvedroad <- apply(data[,paste0("distance_improvedroad_speedafter_",c(20,25,30,35,45,50,70,120))], 1, FUN = min_na)
