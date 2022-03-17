@@ -214,6 +214,83 @@ for(dataset_i in c("kebele", "dmspols_grid_nearroad")){
                width = fig_width,
                dpi = dpi)
         
+        # Figure: By 4 Speeds - FOR PPT (force SI params) ----------------------
+        p <- df %>%
+          dplyr::filter(dataset %in% dataset_i,
+                        addis_distance %in% addis_dist_i,
+                        ntl_num_groups %in% 4,
+                        ntl_group != "all",
+                        indep_var %in% "All",
+                        controls == controls_i,
+                        est_type == est_type_i) %>%
+          ggplot(aes(x = years_since_improved, 
+                     y = b, 
+                     ymin = p025, 
+                     ymax=p975,
+                     group = ntl_group, 
+                     color = ntl_group)) +
+          geom_point(position = position_dodge(width = p_dodge_width_si),size=1) + 
+          geom_linerange(position = position_dodge(width = p_dodge_width_si),size=0.5) +
+          geom_vline(xintercept=0,size=.5,alpha=0.5) +
+          geom_hline(yintercept=0,size=.5,alpha=0.5) +
+          labs(x="Years Since Road Improved",
+               y="Coefficient (+/- 95% CI)",
+               color="Baseline\nNighttime\nLights") +
+          scale_alpha_manual(values = c(0.1, 1)) +
+          scale_color_manual(values = c("gray20", "gray60", "darkorange", "firebrick2"),
+                             guide = guide_legend(reverse = TRUE)) +
+          theme_minimal() +
+          theme(strip.text = element_text(face = "bold", color = "black")) +
+          facet_wrap(~dep_var,
+                     scales = "free_y",
+                     nrow = fig_nrow_si)
+        
+        ggsave(p,
+               filename = file.path(paper_figures, 
+                                    paste0(est_type_i,"_by4ntlgroups_",dataset_i,"_",addis_dist_i,"_FOR_PPT.png")),
+               height = 4, 
+               width = 11.5,
+               dpi = dpi)
+        
+        # Figure: By 4 Speeds - FOR PPT (force SI params), NO CROP ----------------------
+        p <- df %>%
+          dplyr::filter(dataset %in% dataset_i,
+                        addis_distance %in% addis_dist_i,
+                        ntl_num_groups %in% 4,
+                        ntl_group != "all",
+                        indep_var %in% "All",
+                        controls == controls_i,
+                        est_type == est_type_i) %>%
+          dplyr::filter(dep_var != "Dependent Variable: Cropland") %>%
+          ggplot(aes(x = years_since_improved, 
+                     y = b, 
+                     ymin = p025, 
+                     ymax=p975,
+                     group = ntl_group, 
+                     color = ntl_group)) +
+          geom_point(position = position_dodge(width = p_dodge_width_si),size=1) + 
+          geom_linerange(position = position_dodge(width = p_dodge_width_si),size=0.5) +
+          geom_vline(xintercept=0,size=.5,alpha=0.5) +
+          geom_hline(yintercept=0,size=.5,alpha=0.5) +
+          labs(x="Years Since Road Improved",
+               y="Coefficient (+/- 95% CI)",
+               color="Baseline\nNighttime\nLights") +
+          scale_alpha_manual(values = c(0.1, 1)) +
+          scale_color_manual(values = c("gray20", "gray60", "darkorange", "firebrick2"),
+                             guide = guide_legend(reverse = TRUE)) +
+          theme_minimal() +
+          theme(strip.text = element_text(face = "bold", color = "black")) +
+          facet_wrap(~dep_var,
+                     scales = "free_y",
+                     nrow = fig_nrow_si)
+        
+        ggsave(p,
+               filename = file.path(paper_figures, 
+                                    paste0(est_type_i,"_by4ntlgroups_",dataset_i,"_",addis_dist_i,"_nocrop_FOR_PPT.png")),
+               height = fig_height_si, 
+               width = 8,
+               dpi = dpi)
+        
         # Figure: By 2 Speeds --------------------------------------------------
         
         # Don't create for diff-in-diff with 1km grid

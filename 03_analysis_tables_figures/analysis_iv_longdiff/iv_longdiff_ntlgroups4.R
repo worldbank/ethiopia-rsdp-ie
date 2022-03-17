@@ -253,6 +253,47 @@ stargazer(lm_dmspols_ihs_k,
                           paste0("ols_iv_near_mst_cost_distance_5km_","kebele","_results_",rsdp_type,"_regions.tex"))
 )
 
+stargazer(iv_cd_dmspols_ihs_regions_k %>% update_iv_coef_name(), 
+          iv_cd_dmspols_ihs_basentl_regions_k %>% update_iv_coef_name(), 
+          iv_cd_globcover_urban_regions_k %>% update_iv_coef_name(), 
+          iv_cd_globcover_urban_basentl_regions_k %>% update_iv_coef_name(), 
+          iv_cd_globcover_crop_regions_k %>% update_iv_coef_name(), 
+          iv_cd_globcover_crop_basentl_regions_k %>% update_iv_coef_name(),
+          
+          dep.var.labels.include = T,
+          dep.var.labels = c("NTL", "Urban", "Cropland",
+                             "NTL", "Urban", "Cropland"), #  "NTL $\\geq$ 2", "NTL $\\geq$ 6",
+          dep.var.caption = "",
+          omit = c("temp_avg", "precipitation", "distance_rsdp123_targettedlocs_log"),
+          covariate.labels = c("Imp Rd.",
+                               "Imp Rd.$\\times NTL_{96}$ Low",
+                               "Imp Rd.$\\times NTL_{96}$ Med",
+                               "Imp Rd.$\\times NTL_{96}$ High"),
+          omit.stat = c("f","ser", "rsq"),
+          align=TRUE,
+          no.space=TRUE,
+          float=FALSE,
+          column.sep.width="8pt",
+          digits=2,
+          omit.table.layout = "n",
+          
+          add.lines =         add_lines <- list(
+            c("Type", rep("IV", 6)),
+            c("1st Stage F-Stat",
+              #rep("N/A", 6),
+              
+              iv_cd_dmspols_ihs_regions_k$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_dmspols_ihs_basentl_regions_k$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_globcover_urban_regions_k$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_globcover_urban_basentl_regions_k$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_globcover_crop_regions_k$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_globcover_crop_basentl_regions_k$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM))
+          ),
+          out = file.path(paper_tables, 
+                          paste0("ols_iv_near_mst_cost_distance_5km_","kebele","_results_",rsdp_type,"_regions_IVonly.tex"))
+)
+
+
 # APPENDIX RESULTS TABLES ==================================================
 
 # Make stargazer Function --------------------------------------------------
