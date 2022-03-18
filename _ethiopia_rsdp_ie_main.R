@@ -55,11 +55,11 @@ clean_data_code_dir   <- file.path(code_dir, "02_clean_analysis_data")
 analysis_code_dir     <- file.path(code_dir, "03_analysis_tables_figures")
 
 ## For Tables/Figures
-#paper_figures <- file.path(overleaf_dir, "Figures")
-#paper_tables  <- file.path(overleaf_dir, "Tables")
+paper_figures <- file.path(overleaf_dir, "Figures")
+paper_tables  <- file.path(overleaf_dir, "Tables")
 
-paper_figures <- file.path(project_dir, "Output", "Figures")
-paper_tables  <- file.path(project_dir, "Output", "Tables")
+#paper_figures <- file.path(project_dir, "Output", "Figures")
+#paper_tables  <- file.path(project_dir, "Output", "Tables")
 
 # 2. Settings ------------------------------------------------------------------
 # The below settings define which code to run. Time estimates are given, which
@@ -119,12 +119,19 @@ if(!require("facetscales")) install_github("zeehio/facetscales")
 
 #### Packages from CRAN
 if(!require("pacman")) install.packages("pacman")
+
+#### Specific Package Versions
+if(!require("did")){
+  require(devtools)
+  install_version("did", version = "2.0.0", repos = "http://cran.us.r-project.org")
+}
+
 pacman::p_load(AER, 
                clusterSEs,
                coefplot,
                data.table,
                devtools,
-               did,
+               #did,
                doBy,
                dplyr,
                dvmisc,
@@ -166,6 +173,7 @@ pacman::p_load(AER,
                viridis,
                wesanderson)
 
+library(did)
 # 5. User Defined Functions ----------------------------------------------------
 
 # Functions
