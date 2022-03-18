@@ -14,7 +14,7 @@ ntl_group = "4"
 
 # Loop through datasets, variables & subsets -----------------------------------
 #for(dataset in c("kebele", "dmspols_grid_nearroad")){ 
-for(dataset in c("kebele")){ 
+for(dataset in c("kebele", "dmspols_grid_nearroad")){ 
   
   # Define Dependent Variables -------------------------------------------------
   if(dataset %in% "kebele"){
