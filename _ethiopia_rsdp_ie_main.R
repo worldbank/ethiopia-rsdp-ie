@@ -63,7 +63,7 @@ paper_tables  <- file.path(project_dir, "Output", "Tables")
 # processor & (b) 16 GB RAM.
 
 ##### RUN ANY CODE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-RUN_CODE <- F
+RUN_CODE <- T
 
 ##### WHETHER TO ONLY RUN CODE TO GENERATE FIGURES & TABLES - - - - - - - - - - 
 # If TRUE, only generates tables and figures; skips code for cleaning datasets
