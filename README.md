@@ -23,9 +23,9 @@ Data can be found in the `/Data` folder here [the link will be added soon; if re
 
 ## To replicate analysis
 
-1. Clone/download this github repository.
+1. Clone/download this github repository
 2. Download the data folder (link provided above)
 3. In [_ethiopia_rsdp_ie_main.R](https://github.com/worldbank/ethiopia-rsdp-ie/blob/main/_ethiopia_rsdp_ie_main.R), change the following paths:
 * `project_dir` should point to the data folder
 * `code_dir` should point to the github repo
-* Run `_ethiopia_rsdp_ie_main.R`; this runs all scripts needed to replicate the analysis, including data cleaning and generating all tables and figures. 
+* Run `_ethiopia_rsdp_ie_main.R`; this runs all scripts needed to replicate the analysis, including data cleaning and generating all tables and figures
