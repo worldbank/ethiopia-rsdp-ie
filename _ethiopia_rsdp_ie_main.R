@@ -24,7 +24,6 @@
 if(Sys.info()[["user"]] == "robmarty"){
   project_dir  <- "~/Dropbox/World Bank/Replication Packages/Impact of Ethiopia RSDP"
   code_dir     <- "~/Documents/Github/ethiopia-rsdp-ie"
-  overleaf_dir <- "~/Dropbox/Apps/Overleaf/The Impact of Ethiopia RSDP Evidence from Satellite Data"
 }
 
 #### Paths from Root
@@ -55,11 +54,8 @@ clean_data_code_dir   <- file.path(code_dir, "02_clean_analysis_data")
 analysis_code_dir     <- file.path(code_dir, "03_analysis_tables_figures")
 
 ## For Tables/Figures
-paper_figures <- file.path(overleaf_dir, "Figures")
-paper_tables  <- file.path(overleaf_dir, "Tables")
-
-#paper_figures <- file.path(project_dir, "Output", "Figures")
-#paper_tables  <- file.path(project_dir, "Output", "Tables")
+paper_figures <- file.path(project_dir, "Output", "Figures")
+paper_tables  <- file.path(project_dir, "Output", "Tables")
 
 # 2. Settings ------------------------------------------------------------------
 # The below settings define which code to run. Time estimates are given, which
@@ -85,11 +81,11 @@ OVERWRITE_EXTRACTED_DATA <- F
 
 # Whether to run code for creating unit level datasets. 
 # TIME: Takes less than 1 hour to run.
-CREATE_UNIT_LEVEL_DATASET <- T
+CREATE_UNIT_LEVEL_DATASET <- F
 
 # Whether to run code for extracting data to unit level datasets. 
 # TIME: Takes ~1+ day to run
-EXTRACT_DATA <- T
+EXTRACT_DATA <- F
 
 # Computing travel time between units for calculating market access.
 # TIME: Takes 3+ days to run

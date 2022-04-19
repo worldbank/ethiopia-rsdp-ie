@@ -17,9 +17,7 @@ Code is organized into the below folders:
 
 ## Data
 
-Data can be found in the `/Data` folder here (INCLUDE LINK TO VIEWABLE DB FOLDER).
+Data can be found in the `/Data` folder here [the link will be added soon; if require access to the data, please email Rob Marty at rmarty@worldbank.org]
 * Within `/Data`, there is a folder for each dataset. Each dataset folder generally contains a `/RawData` and `/FinalData` folder, where `/RawData` contains data downloaded from its source and `FinalData` contains data processed from code.
 * `Panel Data RSDP Impacts` contains analysis datasets using different units of analysis and datasets of results (e.g., dataframe of regression coefficients that are later used to make figures). Within a dataset folder, `/merged_datasets` contains the final, analysis datasets. For example, `/Data/Panel Data RSDP Impacts/kebele/merged_datasets/panel_data_clean.Rds` contains cleaned Kebele-level panel data and `/longdiff_data_clean_base1996_end2016.Rds` contains cleaned Kebele-level data that uses a long difference from 1996 to 2016.
-
-
 

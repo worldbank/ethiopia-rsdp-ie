@@ -1,7 +1,7 @@
 # Analysis: Coefficient Each Year - Results
 
 #### Parameters
-OVERWRITE_FILES <- T
+OVERWRITE_FILES <- F
 
 dataset = "kebele"
 dep_var = "globcover_urban_sum_ihs"
@@ -66,7 +66,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                                          "all_units",
                                          "results_datasets",
                                          "individual_datasets",
-                                         paste0("dynamic_did_attgt_wald_test_pvalue_",OUT_PATH_SUFFIX, ".Rds"))
+                                         paste0("dynamic_did_attgt_",OUT_PATH_SUFFIX, ".Rds"))
               
               if(OVERWRITE_FILES | !file.exists(file_to_check)){
                 
