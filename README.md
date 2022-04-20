@@ -26,6 +26,6 @@ Data can be found in the `/Data` folder [here](https://www.dropbox.com/sh/l19l75
 1. Clone/download this github repository
 2. Download the project folder that includes data [here](https://www.dropbox.com/sh/l19l75ktxii7iba/AAB973jQioF9b8OiPPAlvA9Ba?dl=0)
 3. In [_ethiopia_rsdp_ie_main.R](https://github.com/worldbank/ethiopia-rsdp-ie/blob/main/_ethiopia_rsdp_ie_main.R), change the following paths:
-* `project_dir` should point to the data folder
-* `code_dir` should point to the github repo
+* [project_dir](https://github.com/worldbank/ethiopia-rsdp-ie/blob/0f3fa9b2f904bc76907efe12ad30fe354548b9f2/_ethiopia_rsdp_ie_main.R#L25) should point to the data folder
+* [code_dir](https://github.com/worldbank/ethiopia-rsdp-ie/blob/0f3fa9b2f904bc76907efe12ad30fe354548b9f2/_ethiopia_rsdp_ie_main.R#L26) should point to the github repo
 * Run `_ethiopia_rsdp_ie_main.R`; this runs all scripts needed to replicate the analysis, including data cleaning and generating all tables and figures
