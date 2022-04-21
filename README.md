@@ -17,9 +17,25 @@ Code is organized into the below folders:
 
 ## Data
 
+### Summary 
 Data can be found in the `/Data` folder [here](https://www.dropbox.com/sh/l19l75ktxii7iba/AAB973jQioF9b8OiPPAlvA9Ba?dl=0)
 * Within `/Data`, there is a folder for each dataset. Each dataset folder generally contains a `/RawData` and `/FinalData` folder, where `/RawData` contains data downloaded from its source and `FinalData` contains data processed from code.
 * `Panel Data RSDP Impacts` contains analysis datasets using different units of analysis and datasets of results (e.g., dataframe of regression coefficients that are later used to make figures). Within a dataset folder, `/merged_datasets` contains the final, analysis datasets. For example, `/Data/Panel Data RSDP Impacts/kebele/merged_datasets/panel_data_clean.Rds` contains cleaned Kebele-level panel data and `/longdiff_data_clean_base1996_end2016.Rds` contains cleaned Kebele-level data that uses a long difference from 1996 to 2016.
+
+### Datasets that need to be manually downloaded
+
+In this repository, we include all fully processed datasets in order for analysis to be easily replicated. However, the repository includes code to process raw data and create the fully processed dataset. A number of datasets need to be downloaded from their original source. The following datasets need to be manually downloaded; click on the link for instructions that include (1) the link to access and download the data and (2) a description of which folder to put the downloaded dataset into.
+
+* [Electricity Network]
+* [Elevation]
+* [GlobCover: 1992 - 2015 Data]
+* [GlobCover: 2016 - 2018 Data]
+* [Gridded Population of the World]
+* [Kebeles]
+* [Nighttime Lights: VIIRS_DMSPOLS_Intercalibrated]
+* [Precipitation]
+* [Temperature]
+* [World Bank Boundaries]
 
 ## To replicate analysis
 
