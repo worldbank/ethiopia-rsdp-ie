@@ -26,16 +26,16 @@ Data can be found in the `/Data` folder [here](https://www.dropbox.com/sh/l19l75
 
 In this repository, we include all fully processed datasets in order for analysis to be easily replicated. However, the repository includes code to process raw data and create the fully processed dataset. A number of datasets need to be downloaded from their original source. The following datasets need to be manually downloaded; click on the link for instructions that include (1) the link to access and download the data and (2) a description of which folder to put the downloaded dataset into.
 
-* [Electricity Network]
-* [Elevation]
-* [GlobCover: 1992 - 2015 Data]
-* [GlobCover: 2016 - 2018 Data]
-* [Gridded Population of the World]
-* [Kebeles]
-* [Nighttime Lights: VIIRS_DMSPOLS_Intercalibrated]
-* [Precipitation]
-* [Temperature]
-* [World Bank Boundaries]
+* [Electricity Network](https://github.com/worldbank/ethiopia-rsdp-ie/tree/main/data/Electricity%20Network/RawData)
+* [Elevation](https://github.com/worldbank/ethiopia-rsdp-ie/tree/main/data/Elevation/RawData)
+* [GlobCover: 1992 - 2015 Data](https://github.com/worldbank/ethiopia-rsdp-ie/tree/main/data/Globcover/RawData/1992_2015_data)
+* [GlobCover: 2016 - 2018 Data](https://github.com/worldbank/ethiopia-rsdp-ie/tree/main/data/Globcover/RawData/2016_2018_data)
+* [Gridded Population of the World](https://github.com/worldbank/ethiopia-rsdp-ie/tree/main/data/Gridded%20Population%20of%20the%20World/RawData)
+* [Kebeles](https://github.com/worldbank/ethiopia-rsdp-ie/tree/main/data/Kebeles/RawData)
+* [Nighttime Lights: VIIRS_DMSPOLS_Intercalibrated](https://github.com/worldbank/ethiopia-rsdp-ie/tree/main/data/VIIRS_DMSPOLS_Intercalibrated/RawData)
+* [Precipitation](https://github.com/worldbank/ethiopia-rsdp-ie/tree/main/data/Precipitation/RawData)
+* [Temperature](https://github.com/worldbank/ethiopia-rsdp-ie/tree/main/data/Temperature/RawData)
+* [World Bank Boundaries](https://github.com/worldbank/ethiopia-rsdp-ie/tree/main/data/World%20Bank%20Boundaries/RawData)
 
 ## To replicate analysis
 

@@ -22,13 +22,14 @@
 # 1. Filepaths -----------------------------------------------------------------
 #### Root Paths
 if(Sys.info()[["user"]] == "robmarty"){
-  project_dir  <- "~/Dropbox/World Bank/Replication Packages/Impact of Ethiopia RSDP"
-  code_dir     <- "~/Documents/Github/ethiopia-rsdp-ie"
+  project_dir <- "~/Documents/Github/ethiopia-rsdp-ie"
 }
+
+code_dir <- project_dir
 
 #### Paths from Root
 ## Within project_dir
-data_dir           <- file.path(project_dir, "Data")
+data_dir           <- file.path(project_dir, "data")
 
 gadm_dir           <- file.path(data_dir, "GADM")
 wb_boundaries_dir  <- file.path(data_dir, "World Bank Boundaries")
