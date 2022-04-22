@@ -40,6 +40,6 @@ The following datasets need to be manually downloaded. Click on the link for ins
 ## To replicate analysis
 
 1. Clone/download this github repository
-2. Download the project folder that includes data [here](https://www.dropbox.com/sh/l19l75ktxii7iba/AAB973jQioF9b8OiPPAlvA9Ba?dl=0)
+2. Download the data that needs to be manually downloaded and put in the appropriate folders (see instructions above)
 3. In [_ethiopia_rsdp_ie_main.R](https://github.com/worldbank/ethiopia-rsdp-ie/blob/main/_ethiopia_rsdp_ie_main.R), [project_dir](https://github.com/worldbank/ethiopia-rsdp-ie/blob/3b9e3b6844c3a76c4f162195276e89864fa252bf/_ethiopia_rsdp_ie_main.R#L25) should point to this github repo
 4. Run `_ethiopia_rsdp_ie_main.R`; this runs all scripts needed to replicate the analysis, including data cleaning and generating all tables and figures
