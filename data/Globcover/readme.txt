@@ -1,0 +1,1 @@
+Globcover Land Cover Data - from European Space Agency
