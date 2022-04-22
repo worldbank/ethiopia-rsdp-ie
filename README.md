@@ -24,7 +24,7 @@ Data can be found in the `/Data` folder [here](https://www.dropbox.com/sh/l19l75
 
 ### Datasets that need to be manually downloaded
 
-In this repository, we include all fully processed datasets in order for analysis to be easily replicated. However, the repository includes code to process raw data and create the fully processed dataset. A number of datasets need to be downloaded from their original source. The following datasets need to be manually downloaded; click on the link for instructions that include (1) the link to access and download the data and (2) a description of which folder to put the downloaded dataset into.
+The following datasets need to be manually downloaded. Click on the link for instructions that include (1) the link to access and download the data and (2) a description of which folder to put the downloaded dataset into.
 
 * [Electricity Network](https://github.com/worldbank/ethiopia-rsdp-ie/tree/main/data/Electricity%20Network/RawData)
 * [Elevation](https://github.com/worldbank/ethiopia-rsdp-ie/tree/main/data/Elevation/RawData)
@@ -41,7 +41,5 @@ In this repository, we include all fully processed datasets in order for analysi
 
 1. Clone/download this github repository
 2. Download the project folder that includes data [here](https://www.dropbox.com/sh/l19l75ktxii7iba/AAB973jQioF9b8OiPPAlvA9Ba?dl=0)
-3. In [_ethiopia_rsdp_ie_main.R](https://github.com/worldbank/ethiopia-rsdp-ie/blob/main/_ethiopia_rsdp_ie_main.R), change the following paths:
-* [project_dir](https://github.com/worldbank/ethiopia-rsdp-ie/blob/0f3fa9b2f904bc76907efe12ad30fe354548b9f2/_ethiopia_rsdp_ie_main.R#L25) should point to the data folder
-* [code_dir](https://github.com/worldbank/ethiopia-rsdp-ie/blob/0f3fa9b2f904bc76907efe12ad30fe354548b9f2/_ethiopia_rsdp_ie_main.R#L26) should point to the github repo
+3. In [_ethiopia_rsdp_ie_main.R](https://github.com/worldbank/ethiopia-rsdp-ie/blob/main/_ethiopia_rsdp_ie_main.R), `project_dir` should point to this github repo
 4. Run `_ethiopia_rsdp_ie_main.R`; this runs all scripts needed to replicate the analysis, including data cleaning and generating all tables and figures
