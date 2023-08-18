@@ -9,8 +9,8 @@ NEAR_THRESHOLD <- 5*1000
 # - DMSP-OLS until 2012
 # - Globcover until 2018
 # - Roads until 2016 (for globcover, could use roads in 2016 and globcover in 2018)
-base_end_df <- data.frame(baseline = c(1996, 1996, 1996),
-                          endline =  c(2012, 2009, 2016))
+base_end_df <- data.frame(baseline = c(1996, 1996, 1996, 2006, 2006),
+                          endline =  c(2012, 2009, 2016, 2009, 2016))
 
 # Load Data --------------------------------------------------------------------
 data <- readRDS(file.path(panel_rsdp_imp_dir, "kebele", "merged_datasets", "panel_data_clean.Rds"))
@@ -20,7 +20,7 @@ data <- data[,!grepl("MA_ntl2000_|MA_poplog2000_|MA_gcu2000_|_ic_|_rural33|_rura
 # Clean Data -------------------------------------------------------------------
 for(i in 1:nrow(base_end_df)){
   print(i)
-
+  
   #### Grab start/end years
   base_year <- base_end_df$baseline[i]
   end_year <- base_end_df$endline[i]
@@ -50,7 +50,7 @@ for(i in 1:nrow(base_end_df)){
                    str_remove_vec(rx = "distance_rsdp123") %>%
                    str_remove_vec(rx = "_pretnd96_92"), 
                  diff) 
-    
+  
   ## Grab time invariant variables
   data_time_invar <- data %>%
     filter(year %in% base_year) %>%
@@ -59,6 +59,7 @@ for(i in 1:nrow(base_end_df)){
                     ends_with("_pretnd96_92"),
                     cell_id, woreda_id, R_CODE, Z_CODE, # Pop2007
                     area_polygon, distance_city_addisababa,
+                    distance_elec_trans,
                     wor_ntlgroup_2bin)) 
   
   ## Merge
@@ -68,6 +69,6 @@ for(i in 1:nrow(base_end_df)){
   file_name <- paste0("longdiff_data_clean_base",base_year,"_end",end_year)
   
   saveRDS(data_clean, file.path(panel_rsdp_imp_dir, "kebele", "merged_datasets", 
-                          paste0(file_name, ".Rds")))
+                                paste0(file_name, ".Rds")))
 }
 

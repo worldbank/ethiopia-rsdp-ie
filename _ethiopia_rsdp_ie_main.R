@@ -23,9 +23,11 @@
 #### Root Paths
 if(Sys.info()[["user"]] == "robmarty"){
   project_dir <- "~/Documents/Github/ethiopia-rsdp-ie"
+  project_dir <- "~/Dropbox/World Bank/Replication Packages/Impact of Ethiopia RSDP"
 }
 
-code_dir <- project_dir
+# code_dir <- project_dir
+code_dir <- "~/Documents/Github/ethiopia-rsdp-ie"
 
 #### Paths from Root
 ## Within project_dir
@@ -35,6 +37,7 @@ gadm_dir           <- file.path(data_dir, "GADM")
 wb_boundaries_dir  <- file.path(data_dir, "World Bank Boundaries")
 rsdp_dir           <- file.path(data_dir, "RSDP Roads")
 ntl_harmon_dir     <- file.path(data_dir, "VIIRS_DMSPOLS_Intercalibrated")
+ntl_bm_dir         <- file.path(data_dir, "VIIRS BlackMarble")
 kebele_dir         <- file.path(data_dir, "Kebeles")
 woreda_dir         <- file.path(data_dir, "Woredas")
 gpw_dir            <- file.path(data_dir, "Gridded Population of the World")
@@ -58,13 +61,16 @@ analysis_code_dir     <- file.path(code_dir, "03_analysis_tables_figures")
 paper_figures <- file.path(project_dir, "Output", "Figures")
 paper_tables  <- file.path(project_dir, "Output", "Tables")
 
+paper_figures <- file.path("~/Dropbox/Apps/Overleaf/The Impact of Ethiopia RSDP Evidence from Satellite Data/Figures")
+paper_tables  <- file.path("~/Dropbox/Apps/Overleaf/The Impact of Ethiopia RSDP Evidence from Satellite Data/Tables")
+
 # 2. Settings ------------------------------------------------------------------
 # The below settings define which code to run. Time estimates are given, which
 # are based off of running code on a Mac with: (a) 3 GHz Dual-Code Intel Code i7
 # processor & (b) 16 GB RAM.
 
 ##### RUN ANY CODE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-RUN_CODE <- T
+RUN_CODE <- F
 
 ##### WHETHER TO ONLY RUN CODE TO GENERATE FIGURES & TABLES - - - - - - - - - - 
 # If TRUE, only generates tables and figures; skips code for cleaning datasets
@@ -111,8 +117,9 @@ NEAR_CUTOFF <- 5000 # meters
 
 # 4. Packages ------------------------------------------------------------------
 #### Install select packages from Github
-if(!require("velox"))       install_github("hunzikp/velox")
-if(!require("facetscales")) install_github("zeehio/facetscales")
+if(!require("velox"))        install_github("hunzikp/velox")
+if(!require("facetscales"))  install_github("zeehio/facetscales")
+if(!require("blackmarbler")) install_github("ramarty/blackmarbler")
 
 #### Packages from CRAN
 if(!require("pacman")) install.packages("pacman")
@@ -168,9 +175,11 @@ pacman::p_load(AER,
                TTR,
                velox,
                viridis,
-               wesanderson)
+               wesanderson,
+               exactextractr)
 
 library(did)
+library(blackmarbler)
 # 5. User Defined Functions ----------------------------------------------------
 
 # Functions
@@ -239,6 +248,11 @@ if(RUN_CODE){
     # Clean Woreda file. Add nighttime lights and nighttime lights groups.
     
     source(file.path(ancil_data_code_dir, "woreda", "clean_woreda.R"))
+    
+    # **** Download VIIRS BlackMarble ------------------------------------------
+    # Download GADM Data
+    
+    source(file.path(ancil_data_code_dir, "viirs_blackmarble", "download_viirs_bm.R"))
     
     # **** RSDP I-III, Road IV MSTs --------------------------------------------
     # Create minimum spanning trees used as instruments

@@ -30,7 +30,8 @@ DATASETS_TIME_INVARIANT <- c(#"kebele_details.Rds",
                              "distance_addis.Rds",
                              "adm_units.Rds",
                              "gpw.Rds",
-                             "area.Rds")
+                             "area.Rds",
+                             "distance_elec_trans_lines.Rds")
 
 DATASETS_TIME_VARYING <- c(#"viirs.Rds",
                            "temperature.Rds",

@@ -293,6 +293,145 @@ stargazer(iv_cd_dmspols_ihs_regions_k %>% update_iv_coef_name(),
                           paste0("ols_iv_near_mst_cost_distance_5km_","kebele","_results_",rsdp_type,"_regions_IVonly.tex"))
 )
 
+# Log (not IHS) ================================================================
+# https://gist.github.com/alexeyknorre/b0780836f4cec04d41a863a683f91b53
+
+## OLS
+lm_dmspols_k_lg     <- as.formula(paste("dmspols_harmon_log ~ near_rsdp123 + distance_rsdp123_targettedlocs_log | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
+lm_globcover_urban_k_lg <- as.formula(paste("globcover_urban_sum_log ~ near_rsdp123 + distance_rsdp123_targettedlocs_log | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
+lm_globcover_crop_k_lg  <- as.formula(paste("globcover_cropland_sum_log  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
+
+lm_dmspols_basentl_k_lg     <- as.formula(paste("dmspols_harmon_log ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
+lm_globcover_urban_basentl_k_lg <- as.formula(paste("globcover_urban_sum_log ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
+lm_globcover_crop_basentl_k_lg  <- as.formula(paste("globcover_cropland_sum_log  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele)
+
+## IV
+iv_cd_dmspols_regions_k_lg     <- as.formula(paste("dmspols_harmon_log ~ distance_rsdp123_targettedlocs_log | 0 | (near_rsdp123 ~ near_mst_lc_region) | ", "cluster_var")) %>% felm(data = df_kebele)
+iv_cd_globcover_urban_regions_k_lg <- as.formula(paste("globcover_urban_sum_log ~ distance_rsdp123_targettedlocs_log | 0 | (near_rsdp123 ~ near_mst_lc_region) | ", "cluster_var")) %>% felm(data = df_kebele)
+iv_cd_globcover_crop_regions_k_lg  <- as.formula(paste("globcover_cropland_sum_log  ~ distance_rsdp123_targettedlocs_log | 0 | (near_rsdp123 ~ near_mst_lc_region) | ", "cluster_var")) %>% felm(data = df_kebele)
+
+iv_cd_dmspols_basentl_regions_k_lg     <- as.formula(paste("dmspols_harmon_log ~ distance_rsdp123_targettedlocs_log | 0 | (near_rsdp123|near_rsdp123Xdmspols_1996_bin4_2|near_rsdp123Xdmspols_1996_bin4_3|near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4) | ", "cluster_var")) %>% felm(data = df_kebele)
+iv_cd_globcover_urban_basentl_regions_k_lg <- as.formula(paste("globcover_urban_sum_log ~ distance_rsdp123_targettedlocs_log | 0 | (near_rsdp123|near_rsdp123Xdmspols_1996_bin4_2|near_rsdp123Xdmspols_1996_bin4_3|near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4) | ", "cluster_var")) %>% felm(data = df_kebele)
+iv_cd_globcover_crop_basentl_regions_k_lg  <- as.formula(paste("globcover_cropland_sum_log  ~ distance_rsdp123_targettedlocs_log | 0 | (near_rsdp123|near_rsdp123Xdmspols_1996_bin4_2|near_rsdp123Xdmspols_1996_bin4_3|near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4) | ", "cluster_var")) %>% felm(data = df_kebele)
+
+stargazer(lm_dmspols_k_lg, 
+          lm_dmspols_basentl_k_lg, 
+          lm_globcover_urban_k_lg,
+          lm_globcover_urban_basentl_k_lg, 
+          lm_globcover_crop_k_lg, 
+          lm_globcover_crop_basentl_k_lg,
+          
+          iv_cd_dmspols_regions_k_lg %>% update_iv_coef_name(), 
+          iv_cd_dmspols_basentl_regions_k_lg %>% update_iv_coef_name(), 
+          iv_cd_globcover_urban_regions_k_lg %>% update_iv_coef_name(), 
+          iv_cd_globcover_urban_basentl_regions_k_lg %>% update_iv_coef_name(), 
+          iv_cd_globcover_crop_regions_k_lg %>% update_iv_coef_name(), 
+          iv_cd_globcover_crop_basentl_regions_k_lg %>% update_iv_coef_name(),
+          
+          dep.var.labels.include = T,
+          dep.var.labels = c("NTL", "Urban", "Cropland",
+                             "NTL", "Urban", "Cropland"), #  "NTL $\\geq$ 2", "NTL $\\geq$ 6",
+          dep.var.caption = "",
+          omit = c("temp_avg", "precipitation", "distance_rsdp123_targettedlocs_log"),
+          covariate.labels = c("Imp Rd.",
+                               "Imp Rd.$\\times NTL_{96}$ Low",
+                               "Imp Rd.$\\times NTL_{96}$ Med",
+                               "Imp Rd.$\\times NTL_{96}$ High"),
+          omit.stat = c("f","ser", "rsq"),
+          align=TRUE,
+          no.space=TRUE,
+          float=FALSE,
+          column.sep.width="-15pt",
+          digits=2,
+          omit.table.layout = "n",
+          
+          add.lines =         add_lines <- list(
+            c("Type", rep("OLS", 6), rep("IV", 6)),
+            c("1st Stage F-Stat",
+              rep("N/A", 6),
+              
+              iv_cd_dmspols_regions_k_lg$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_dmspols_basentl_regions_k_lg$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_globcover_urban_regions_k_lg$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_globcover_urban_basentl_regions_k_lg$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_globcover_crop_regions_k_lg$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_globcover_crop_basentl_regions_k_lg$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM))
+          ),
+          out = file.path(paper_tables, 
+                          paste0("ols_iv_near_mst_cost_distance_5km_","kebele","_results_",rsdp_type,"_regions_log.tex"))
+)
+
+# Remove Elect Trans Lines =====================================================
+# https://gist.github.com/alexeyknorre/b0780836f4cec04d41a863a683f91b53
+
+df_kebele_rm_elec <- df_kebele %>%
+  dplyr::filter(distance_elec_trans >= 5000)
+
+## OLS
+lm_dmspols_k_el     <- as.formula(paste("dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele_rm_elec)
+lm_globcover_urban_k_el <- as.formula(paste("dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele_rm_elec)
+lm_globcover_crop_k_el  <- as.formula(paste("dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele_rm_elec)
+
+lm_dmspols_basentl_k_el     <- as.formula(paste("dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele_rm_elec)
+lm_globcover_urban_basentl_k_el <- as.formula(paste("dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele_rm_elec)
+lm_globcover_crop_basentl_k_el  <- as.formula(paste("dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 | 0 | 0 | ", "cluster_var")) %>% felm(data = df_kebele_rm_elec)
+
+## IV
+iv_cd_dmspols_regions_k_el     <- as.formula(paste("dv_dmspols ~ distance_rsdp123_targettedlocs_log | 0 | (near_rsdp123 ~ near_mst_lc_region) | ", "cluster_var")) %>% felm(data = df_kebele_rm_elec)
+iv_cd_globcover_urban_regions_k_el <- as.formula(paste("dv_gcurban ~ distance_rsdp123_targettedlocs_log | 0 | (near_rsdp123 ~ near_mst_lc_region) | ", "cluster_var")) %>% felm(data = df_kebele_rm_elec)
+iv_cd_globcover_crop_regions_k_el  <- as.formula(paste("dv_gccrop  ~ distance_rsdp123_targettedlocs_log | 0 | (near_rsdp123 ~ near_mst_lc_region) | ", "cluster_var")) %>% felm(data = df_kebele_rm_elec)
+
+iv_cd_dmspols_basentl_regions_k_el     <- as.formula(paste("dv_dmspols ~ distance_rsdp123_targettedlocs_log | 0 | (near_rsdp123|near_rsdp123Xdmspols_1996_bin4_2|near_rsdp123Xdmspols_1996_bin4_3|near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4) | ", "cluster_var")) %>% felm(data = df_kebele_rm_elec)
+iv_cd_globcover_urban_basentl_regions_k_el <- as.formula(paste("dv_gcurban ~ distance_rsdp123_targettedlocs_log | 0 | (near_rsdp123|near_rsdp123Xdmspols_1996_bin4_2|near_rsdp123Xdmspols_1996_bin4_3|near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4) | ", "cluster_var")) %>% felm(data = df_kebele_rm_elec)
+iv_cd_globcover_crop_basentl_regions_k_el  <- as.formula(paste("dv_gccrop  ~ distance_rsdp123_targettedlocs_log | 0 | (near_rsdp123|near_rsdp123Xdmspols_1996_bin4_2|near_rsdp123Xdmspols_1996_bin4_3|near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4) | ", "cluster_var")) %>% felm(data = df_kebele_rm_elec)
+
+stargazer(lm_dmspols_k_el, 
+          lm_dmspols_basentl_k_el, 
+          lm_globcover_urban_k_el,
+          lm_globcover_urban_basentl_k_el, 
+          lm_globcover_crop_k_el, 
+          lm_globcover_crop_basentl_k_el,
+          
+          iv_cd_dmspols_regions_k_el %>% update_iv_coef_name(), 
+          iv_cd_dmspols_basentl_regions_k_el %>% update_iv_coef_name(), 
+          iv_cd_globcover_urban_regions_k_el %>% update_iv_coef_name(), 
+          iv_cd_globcover_urban_basentl_regions_k_el %>% update_iv_coef_name(), 
+          iv_cd_globcover_crop_regions_k_el %>% update_iv_coef_name(), 
+          iv_cd_globcover_crop_basentl_regions_k_el %>% update_iv_coef_name(),
+          
+          dep.var.labels.include = T,
+          dep.var.labels = c("NTL", "Urban", "Cropland",
+                             "NTL", "Urban", "Cropland"), #  "NTL $\\geq$ 2", "NTL $\\geq$ 6",
+          dep.var.caption = "",
+          omit = c("temp_avg", "precipitation", "distance_rsdp123_targettedlocs_log"),
+          covariate.labels = c("Imp Rd.",
+                               "Imp Rd.$\\times NTL_{96}$ Low",
+                               "Imp Rd.$\\times NTL_{96}$ Med",
+                               "Imp Rd.$\\times NTL_{96}$ High"),
+          omit.stat = c("f","ser", "rsq"),
+          align=TRUE,
+          no.space=TRUE,
+          float=FALSE,
+          column.sep.width="-15pt",
+          digits=2,
+          omit.table.layout = "n",
+          
+          add.lines =         add_lines <- list(
+            c("Type", rep("OLS", 6), rep("IV", 6)),
+            c("1st Stage F-Stat",
+              rep("N/A", 6),
+              
+              iv_cd_dmspols_regions_k_el$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_dmspols_basentl_regions_k_el$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_globcover_urban_regions_k_el$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_globcover_urban_basentl_regions_k_el$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_globcover_crop_regions_k_el$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM),
+              iv_cd_globcover_crop_basentl_regions_k_el$stage1$iv1fstat[[1]][5] %>% round(ROUND_NUM))
+          ),
+          out = file.path(paper_tables, 
+                          paste0("ols_iv_near_mst_cost_distance_5km_","kebele","_results_",rsdp_type,"_regions_rm_elec.tex"))
+)
+
 
 # APPENDIX RESULTS TABLES ==================================================
 

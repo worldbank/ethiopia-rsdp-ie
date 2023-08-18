@@ -31,6 +31,7 @@ data_all <- data_all %>%
                 dmspols_harmon_10 = as.numeric(dmspols_harmon >= 10),
                 
                 dmspols_harmon_ihs = calc_ihs(dmspols_harmon),
+                dmspols_harmon_log = log(dmspols_harmon + 1),
                 
                 globcover_urban = as.numeric(globcover_urban    > 0),
                 globcover_cropland = as.numeric(globcover_cropland > 0),

@@ -8,6 +8,11 @@ extract_dmspols_harmon_to_points <- function(year, sdf){
   print(year)
   if(year %in% 1992:2013){
     dmspols <- raster(file.path(ntl_harmon_dir, "RawData", paste0("Harmonized_DN_NTL_",year,"_calDMSP.tif"))) %>% crop(sdf)
+    
+    if(year == 2013){
+      viirs13 <- raster(file.path(ntl_harmon_dir, "RawData", "DN_NTL_2013_simVIIRS.tif")) %>% crop(sdf)
+    }
+    
   } else{
     dmspols <- raster(file.path(ntl_harmon_dir, "RawData", paste0("Harmonized_DN_NTL_",year,"_simVIIRS.tif"))) %>% crop(sdf)
   }
@@ -15,12 +20,20 @@ extract_dmspols_harmon_to_points <- function(year, sdf){
   if(grepl("grid", DATASET_TYPE)){
     sdf$dmspols_harmon <- raster::extract(dmspols, sdf) %>% as.numeric()
     
-    #sdf$dmspols_harmon <- dmspols_vx$extract_points(sp=sdf) %>% as.numeric
+    if(year == 2013){
+      sdf$dmspols_harmon_viirs13 <- raster::extract(viirs13, sdf) %>% as.numeric()
+    }
+    
   } else {
     dmspols_vx <- velox(dmspols)
-    
+
     # Average NTL value
-    sdf$dmspols_harmon   <- dmspols_vx$extract(sp=sdf, fun=function(x){mean(x, na.rm=T)}, small = T) %>% as.numeric
+    sdf$dmspols_harmon <- dmspols_vx$extract(sp=sdf, fun=function(x){mean(x, na.rm=T)}, small = T) %>% as.numeric
+    
+    if(year == 2013){
+      viirs13_vx <- velox(viirs13)
+      sdf$dmspols_harmon_viirs13 <- viirs13_vx$extract(sp=sdf, fun=function(x){mean(x, na.rm=T)}, small = T) %>% as.numeric
+    }
     
     # Proportion of unit above NTL threshold
     sdf$dmspols_harmon_1 <- dmspols_vx$extract(sp=sdf, fun=function(x){mean(x >= 1, na.rm=T)}, small = T) %>% as.numeric
@@ -51,8 +64,14 @@ extract_dmspols_harmon_to_points <- function(year, sdf){
   return(sdf@data)
 }
 
-sdf_all <- lapply(1992:2018, extract_dmspols_harmon_to_points, sdf) %>% bind_rows
+sdf_all <- lapply(1992:2021, extract_dmspols_harmon_to_points, sdf) %>% bind_rows
+
+sdf_all$dmspols_harmon_viirs <- NA
+sdf_all$dmspols_harmon_viirs[sdf_all$year == 2013] <- sdf_all$dmspols_harmon_viirs13[sdf_all$year == 2013]
+sdf_all$dmspols_harmon_viirs[sdf_all$year != 2013] <- sdf_all$dmspols_harmon[sdf_all$year != 2013]
+sdf_all$dmspols_harmon_viirs13 <- NULL
 
 # Export -----------------------------------------------------------------------
 saveRDS(sdf_all, file.path(panel_rsdp_imp_dir, DATASET_TYPE, "individual_datasets", "dmspolsharmon.Rds"))
+
 

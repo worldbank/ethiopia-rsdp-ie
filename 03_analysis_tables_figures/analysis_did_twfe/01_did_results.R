@@ -18,11 +18,12 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
   
   # Define Dependent Variables -------------------------------------------------
   if(dataset %in% "kebele"){
-    dep_var_vec <- c("globcover_urban_sum_ihs", "globcover_cropland_sum_ihs", "dmspols_harmon_ihs")
+    dep_var_vec <- c("globcover_urban_sum_ihs", "globcover_cropland_sum_ihs", "dmspols_harmon_ihs",
+                     "globcover_urban_sum_log", "globcover_cropland_sum_log", "dmspols_harmon_log")
   }           
   
   if(dataset %in% "dmspols_grid_nearroad"){
-    dep_var_vec <- c("globcover_urban", "globcover_cropland", "dmspols_harmon_ihs")
+    dep_var_vec <- c("globcover_urban", "globcover_cropland", "dmspols_harmon_ihs", "dmspols_harmon_log")
   } 
   
   for(dep_var in dep_var_vec){

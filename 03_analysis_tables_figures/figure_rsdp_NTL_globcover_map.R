@@ -112,8 +112,8 @@ make_gc_figure <- function(df, title){
   
 }
 
-p_gc1996_urban <- make_gc_figure(gc1996_df, "Urban")
-p_gc2016_urban <- make_gc_figure(gc2016_df, "Urban")
+p_gc1996_urban <- make_gc_figure(gc1996_df, "Urban Land")
+p_gc2016_urban <- make_gc_figure(gc2016_df, "Urban Land")
 
 # GlobCover-Cropland --------------------------------------------------------------
 #### Prep Data

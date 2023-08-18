@@ -9,7 +9,7 @@ rsdp_sp <- readRDS(file.path(rsdp_dir, "RawData", "RoadNetworkPanelData_1996_201
 eth <- readRDS(file.path(wb_boundaries_dir, "FinalData", "ethiopia.Rds"))
 
 # Map --------------------------------------------------------------------------
-rsdp_sp <- rsdp_sp[rsdp_sp$Speed2016 >= rsdp_sp$Speed2005,]
+rsdp_sp <- rsdp_sp[rsdp_sp$Speed2016 >= rsdp_sp$Speed2007,]
 
 elec_sp <- elec_sp[elec_sp$STATUS %in% c("Planned",
                                          "Under Construction"),]
@@ -29,7 +29,7 @@ rsdp_sp_tidy$one <- "constant"
 p <- ggplot() +
   geom_path(data = rsdp_sp_tidy,
             aes(x = long, y = lat, group = group, 
-                size = "RSDP Roads\nImproved\n2005-2015"),
+                size = "RSDP Roads\nImproved\n2007-2016"),
             color = "gray50") +
   geom_path(data = elec_sp_tidy,
             aes(x = long, y = lat, group = group,

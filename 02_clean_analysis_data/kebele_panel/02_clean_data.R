@@ -70,6 +70,7 @@ for(var in ma_var) data[[paste0(var, "_log")]] <- data[[var]] %>% log()
 ntl_var <- data %>% names() %>% str_subset("dmspols|globcover")
 #for(var in ntl_var) data[[paste0(var, "_log")]] <- log(data[[var]] + 1)
 for(var in ntl_var) data[[paste0(var, "_ihs")]] <- calc_ihs(data[[var]])
+for(var in ntl_var) data[[paste0(var, "_log")]] <- log(data[[var]] + 1)
 
 # Baseline Dependent Variables -------------------------------------------------
 data <- data %>%

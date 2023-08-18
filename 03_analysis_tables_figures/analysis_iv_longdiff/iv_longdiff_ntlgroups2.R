@@ -237,6 +237,8 @@ stargazer(lm_dmspols_ihs_k,
                           paste0("ols_iv_near_mst_cost_distance_5km_","kebele","_results_",rsdp_type,"_regions_2ntlgroups.tex"))
 )
 
+# LOG vs DHS ===================================================================
+
 # APPENDIX RESULTS TABLES ==================================================
 
 # Make stargazer Function --------------------------------------------------
