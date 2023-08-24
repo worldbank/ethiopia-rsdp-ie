@@ -32,6 +32,10 @@ roads <- spTransform(roads, CRS(UTM_ETH))
 roads_1km_buff <- gBuffer_chunks(sdf = roads, width = 1000, chunk_size = 51)
 
 # 735 736 737
+inter_tf <- st_intersects(roads_1km_buff %>% st_as_sf(), 
+                          woreda_blank %>% st_as_sf(),
+                          sparse = F) 
+
 woreda_clean <- lapply(1:nrow(woreda_blank), function(i){
   print(paste0(i, " / ", nrow(woreda_blank)))
   
@@ -40,16 +44,27 @@ woreda_clean <- lapply(1:nrow(woreda_blank), function(i){
   ## Cleans up self-intersection issues
   woreda_blank_i <- gBuffer(woreda_blank_i, byid=T, width=0)
   
-  roads_1km_buff_i <- raster::intersect(roads_1km_buff, woreda_blank_i)
+  inter_tf_i <- inter_tf[,i]
   
+  # Issues; erases all
+  if(i %in% c(735, 736, 737)) inter_tf_i <- F
+  
+  if(TRUE %in% inter_tf_i){
+    roads_1km_buff_i <- raster::intersect(roads_1km_buff, woreda_blank_i)
+  } else{
+    roads_1km_buff_i <- NULL
+  }
+
   # If doesn't intersect with any roads, keep whole woreda
   if(is.null(roads_1km_buff_i)){ 
     woreda_blank_i_e <- woreda_blank_i
     
     # If does intersect with roads, cut out the road
   } else{
-    woreda_blank_i_e <- erase(woreda_blank_i, roads_1km_buff_i)
+
+    woreda_blank_i_e <- raster::erase(woreda_blank_i, roads_1km_buff_i)
     
+
     # Check if fully removes polygon; if does, use full Woreda
     if(nrow(woreda_blank_i_e) %in% 0){
       woreda_blank_i_e <- woreda_blank_i

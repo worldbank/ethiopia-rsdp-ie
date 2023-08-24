@@ -35,7 +35,7 @@ DATASETS_TIME_INVARIANT <- c("woreda_details.Rds",
                              "gpw.Rds",
                              "area.Rds")
 
-DATASETS_TIME_VARYING <- c(#"viirs.Rds",
+DATASETS_TIME_VARYING <- c("viirs_bm.Rds",
                            "temperature.Rds",
                            "precipitation.Rds",
                            "road_length.Rds",

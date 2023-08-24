@@ -13,13 +13,12 @@ controls = "none"
 ntl_group = "4"
 
 # Loop through datasets, variables & subsets -----------------------------------
-#for(dataset in c("kebele", "dmspols_grid_nearroad")){ 
-for(dataset in c("kebele", "dmspols_grid_nearroad")){ 
+for(dataset in c("kebele")){ # dmspols_grid_nearroad 
   
   # Define Dependent Variables -------------------------------------------------
   if(dataset %in% "kebele"){
-    dep_var_vec <- c("globcover_urban_sum_ihs", "globcover_cropland_sum_ihs", "dmspols_harmon_ihs",
-                     "globcover_urban_sum_log", "globcover_cropland_sum_log", "dmspols_harmon_log")
+    dep_var_vec <- c("globcover_urban_sum_ihs", "globcover_cropland_sum_ihs", "dmspols_harmon_ihs", "dmspols_harmon_viirs_ihs", "viirs_bm_ihs",
+                     "globcover_urban_sum_log", "globcover_cropland_sum_log", "dmspols_harmon_log", "dmspols_harmon_viirs_log", "viirs_bm_log") 
   }           
   
   if(dataset %in% "dmspols_grid_nearroad"){
@@ -27,9 +26,18 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
   } 
   
   for(dep_var in dep_var_vec){
-    for(indep_var in c("year_improvedroad",
+    for(indep_var in c(#"year_improvedroad_p4",
+                       "year_improvedroad",
                        "year_improvedroad_50aboveafter",
-                       "year_improvedroad_below50after")){
+                       "year_improvedroad_below50after",
+                       
+                       #"year_improvedroad_p1to3_50aboveafter", 
+                       #"year_improvedroad_p1to3_below50after",
+                       "year_improvedroad_p1to3", 
+                       
+                       #"year_improvedroad_p4_50aboveafter", 
+                       #"year_improvedroad_p4_below50after",
+                       "year_improvedroad_p4")){
       for(addis_distance in c("All", "Far")){ # "All", "Far"
         for(ntl_num_groups in c(2,4)){ # 
           for(controls in c("none")){ # temp_precip, precip
@@ -54,6 +62,16 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                 next
               }
               
+              if((indep_var %>% str_detect("year_improvedroad_p1to3")) & (dep_var %>% str_detect("viirs_bm")) ){
+                next
+              }
+              
+              if((indep_var %in% c("year_improvedroad",
+                                   "year_improvedroad_50aboveafter",
+                                   "year_improvedroad_below50after")) & (dep_var %>% str_detect("viirs_bm")) ){
+                next
+              }
+              
               # Check if model already estimated ---------------------------------
               OUT_PATH_SUFFIX <- paste0(dataset, "_", 
                                         dep_var, "_", 
@@ -68,6 +86,18 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                                          "results_datasets",
                                          "individual_datasets",
                                          paste0("dynamic_did_attgt_",OUT_PATH_SUFFIX, ".Rds"))
+              
+              if(F){
+                a <- file.path(panel_rsdp_imp_dir,
+                               "all_units",
+                               "results_datasets",
+                               "individual_datasets") %>%
+                  list.files(full.names = T) %>%
+                  str_subset("p4|p1to3")
+                for(file_i in a){
+                  file.remove(a)
+                }
+              }
               
               if(OVERWRITE_FILES | !file.exists(file_to_check)){
                 
@@ -98,11 +128,30 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                 if(ntl_group %in% "4") data <- data[data$ntl_group %in% 4,]
                 
                 ## Subset
+                # dep_var_vec <- c("globcover_urban_sum_ihs", "globcover_cropland_sum_ihs", "dmspols_harmon_ihs", "dmspols_harmon_viirs_ihs", "viirs_bm_ihs",
+                #                  "globcover_urban_sum_log", "globcover_cropland_sum_log", "dmspols_harmon_log", "dmspols_harmon_viirs_log", "viirs_bm_log"
+                #           
+                #                  
+                             
+                if(dep_var %>% str_detect("globcover")) end_year_i <- 2018
+                if(dep_var %>% str_detect("dmspols_harmon")) end_year_i <- 2018 # could update to 2021
+                if(dep_var %>% str_detect("viirs_bm")) end_year_i <- 2022 # could update to 2021
+                
                 data = data %>%
                   ungroup() %>%
                   dplyr::filter(year >= 1992,
-                                year <= 2018,
+                                year <= end_year_i,
                                 !is.na(indep_var))
+                
+                if(indep_var %>% str_detect("year_improvedroad_p1to3")){
+                  data <- data %>%
+                    dplyr::filter(year <= 2009)
+                }
+                
+                if(indep_var %>% str_detect("year_improvedroad_p4")){
+                  data <- data %>%
+                    dplyr::filter(year >= 2012)
+                }
                 
                 # This way of selecting specific variables is robust to some names (ie, woreda_id)
                 # not being in all the datasets

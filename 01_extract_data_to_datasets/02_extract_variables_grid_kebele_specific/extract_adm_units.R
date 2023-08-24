@@ -45,7 +45,8 @@ if(nrow(points_nooverlap) > 0){
 #### Merge in data
 woreda_df <- woreda@data %>%
   dplyr::select(woreda_id, W_CODE, Z_CODE, R_CODE, Pop2007, Density,
-                woreda_dmspols96_max, wor_ntlgroup_2bin, wor_ntlgroup_4bin) %>%
+                woreda_dmspols96_max, wor_ntlgroup_2bin, wor_ntlgroup_4bin,
+                woreda_dmspols11_max, wor_ntlgroup_2011_2bin, wor_ntlgroup_2011_4bin) %>%
   dplyr::rename(woreda_pop2007 = Pop2007,
                 woreda_density2007 = Density)
 

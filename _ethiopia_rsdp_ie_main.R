@@ -58,8 +58,8 @@ clean_data_code_dir   <- file.path(code_dir, "02_clean_analysis_data")
 analysis_code_dir     <- file.path(code_dir, "03_analysis_tables_figures")
 
 ## For Tables/Figures
-paper_figures <- file.path(project_dir, "Output", "Figures")
-paper_tables  <- file.path(project_dir, "Output", "Tables")
+# paper_figures <- file.path(project_dir, "Output", "Figures")
+# paper_tables  <- file.path(project_dir, "Output", "Tables")
 
 paper_figures <- file.path("~/Dropbox/Apps/Overleaf/The Impact of Ethiopia RSDP Evidence from Satellite Data/Figures")
 paper_tables  <- file.path("~/Dropbox/Apps/Overleaf/The Impact of Ethiopia RSDP Evidence from Satellite Data/Tables")

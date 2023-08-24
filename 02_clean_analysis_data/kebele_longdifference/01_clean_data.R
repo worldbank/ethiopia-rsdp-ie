@@ -9,8 +9,8 @@ NEAR_THRESHOLD <- 5*1000
 # - DMSP-OLS until 2012
 # - Globcover until 2018
 # - Roads until 2016 (for globcover, could use roads in 2016 and globcover in 2018)
-base_end_df <- data.frame(baseline = c(1996, 1996, 1996, 2006, 2006),
-                          endline =  c(2012, 2009, 2016, 2009, 2016))
+base_end_df <- data.frame(baseline = c(1996, 1996, 1996, 1996, 2012, 2012),
+                          endline =  c(2012, 2009, 2016, 2018, 2016, 2018))
 
 # Load Data --------------------------------------------------------------------
 data <- readRDS(file.path(panel_rsdp_imp_dir, "kebele", "merged_datasets", "panel_data_clean.Rds"))
@@ -45,18 +45,22 @@ for(i in 1:nrow(base_end_df)){
     # First difference
     group_by(cell_id) %>%
     summarize_at(names(data) %>% 
-                   str_subset("MA|road_length|dmspols|globcover|viirs|temp|precipitation|ndvi|distance_road_") %>%
+                   str_subset("MA|road_length|dmspols|viirs|globcover|viirs|temp|precipitation|ndvi|distance_road_") %>%
                    str_remove_vec(rx = "_1996") %>%
+                   str_remove_vec(rx = "_2011") %>%
                    str_remove_vec(rx = "distance_rsdp123") %>%
-                   str_remove_vec(rx = "_pretnd96_92"), 
+                   str_remove_vec(rx = "_pretnd96_92") %>%
+                   str_remove_vec(rx = "_pretnd11_07"), 
                  diff) 
   
   ## Grab time invariant variables
   data_time_invar <- data %>%
     filter(year %in% base_year) %>%
     dplyr::select(c(contains("_1996"),
+                    contains("_2011"),
                     contains("distance_rsdp123"),
                     ends_with("_pretnd96_92"),
+                    ends_with("_pretnd11_07"),
                     cell_id, woreda_id, R_CODE, Z_CODE, # Pop2007
                     area_polygon, distance_city_addisababa,
                     distance_elec_trans,

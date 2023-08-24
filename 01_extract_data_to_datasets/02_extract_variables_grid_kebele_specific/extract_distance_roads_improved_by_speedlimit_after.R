@@ -26,11 +26,13 @@ roads_sdf <- readRDS(file.path(rsdp_dir, "RawData", "RoadNetworkPanelData_1996_2
 roads_sdf$id <- 1 # useful to have a variable the same for all obs when aggreagting roads later
 roads_sdf <- roads_sdf %>% spTransform(CRS(UTM_ETH))
 
+roads_anyyear_sdf <- roads_sdf[roads_sdf$Speed2016 > roads_sdf$Speed1996,]
+
 # Calculate Distance -----------------------------------------------------------
 determine_distance_to_points <- function(year, points, roads){
   
   print(paste(year, "--------------------------------------------------------"))
-
+  
   # Grab roads for relevant year
   roads_yyyy <- roads[roads[[paste0("Speed",year)]] > 0,]
   
@@ -60,8 +62,28 @@ determine_distance_to_points <- function(year, points, roads){
   return(points@data)
 }
 
-points_all <- lapply(1997:2016, determine_distance_to_points, points, roads_sdf) %>% bind_rows
+points_all <- lapply(1997:2016, determine_distance_to_points, points, roads_sdf) %>% 
+  bind_rows()
+
+points_rsdp1to3 <- lapply(1997:2016, determine_distance_to_points, points, 
+                          roads_sdf[roads_sdf$Speed2009 > roads_sdf$Speed1996,]) %>% 
+  bind_rows() %>%
+  dplyr::rename_at(vars(contains("speedafter")), . %>% str_replace_all("speedafter", "speedafter_p1to3"))
+
+# roads_sdf$Speed2016 > roads_sdf$Speed2009
+points_rsdp4 <- lapply(1997:2016, determine_distance_to_points, points, 
+                       roads_sdf[roads_sdf$Speed2016 > roads_sdf$Speed2012,]) %>% 
+  bind_rows() %>%
+  dplyr::rename_at(vars(contains("speedafter")), . %>% str_replace_all("speedafter", "speedafter_p4"))
+
+points_all <- points_all %>%
+  full_join(points_rsdp1to3, by = c("cell_id", "year")) %>%
+  full_join(points_rsdp4,    by = c("cell_id", "year"))
 
 # Export -----------------------------------------------------------------------
 saveRDS(points_all, file.path(panel_rsdp_imp_dir, DATASET_TYPE, "individual_datasets", "distance_roads_improved_by_speedlimit_after.Rds"))
+
+
+
+
 

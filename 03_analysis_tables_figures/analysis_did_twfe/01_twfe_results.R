@@ -6,11 +6,11 @@
 OVERWRITE_FILES <- F
 
 # Loop Over Datasets -----------------------------------------------------------
-for(dataset in c("kebele", "dmspols_grid_nearroad")){
+for(dataset in c("kebele")){ # dmspols_grid_nearroad
   
   # Define Dependent Variables -------------------------------------------------
   if(dataset %in% "kebele"){
-    dep_var_vec <- c("globcover_urban_sum_ihs", "globcover_cropland_sum_ihs", "dmspols_harmon_ihs")
+    dep_var_vec <- c("globcover_urban_sum_ihs", "globcover_cropland_sum_ihs", "dmspols_harmon_ihs", "viirs_bm_ihs")
   }           
   
   if(dataset %in% "dmspols_grid_nearroad"){
@@ -21,7 +21,9 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
   data <- readRDS(file.path(panel_rsdp_imp_dir, dataset, "merged_datasets", "panel_data_clean.Rds"))
   
   for(dep_var in dep_var_vec){
-    for(indep_var in c("years_since_improvedroad", "years_since_improvedroad_50aboveafter", "years_since_improvedroad_below50after")){
+    for(indep_var in c("years_since_improvedroad", 
+                       "years_since_improvedroad_50aboveafter",
+                       "years_since_improvedroad_below50after")){
       for(controls in c("")){ # "+temp_avg+precipitation"
         for(addis_distance in c("All", "Far")){
           for(ntl_num_groups in c(2,4)){
@@ -39,6 +41,16 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
               }
               
               if((dataset == "dmspols_grid_nearroad") & (addis_distance == "Far")){
+                next
+              }
+              
+              if((indep_var %>% str_detect("distance_improvedroad_p1to3")) & (dep_var %>% str_detect("viirs")) ){
+                next
+              }
+              
+              if((indep_var %in% c("year_improvedroad",
+                                   "year_improvedroad_50aboveafter",
+                                   "year_improvedroad_below50after")) & (dep_var %>% str_detect("viirs")) ){
                 next
               }
               
@@ -75,13 +87,23 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                 if(ntl_group %in% "3")        data_temp <- data_temp[data_temp$ntl_group %in% 3,]
                 if(ntl_group %in% "4")        data_temp <- data_temp[data_temp$ntl_group %in% 4,]
                 
+                if(indep_var %>% str_detect("distance_improvedroad_p1to3")){
+                  data_temp <- data_temp %>%
+                    dplyr::filter(year <= 2009)
+                }
+                
+                if(indep_var %>% str_detect("distance_improvedroad_p4")){
+                  data_temp <- data_temp %>%
+                    dplyr::filter(year >= 2012)
+                }
+                
                 # Run model ----------------------------------------------------
                 results_df_temp <- tryCatch({     
                   
                   paste(dep_var, "~", indep_var, controls, "| year + cell_id | 0 | woreda_id") %>%
                     as.formula() %>%
                     felm(data = data_temp) %>%
-                    lm_confint_tidy(indep_var)%>%
+                    lm_confint_tidy(indep_var) %>%
                     mutate(addis_distance = addis_distance,
                            dep_var = dep_var,
                            ntl_group = ntl_group,
@@ -92,6 +114,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){
                   
                 }, error=function(e) data.frame(NULL))
                 
+                print(nrow(results_df_temp))
                 saveRDS(results_df_temp, file)
               }
               

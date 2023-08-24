@@ -52,10 +52,17 @@ df <- bind_rows(
   tw_df
 )
 
+df <- df %>%
+  dplyr::filter(!(indep_var %in% c("year_improvedroad_p1to3",
+                                   "year_improvedroad_p4")))
+
 # Clean Data -------------------------------------------------------------------
 df <- df %>%
   dplyr::filter(dep_var %in% c("dmspols_harmon_ihs",
                                "dmspols_harmon_log",
+                               
+                               "viirs_bm_ihs",
+                               "viirs_bm_log",
                                
                                "globcover_urban",
                                "globcover_urban_sum_ihs",
@@ -72,6 +79,12 @@ df <- df %>%
     dep_var == "dmspols_harmon_ihs" ~ "Dependent Variable: Nighttime Lights",
     dep_var == "dmspols_harmon_log" ~ "Dependent Variable: Nighttime Lights",
     
+    dep_var == "dmspols_harmon_viirs_ihs" ~ "Dependent Variable: Nighttime Lights",
+    dep_var == "dmspols_harmon_viirs_log" ~ "Dependent Variable: Nighttime Lights",
+    
+    dep_var == "viirs_bm_ihs" ~ "Dependent Variable: Nighttime Lights",
+    dep_var == "viirs_bm_log" ~ "Dependent Variable: Nighttime Lights",
+    
     dep_var == "globcover_urban_sum_log" ~ "Dependent Variable: Urban",
     dep_var == "globcover_urban_sum_ihs" ~ "Dependent Variable: Urban",
     dep_var == "globcover_urban" ~ "Dependent Variable: Urban",
@@ -87,12 +100,13 @@ df <- df %>%
   
   mutate(indep_var = case_when(
     indep_var == "year_improvedroad" ~ "All",
-    indep_var == "year_improvedroad_50aboveafter" ~ ">=50 km/h",
-    indep_var == "year_improvedroad_below50after" ~ "<50 km/h",
+    indep_var == "year_improvedroad_50aboveafter" ~ "Federal and\nAsphalt Roads\n ", # ">=50 km/h",
+    indep_var == "year_improvedroad_below50after" ~ "URRAP and\nLow to\nIntermediate\nClass Gravel\nRoads\n ", # "<50 km/h",
     
     indep_var == "years_since_improvedroad" ~ "All",
-    indep_var == "years_since_improvedroad_50aboveafter" ~ ">=50 km/h",
-    indep_var == "years_since_improvedroad_below50after" ~ "<50 km/h"
+    indep_var == "years_since_improvedroad_50aboveafter" ~ "Federal and\nAsphalt Roads\n ", #  ">=50 km/h",
+    indep_var == "years_since_improvedroad_below50after" ~ "URRAP and\nLow to\nIntermediate\nClass Gravel\nRoads\n ", #  "<50 km/h",
+    TRUE ~ indep_var
   )) %>%
   
   mutate(ntl_group = case_when(
@@ -116,12 +130,114 @@ df <- df %>%
   
   dplyr::filter(abs(years_since_improved) <= 10)
 
+# Individual Figure ------------------------------------------------------------
+# df_sub <- df %>%
+#   dplyr::filter(dataset %in% "kebele",
+#                 addis_distance %in% "All",
+#                 controls %in% "none",
+#                 est_type %in% "did") # did, tw
+# 
+# p_dodge_width <- 1
+# df_sub %>%
+#   dplyr::filter(indep_var %in% "year_improvedroad_p1to3",
+#                 ntl_num_groups %in% 4,
+#                 ntl_group != "all",
+#                 dep_var_raw %in% c("dmspols_harmon_ihs",
+#                                "globcover_urban_sum_ihs",
+#                                "globcover_cropland_sum_ihs")) %>%
+#   ggplot(aes(x = years_since_improved, 
+#              y = b, 
+#              ymin = p025, 
+#              ymax=p975,
+#              group = ntl_group, 
+#              color = ntl_group)) +
+#   geom_point(position = position_dodge(width = p_dodge_width),size=1) + 
+#   geom_linerange(position = position_dodge(width = p_dodge_width),size=0.5) +
+#   geom_vline(xintercept=0,size=.5,alpha=0.5) +
+#   geom_hline(yintercept=0,size=.5,alpha=0.5) +
+#   labs(x="Years Since Road Improved",
+#        y="Coefficient (+/- 95% CI)",
+#        color="Baseline\nNighttime\nLights") +
+#   scale_alpha_manual(values = c(0.1, 1)) +
+#   # scale_color_manual(values = c("gray20", "gray60", "darkorange", "firebrick2"),
+#   #                    guide = guide_legend(reverse = TRUE)) +
+#   theme_minimal() +
+#   theme(strip.text = element_text(face = "bold", color = "black")) +
+#   facet_wrap(dep_var~ntl_group,
+#              scales = "free_y",
+#              ncol = 4)
+# 
+# 
+# 
+# p_dodge_width <- 1
+# df_sub %>%
+#   dplyr::filter(indep_var %in% "year_improvedroad_p4",
+#                 ntl_num_groups %in% 4,
+#                 ntl_group != "all",
+#                 dep_var_raw %in% c("viirs_bm_ihs",
+#                                "globcover_urban_sum_ihs",
+#                                "globcover_cropland_sum_ihs")) %>%
+#   ggplot(aes(x = years_since_improved, 
+#              y = b, 
+#              ymin = p025, 
+#              ymax=p975,
+#              group = ntl_group, 
+#              color = ntl_group)) +
+#   geom_point(position = position_dodge(width = p_dodge_width),size=1) + 
+#   geom_linerange(position = position_dodge(width = p_dodge_width),size=0.5) +
+#   geom_vline(xintercept=0,size=.5,alpha=0.5) +
+#   geom_hline(yintercept=0,size=.5,alpha=0.5) +
+#   labs(x="Years Since Road Improved",
+#        y="Coefficient (+/- 95% CI)",
+#        color="Baseline\nNighttime\nLights") +
+#   scale_alpha_manual(values = c(0.1, 1)) +
+#   # scale_color_manual(values = c("gray20", "gray60", "darkorange", "firebrick2"),
+#   #                    guide = guide_legend(reverse = TRUE)) +
+#   theme_minimal() +
+#   theme(strip.text = element_text(face = "bold", color = "black")) +
+#   facet_wrap(dep_var~ntl_group,
+#              scales = "free_y",
+#              ncol = 4)
+# 
+# 
+# 
+# p_dodge_width <- 1
+# df_sub %>%
+#   dplyr::filter(indep_var %in% "All",
+#                 ntl_num_groups %in% 4,
+#                 ntl_group != "all",
+#                 dep_var_raw %in% c("dmspols_harmon_ihs",
+#                                    "globcover_urban_sum_ihs",
+#                                    "globcover_cropland_sum_ihs")) %>%
+#   ggplot(aes(x = years_since_improved, 
+#              y = b, 
+#              ymin = p025, 
+#              ymax=p975,
+#              group = ntl_group, 
+#              color = ntl_group)) +
+#   geom_point(position = position_dodge(width = p_dodge_width),size=1) + 
+#   geom_linerange(position = position_dodge(width = p_dodge_width),size=0.5) +
+#   geom_vline(xintercept=0,size=.5,alpha=0.5) +
+#   geom_hline(yintercept=0,size=.5,alpha=0.5) +
+#   labs(x="Years Since Road Improved",
+#        y="Coefficient (+/- 95% CI)",
+#        color="Baseline\nNighttime\nLights") +
+#   scale_alpha_manual(values = c(0.1, 1)) +
+#   # scale_color_manual(values = c("gray20", "gray60", "darkorange", "firebrick2"),
+#   #                    guide = guide_legend(reverse = TRUE)) +
+#   theme_minimal() +
+#   theme(strip.text = element_text(face = "bold", color = "black")) +
+#   facet_wrap(dep_var~ntl_group,
+#              scales = "free_y",
+#              ncol = 4)
+
+
 # Loop over figures ------------------------------------------------------------
-for(dataset_i in c("kebele", "dmspols_grid_nearroad")){ 
+for(dataset_i in c("kebele", "dmspols_grid_nearroad")){ # 
   for(addis_dist_i in c("All", "Far")){
     for(controls_i in c("none")){ 
       for(est_type_i in c("did", "tw")){
-        for(trans_type in c("log")){ # "ihs", "log"
+        for(trans_type in c("ihs", "log")){ # "ihs", "log"
           
           # Skip certain parameter combinations ----------------------------------
           if((dataset_i == "dmspols_grid_nearroad") & (addis_dist_i == "Far")){
