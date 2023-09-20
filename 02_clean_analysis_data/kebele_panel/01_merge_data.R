@@ -45,6 +45,8 @@ DATASETS_TIME_VARYING <- c("viirs_bm.Rds",
                            #"dmspols_intercalibrated_zhang.Rds",
                            #"distance_roads_improved_by_speedlimit_before.Rds",
                            "distance_roads_improved_by_speedlimit_after.Rds",
+                           "distance_roads_improved_by_speedlimit_after_rand.Rds",
+                           "distance_roads_improved_by_speedlimit_after_randrestrict.Rds",
                            "distance_roads_by_speedlimit.Rds")
 
 # Merge ------------------------------------------------------------------------
@@ -53,6 +55,18 @@ for(dataset in DATASETS_TIME_VARYING){
   dataset_temp <- readRDS(file.path(panel_rsdp_imp_dir, "kebele", "individual_datasets", dataset)) %>% data.table
   print(nrow(dataset_temp))
   print(length(unique(dataset_temp$cell_id)))
+  
+  # Rename
+  if(dataset == "distance_roads_improved_by_speedlimit_after_rand.Rds"){
+    names(dataset_temp) <- names(dataset_temp) %>%
+      str_replace_all("speedafter", "speedafter_rand")
+  }
+  
+  if(dataset == "distance_roads_improved_by_speedlimit_after_randrestrict.Rds"){
+    names(dataset_temp) <- names(dataset_temp) %>%
+      str_replace_all("speedafter", "speedafter_randrestrict")
+  }
+  
   points_all <- merge(points_all, dataset_temp, by=c("cell_id", "year"), all=T)
 }
 

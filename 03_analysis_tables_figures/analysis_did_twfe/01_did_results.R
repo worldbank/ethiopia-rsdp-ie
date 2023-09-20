@@ -25,27 +25,26 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
     dep_var_vec <- c("globcover_urban", "globcover_cropland", "dmspols_harmon_ihs", "dmspols_harmon_log")
   } 
   
-  for(dep_var in dep_var_vec){
-    for(indep_var in c(#"year_improvedroad_p4",
-                       "year_improvedroad",
-                       "year_improvedroad_50aboveafter",
-                       "year_improvedroad_below50after",
-                       
-                       #"year_improvedroad_p1to3_50aboveafter", 
-                       #"year_improvedroad_p1to3_below50after",
-                       "year_improvedroad_p1to3", 
-                       
-                       #"year_improvedroad_p4_50aboveafter", 
-                       #"year_improvedroad_p4_below50after",
-                       "year_improvedroad_p4")){
+  for(dep_var in rev(dep_var_vec)){
+    for(indep_var in rev(c("year_improvedroad",
+                           "year_improvedroad_50aboveafter",
+                           "year_improvedroad_below50after",
+                           
+                           "year_improvedroad_rand", 
+                           "year_improvedroad_50aboveafter_rand",
+                           "year_improvedroad_below50after_rand",
+                           
+                           "year_improvedroad_randrestrict",
+                           "year_improvedroad_50aboveafter_randrestrict",
+                           "year_improvedroad_below50after_randrestrict"))){
       for(addis_distance in c("All", "Far")){ # "All", "Far"
-        for(ntl_num_groups in c(2,4)){ # 
+        for(ntl_num_groups in rev(c(2,4))){ # 
           for(controls in c("none")){ # temp_precip, precip
             
             if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "0", "1")
             if(ntl_num_groups %in% 4) ntl_group_vec <- c("all", "1", "2", "3", "4")
             
-            for(ntl_group in ntl_group_vec){
+            for(ntl_group in rev(ntl_group_vec)){
               
               # Skip certain subsets ---------------------------------------------
               # For road type, only calculate for all groups
@@ -69,6 +68,15 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
               if((indep_var %in% c("year_improvedroad",
                                    "year_improvedroad_50aboveafter",
                                    "year_improvedroad_below50after")) & (dep_var %>% str_detect("viirs_bm")) ){
+                next
+              }
+              
+              ### Rand
+              if( (str_detect(dep_var, "_log")) & (str_detect(indep_var, "_rand")) ){
+                next
+              }
+              
+              if( (addis_distance == "Far") & (str_detect(indep_var, "_rand")) ){
                 next
               }
               
@@ -132,7 +140,7 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                 #                  "globcover_urban_sum_log", "globcover_cropland_sum_log", "dmspols_harmon_log", "dmspols_harmon_viirs_log", "viirs_bm_log"
                 #           
                 #                  
-                             
+                
                 if(dep_var %>% str_detect("globcover")) end_year_i <- 2018
                 if(dep_var %>% str_detect("dmspols_harmon")) end_year_i <- 2018 # could update to 2021
                 if(dep_var %>% str_detect("viirs_bm")) end_year_i <- 2022 # could update to 2021

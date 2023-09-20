@@ -23,7 +23,15 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
   for(dep_var in dep_var_vec){
     for(indep_var in c("years_since_improvedroad", 
                        "years_since_improvedroad_50aboveafter",
-                       "years_since_improvedroad_below50after")){
+                       "years_since_improvedroad_below50after",
+                       
+                       "years_since_improvedroad_rand", 
+                       "years_since_improvedroad_50aboveafter_rand",
+                       "years_since_improvedroad_below50after_rand",
+                       
+                       "years_since_improvedroad_randrestrict", 
+                       "years_since_improvedroad_50aboveafter_randrestrict",
+                       "years_since_improvedroad_below50after_randrestrict")){
       for(controls in c("")){ # "+temp_avg+precipitation"
         for(addis_distance in c("All", "Far")){
           for(ntl_num_groups in c(2,4)){

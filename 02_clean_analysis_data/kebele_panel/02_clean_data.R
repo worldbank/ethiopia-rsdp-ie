@@ -13,6 +13,17 @@ data$distance_improvedroad              <- apply(data[,paste0("distance_improved
 data$distance_improvedroad_50aboveafter <- apply(data[,paste0("distance_improvedroad_speedafter_",c(50,70,120))], 1, FUN = min_na)
 data$distance_improvedroad_below50after <- apply(data[,paste0("distance_improvedroad_speedafter_",c(20,25,30,35,45))], 1, FUN = min_na)
 
+names(data) %>% str_subset("distance_improvedroad_speedafter_rand_[:digit:]") %>% sort()
+data$distance_improvedroad_rand              <- apply(data[,paste0("distance_improvedroad_speedafter_rand_",c(10,15,20,25,30,35,45,50,70))], 1, FUN = min_na)
+data$distance_improvedroad_50aboveafter_rand <- apply(data[,paste0("distance_improvedroad_speedafter_rand_",c(50,70))], 1, FUN = min_na)
+data$distance_improvedroad_below50after_rand <- apply(data[,paste0("distance_improvedroad_speedafter_rand_",c(10,15,20,25,30,35,45))], 1, FUN = min_na)
+
+names(data) %>% str_subset("distance_improvedroad_speedafter_randrestrict_[:digit:]") %>% sort()
+data$distance_improvedroad_randrestrict              <- apply(data[,paste0("distance_improvedroad_speedafter_randrestrict_",c(10,15,20,25,30,35,45,50,70))], 1, FUN = min_na)
+data$distance_improvedroad_50aboveafter_randrestrict <- apply(data[,paste0("distance_improvedroad_speedafter_randrestrict_",c(50,70))], 1, FUN = min_na)
+data$distance_improvedroad_below50after_randrestrict <- apply(data[,paste0("distance_improvedroad_speedafter_randrestrict_",c(10,15,20,25,30,35,45))], 1, FUN = min_na)
+
+
 names(data) %>% str_subset("distance_improvedroad_speedafter_p1to3") %>% sort()
 data$distance_improvedroad_p1to3              <- apply(data[,paste0("distance_improvedroad_speedafter_p1to3_",c(45,50,70))], 1, FUN = min_na)
 data$distance_improvedroad_p1to3_50aboveafter <- apply(data[,paste0("distance_improvedroad_speedafter_p1to3_",c(50,70))], 1, FUN = min_na)
@@ -36,13 +47,21 @@ roadimproved_df <- lapply(c("distance_improvedroad",
                             "distance_improvedroad_50aboveafter", 
                             "distance_improvedroad_below50after",
                             
-                            "distance_improvedroad_p1to3", 
-                            "distance_improvedroad_p1to3_50aboveafter", 
-                            "distance_improvedroad_p1to3_below50after",
+                            "distance_improvedroad_rand", 
+                            "distance_improvedroad_50aboveafter_rand", 
+                            "distance_improvedroad_below50after_rand",
                             
-                            "distance_improvedroad_p4", 
-                            "distance_improvedroad_p4_50aboveafter", 
-                            "distance_improvedroad_p4_below50after"),
+                            "distance_improvedroad_randrestrict", 
+                            "distance_improvedroad_50aboveafter_randrestrict", 
+                            "distance_improvedroad_below50after_randrestrict"),
+                            
+                            # "distance_improvedroad_p1to3", 
+                            # "distance_improvedroad_p1to3_50aboveafter", 
+                            # "distance_improvedroad_p1to3_below50after",
+                            # 
+                            # "distance_improvedroad_p4", 
+                            # "distance_improvedroad_p4_50aboveafter", 
+                            # "distance_improvedroad_p4_below50after"),
                           generate_road_improved_variables, 
                           data, 
                           ALL_YEARS_IMPROVED_VAR,
