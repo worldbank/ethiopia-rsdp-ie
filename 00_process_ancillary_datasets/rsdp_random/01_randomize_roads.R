@@ -5,6 +5,8 @@ set.seed(42)
 # Load data --------------------------------------------------------------------
 rsdp_sp <- readRDS(file.path(rsdp_dir, "RawData", "RoadNetworkPanelData_1996_2016.Rds"))
 
+rsdp_sp$Complete_G[rsdp_sp$Complete_G <= 1996] <- 1996
+
 # Randomize year ---------------------------------------------------------------
 
 #### Random Year
@@ -30,6 +32,34 @@ rsdp_yr_rt_sp$Complete_G_rand <- lapply(1:nrow(rsdp_yr_rt_sp), function(i){
     as.numeric()
 }) %>%
   unlist()
+
+#### Only randomize treated roads
+year_df <- rsdp_sp@data %>%
+  group_by(Complete_G) %>%
+  dplyr::summarise(n = n()) %>%
+  ungroup() %>%
+  dplyr::mutate(prop = n / sum(n)) %>%
+  dplyr::rename(year = Complete_G) %>%
+  dplyr::select(-n)
+
+rsdp_yr_untrt_sp_1996  <- rsdp_sp[rsdp_sp$Complete_G == 1996,]
+rsdp_yr_untrt_sp_g1996 <- rsdp_sp[rsdp_sp$Complete_G > 1996,]
+
+rsdp_yr_untrt_sp_g1996$Complete_G_rand <- 1996
+
+rsdp_yr_untrt_sp_1996$Complete_G_rand <- lapply(1:nrow(rsdp_yr_untrt_sp_1996), function(i){
+  rsdp_sp_i <- rsdp_yr_untrt_sp_1996[i,]
+  
+  sample(x = year_df$year, 
+         size = 1,
+         prob = year_df$prob) %>%
+    as.character() %>%
+    as.numeric()
+}) %>%
+  unlist()
+
+rsdp_yr_untrt_sp <- rbind(rsdp_yr_untrt_sp_1996,
+                          rsdp_yr_untrt_sp_g1996)
 
 # Adjust speeds ----------------------------------------------------------------
 
@@ -59,8 +89,9 @@ adjust_speed <- function(df){
   
 }
 
-rsdp_rand_sp  <- adjust_speed(rsdp_rand_sp)
-rsdp_yr_rt_sp <- adjust_speed(rsdp_yr_rt_sp)
+rsdp_rand_sp     <- adjust_speed(rsdp_rand_sp)
+rsdp_yr_rt_sp    <- adjust_speed(rsdp_yr_rt_sp)
+rsdp_yr_untrt_sp <- adjust_speed(rsdp_yr_untrt_sp)
 
 # Cleanup ----------------------------------------------------------------------
 rsdp_rand_sp@data <- rsdp_rand_sp@data %>%
@@ -71,16 +102,26 @@ rsdp_yr_rt_sp@data <- rsdp_yr_rt_sp@data %>%
   dplyr::rename(Complete_G_orig = Complete_G) %>%
   dplyr::rename(Complete_G      = Complete_G_rand)
 
+rsdp_yr_untrt_sp@data <- rsdp_yr_untrt_sp@data %>%
+  dplyr::rename(Complete_G_orig = Complete_G) %>%
+  dplyr::rename(Complete_G      = Complete_G_rand)
+
 # Export -----------------------------------------------------------------------
-saveRDS(rsdp_rand_sp,  file.path(rsdp_dir, "FinalData", "RoadNetworkPanelData_1996_2016_rand_year.Rds"))
-saveRDS(rsdp_yr_rt_sp, file.path(rsdp_dir, "FinalData", "RoadNetworkPanelData_1996_2016_rand_year_restrict.Rds"))
+saveRDS(rsdp_rand_sp,     file.path(rsdp_dir, "FinalData", "RoadNetworkPanelData_1996_2016_rand_year.Rds"))
+saveRDS(rsdp_yr_rt_sp,    file.path(rsdp_dir, "FinalData", "RoadNetworkPanelData_1996_2016_rand_year_restrict.Rds"))
+saveRDS(rsdp_yr_untrt_sp, file.path(rsdp_dir, "FinalData", "RoadNetworkPanelData_1996_2016_rand_year_treated.Rds"))
 
 
+# 
+# 
+# 
+# 
+# 
 # diff <- (rsdp_rand_sp$Complete_G - rsdp_rand_sp$Complete_G_orig)
 # diff <- (rsdp_yr_rt_sp$Complete_G - rsdp_yr_rt_sp$Complete_G_orig)
 # 
 # diff %>% table %>% View()
-
+# 
 # rsdp_sp$Speed2016       %>% table()
 # rsdp_rand_sp$Speed2016  %>% table()
 # rsdp_yr_rt_sp$Speed2016 %>% table()

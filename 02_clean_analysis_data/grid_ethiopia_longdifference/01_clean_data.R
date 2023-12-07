@@ -51,6 +51,7 @@ for(i in 1:nrow(base_end_df)){
                     contains("distance_anyimproved"),
                     contains("distance_anyroad"),
                     cell_id, woreda_id, R_CODE, Z_CODE, distance_city_addisababa,
+                    latitude, longitude,
                     wor_ntlgroup_2bin))
   
   ## Merge

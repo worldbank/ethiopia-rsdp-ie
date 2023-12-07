@@ -17,34 +17,42 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
   
   # Define Dependent Variables -------------------------------------------------
   if(dataset %in% "kebele"){
-    dep_var_vec <- c("globcover_urban_sum_ihs", "globcover_cropland_sum_ihs", "dmspols_harmon_ihs", "dmspols_harmon_viirs_ihs", "viirs_bm_ihs",
-                     "globcover_urban_sum_log", "globcover_cropland_sum_log", "dmspols_harmon_log", "dmspols_harmon_viirs_log", "viirs_bm_log") 
+    dep_var_vec <- c("globcover_urban_sum_ihs", "globcover_cropland_sum_ihs", "dmspols_harmon_ihs", "dmspols_harmon_viirs_ihs",
+                     "globcover_urban_sum_log", "globcover_cropland_sum_log", "dmspols_harmon_log", "dmspols_harmon_viirs_log") # "viirs_bm_ihs", "viirs_bm_log"
   }           
   
   if(dataset %in% "dmspols_grid_nearroad"){
     dep_var_vec <- c("globcover_urban", "globcover_cropland", "dmspols_harmon_ihs", "dmspols_harmon_log")
   } 
   
-  for(dep_var in rev(dep_var_vec)){
-    for(indep_var in rev(c("year_improvedroad",
-                           "year_improvedroad_50aboveafter",
-                           "year_improvedroad_below50after",
-                           
-                           "year_improvedroad_rand", 
-                           "year_improvedroad_50aboveafter_rand",
-                           "year_improvedroad_below50after_rand",
-                           
-                           "year_improvedroad_randrestrict",
-                           "year_improvedroad_50aboveafter_randrestrict",
-                           "year_improvedroad_below50after_randrestrict"))){
-      for(addis_distance in c("All", "Far")){ # "All", "Far"
-        for(ntl_num_groups in rev(c(2,4))){ # 
-          for(controls in c("none")){ # temp_precip, precip
+  for(dep_var in dep_var_vec){
+    for(indep_var in c("year_improvedroad",
+                       "year_improvedroad_50aboveafter",
+                       "year_improvedroad_below50after",
+                       
+                       "year_improvedroad_p1to3",
+                       "year_improvedroad_p1to3_50aboveafter",
+                       "year_improvedroad_p1to3_below50after",
+                       
+                       "year_improvedroad_rand", 
+                       "year_improvedroad_50aboveafter_rand",
+                       "year_improvedroad_below50after_rand",
+                       
+                       "year_improvedroad_randtreat", 
+                       "year_improvedroad_50aboveafter_randtreat",
+                       "year_improvedroad_below50after_randtreat",
+                       
+                       "year_improvedroad_randrestrict",
+                       "year_improvedroad_50aboveafter_randrestrict",
+                       "year_improvedroad_below50after_randrestrict")){
+      for(addis_distance in rev(c("All", "Far"))){ # "All", "Far"
+        for(ntl_num_groups in c(2,4)){ # 
+          for(controls in c("none", "splag")){ # temp_precip, precip
             
             if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "0", "1")
             if(ntl_num_groups %in% 4) ntl_group_vec <- c("all", "1", "2", "3", "4")
             
-            for(ntl_group in rev(ntl_group_vec)){
+            for(ntl_group in ntl_group_vec){
               
               # Skip certain subsets ---------------------------------------------
               # For road type, only calculate for all groups
@@ -61,6 +69,10 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                 next
               }
               
+              if((dataset == "dmspols_grid_nearroad") & (controls == "splag")){
+                next
+              }
+              
               if((indep_var %>% str_detect("year_improvedroad_p1to3")) & (dep_var %>% str_detect("viirs_bm")) ){
                 next
               }
@@ -68,6 +80,18 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
               if((indep_var %in% c("year_improvedroad",
                                    "year_improvedroad_50aboveafter",
                                    "year_improvedroad_below50after")) & (dep_var %>% str_detect("viirs_bm")) ){
+                next
+              }
+              
+              if( (controls == "splag") & (dep_var == "viirs_bm_ihs") ){
+                next
+              }
+              
+              if( (controls == "splag") & (str_detect(indep_var, "_rand")) ){
+                next
+              }
+              
+              if( (controls == "splag") & (str_detect(dep_var, "_log")) ){
                 next
               }
               
@@ -151,15 +175,15 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                                 year <= end_year_i,
                                 !is.na(indep_var))
                 
-                if(indep_var %>% str_detect("year_improvedroad_p1to3")){
-                  data <- data %>%
-                    dplyr::filter(year <= 2009)
-                }
-                
-                if(indep_var %>% str_detect("year_improvedroad_p4")){
-                  data <- data %>%
-                    dplyr::filter(year >= 2012)
-                }
+                # if(indep_var %>% str_detect("year_improvedroad_p1to3")){
+                #   data <- data %>%
+                #     dplyr::filter(year <= 2009)
+                # }
+                # 
+                # if(indep_var %>% str_detect("year_improvedroad_p4")){
+                #   data <- data %>%
+                #     dplyr::filter(year >= 2012)
+                # }
                 
                 # This way of selecting specific variables is robust to some names (ie, woreda_id)
                 # not being in all the datasets
@@ -179,6 +203,21 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                   
                   data <- data %>%
                     dplyr::filter(!is.na(precipitation))
+                  
+                } else if (controls %in% "splag"){
+                  
+                  dep_var_splag <- dep_var %>%
+                    str_replace_all("_ihs", "_splag_ihs") %>%
+                    str_replace_all("_log", "_splag_log")
+                  
+                  data$dep_var_splag <- data[[dep_var_splag]]
+                  
+                  data <- data[,names(data) %in% c("dep_var", "indep_var", "cell_id", "year", "woreda_id", 
+                                                   "dep_var_splag")]
+                  
+                  data <- data %>%
+                    dplyr::filter(!is.na(dep_var_splag))
+                  
                 }
                 
                 # Estimate Model -----------------------------------------------
@@ -211,6 +250,18 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                                           idname = "cell_id",
                                           gname = "indep_var",
                                           xformla = ~precipitation,
+                                          data = data,
+                                          control_group = "notyettreated",
+                                          clustervars = cluster_var,
+                                          print_details = T
+                                          
+                  )
+                } else if(controls %in% "splag"){
+                  example_attgt <- att_gt(yname = "dep_var",
+                                          tname = "year",
+                                          idname = "cell_id",
+                                          gname = "indep_var",
+                                          xformla = ~dep_var_splag,
                                           data = data,
                                           control_group = "notyettreated",
                                           clustervars = cluster_var,

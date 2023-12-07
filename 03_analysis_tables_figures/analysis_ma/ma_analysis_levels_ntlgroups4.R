@@ -63,12 +63,18 @@ prep_data <- function(unit, log, theta, exclude, time_period){
 
 # Regressions ------------------------------------------------------------------
 unit <- "kebeleworeda"
-#for(unit in c("woreda", "kebele")){ 
+
+log <- "_log"
+theta <- "3_8"
+exclude <- "_exclude20km"
+trans_type <- "log"
+time_period <- "all"
+
 for(log in c("_log")){
   for(theta in c("3_8")){ # 
     for(exclude in c("_exclude20km", "_exclude50km", "_exclude100km")){ 
       for(trans_type in c("log")){ # ihs, log
-        for(time_period in c("all", "rsdpi_iii", "rsdpiv")){
+        for(time_period in c("all", "rsdpi_iii")){
           
           data_kebele <- prep_data("kebele", log, theta, exclude, time_period)
           data_woreda <- prep_data("woreda", log, theta, exclude, time_period)
@@ -93,120 +99,172 @@ for(log in c("_log")){
           }
           
           ## OLS - Kebele
-          ols1k <- felm(dmspols_harmon_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_kebele)
-          ols2k <- felm(dmspols_harmon_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id | 0  | cluster_var, data = data_kebele)
+          ols1k <- feols(dmspols_harmon_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id                       , vcov = conley(20), data = data_kebele)
+          ols2k <- feols(dmspols_harmon_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id    , vcov = conley(20), data = data_kebele)
           
-          ols3k <- felm(globcover_urban_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_kebele)
-          ols4k <- felm(globcover_urban_sum_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id | 0  | cluster_var, data = data_kebele)
+          ols3k <- feols(globcover_urban_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id                       , vcov = conley(20), data = data_kebele)
+          ols4k <- feols(globcover_urban_sum_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id    , vcov = conley(20), data = data_kebele)
           
-          ols5k <- felm(globcover_cropland_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_kebele)
-          ols6k <- felm(globcover_cropland_sum_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id | 0  | cluster_var, data = data_kebele)
+          ols5k <- feols(globcover_cropland_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id                       , vcov = conley(20), data = data_kebele)
+          ols6k <- feols(globcover_cropland_sum_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id    , vcov = conley(20), data = data_kebele)
           
           ## OLS - Woreda
-          ols1w <- felm(dmspols_harmon_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_woreda)
-          ols2w <- felm(dmspols_harmon_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id | 0  | cluster_var, data = data_woreda)
+          ols1w <- feols(dmspols_harmon_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id                       , vcov = ~cluster_var, data = data_woreda)
+          ols2w <- feols(dmspols_harmon_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id    , vcov = ~cluster_var, data = data_woreda)
           
-          ols3w <- felm(globcover_urban_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_woreda)
-          ols4w <- felm(globcover_urban_sum_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id | 0  | cluster_var, data = data_woreda)
+          ols3w <- feols(globcover_urban_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id                       , vcov = ~cluster_var, data = data_woreda)
+          ols4w <- feols(globcover_urban_sum_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id    , vcov = ~cluster_var, data = data_woreda)
           
-          ols5w <- felm(globcover_cropland_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id | 0                     | cluster_var, data = data_woreda)
-          ols6w <- felm(globcover_cropland_sum_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id | 0  | cluster_var, data = data_woreda)
+          ols5w <- feols(globcover_cropland_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id                       , vcov = ~cluster_var, data = data_woreda)
+          ols6w <- feols(globcover_cropland_sum_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id    , vcov = ~cluster_var, data = data_woreda)
           
           ## IV - Kebele
-          iv1k <- felm(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id | (MA_var ~ MA_var_exc) |                                                                       cluster_var, data = data_kebele) 
-          iv2k <- felm(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id | (MA_var|MA_varXdmspols_harmon_1996_bin4_2|MA_varXdmspols_harmon_1996_bin4_3|MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4) | cluster_var, data = data_kebele) 
+          iv1k <- feols(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = conley(20), data = data_kebele) 
+          iv2k <- feols(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id | MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4 , vcov = conley(20), data = data_kebele) 
           
-          iv3k <- felm(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id | (MA_var ~ MA_var_exc) |                                                                       cluster_var, data = data_kebele) 
-          iv4k <- felm(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id | (MA_var|MA_varXdmspols_harmon_1996_bin4_2|MA_varXdmspols_harmon_1996_bin4_3|MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4) | cluster_var, data = data_kebele) 
+          iv3k <- feols(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = conley(20), data = data_kebele) 
+          iv4k <- feols(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id | MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4 , vcov = conley(20), data = data_kebele) 
           
-          iv5k <- felm(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id | (MA_var ~ MA_var_exc) |                                                                       cluster_var, data = data_kebele) 
-          iv6k <- felm(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id | (MA_var|MA_varXdmspols_harmon_1996_bin4_2|MA_varXdmspols_harmon_1996_bin4_3|MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4) | cluster_var, data = data_kebele) 
+          iv5k <- feols(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = conley(20), data = data_kebele) 
+          iv6k <- feols(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id | MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4 , vcov = conley(20), data = data_kebele) 
           
           ## IV - Woreda
-          iv1w <- felm(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id | (MA_var ~ MA_var_exc) |                                                                       cluster_var, data = data_woreda) 
-          iv2w <- felm(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id | (MA_var|MA_varXdmspols_harmon_1996_bin4_2|MA_varXdmspols_harmon_1996_bin4_3|MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4) | cluster_var, data = data_woreda) 
+          iv1w <- feols(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = ~cluster_var, data = data_woreda) 
+          iv2w <- feols(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id | MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4 , vcov = ~cluster_var, data = data_woreda) 
           
-          iv3w <- felm(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id | (MA_var ~ MA_var_exc) |                                                                       cluster_var, data = data_woreda) 
-          iv4w <- felm(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id | (MA_var|MA_varXdmspols_harmon_1996_bin4_2|MA_varXdmspols_harmon_1996_bin4_3|MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4) | cluster_var, data = data_woreda) 
+          iv3w <- feols(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = ~cluster_var, data = data_woreda) 
+          iv4w <- feols(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id | MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4 , vcov = ~cluster_var, data = data_woreda) 
           
-          iv5w <- felm(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id | (MA_var ~ MA_var_exc) |                                                                       cluster_var, data = data_woreda) 
-          iv6w <- felm(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id | (MA_var|MA_varXdmspols_harmon_1996_bin4_2|MA_varXdmspols_harmon_1996_bin4_3|MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4) | cluster_var, data = data_woreda) 
+          iv5w <- feols(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = ~cluster_var, data = data_woreda) 
+          iv6w <- feols(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id | MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4 , vcov = ~cluster_var, data = data_woreda) 
           
           ## OLS Stargazer
-          stargazer(ols1k,
-                    ols2k,
-                    ols3k,
-                    ols4k,
-                    ols5k,
-                    ols6k,
-                    ols1w,
-                    ols2w,
-                    ols3w,
-                    ols4w,
-                    ols5w,
-                    ols6w,
-                    dep.var.labels.include = T,
-                    dep.var.labels   = c("NTL", "Urban", "Cropland",
-                                         "NTL", "Urban", "Cropland"), # "NTL$\\geq$2", "NTL$\\geq6$",
-                    #keep=c("MA_var"),
-                    omit = c("temp_avg", "precipitation"),
-                    covariate.labels = c("MA",
-                                         "MA$\\times NTL_{96}$ Low",
-                                         "MA$\\times NTL_{96}$ Med",
-                                         "MA$\\times NTL_{96}$ High"),
-                    dep.var.caption = "",
-                    omit.stat = c("f","ser"), 
-                    align=TRUE,
-                    no.space=TRUE,
-                    float=FALSE,
-                    column.sep.width = "8pt",
-                    digits = 2,
-                    omit.table.layout = "n",
-                    add.lines = list(
-                      c("Unit", rep("Keb.", 6), rep("Wor.", 6)),
-                      c("Year FE", rep("Y", 12)),
-                      c("Unit FE", rep("Y", 12))
-                    ),
-                    out=file.path(paper_tables,
-                                  paste0("MA_table",log,"_theta",theta,"_",unit,"_",time_period,"_ols",trans_type_suffix,".tex")))
+          modelsummary_tab(list("NTL" = ols1k,
+                            "NTL" = ols2k,
+                            "Urban" = ols3k,
+                            "Urban" = ols4k,
+                            "Cropland" = ols5k,
+                            "Cropland" = ols6k,
+                            "NTL" = ols1w,
+                            "NTL" = ols2w,
+                            "Urban" = ols3w,
+                            "Urban" = ols4w,
+                            "Cropland" = ols5w,
+                            "Cropland" = ols6w),
+                       stars = c('*' = .05, '**' = .01, "***" = 0.001),
+                       coef_map = c("MA_var" = "MA",
+                                    "MA_varXdmspols_harmon_1996_bin4_2" = "MA$\\times NTL_{96}$ Low",
+                                    "MA_varXdmspols_harmon_1996_bin4_3" = "MA$\\times NTL_{96}$ Med",
+                                    "MA_varXdmspols_harmon_1996_bin4_4" = "MA$\\times NTL_{96}$ High"),
+                       gof_map = c("nobs", "adj.r.squared"),
+                       escape = FALSE,
+                       add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
+                                          'Unit', "Keb.","Keb.","Keb.","Keb.","Keb.","Keb.","Wor.","Wor.","Wor.","Wor.","Wor.","Wor.",
+                                          'Year FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y",
+                                          'Unit FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y"),
+                       output = file.path(paper_tables,
+                                          paste0("MA_table",log,"_theta",theta,"_",unit,"_",time_period,"_ols",trans_type_suffix,".tex")))
+          
+          # stargazer(ols1k,
+          #           ols2k,
+          #           ols3k,
+          #           ols4k,
+          #           ols5k,
+          #           ols6k,
+          #           ols1w,
+          #           ols2w,
+          #           ols3w,
+          #           ols4w,
+          #           ols5w,
+          #           ols6w,
+          #           dep.var.labels.include = T,
+          #           dep.var.labels   = c("NTL", "Urban", "Cropland",
+          #                                "NTL", "Urban", "Cropland"), # "NTL$\\geq$2", "NTL$\\geq6$",
+          #           #keep=c("MA_var"),
+          #           omit = c("temp_avg", "precipitation"),
+          #           covariate.labels = c("MA",
+          #                                "MA$\\times NTL_{96}$ Low",
+          #                                "MA$\\times NTL_{96}$ Med",
+          #                                "MA$\\times NTL_{96}$ High"),
+          #           dep.var.caption = "",
+          #           omit.stat = c("f","ser"), 
+          #           align=TRUE,
+          #           no.space=TRUE,
+          #           float=FALSE,
+          #           column.sep.width = "8pt",
+          #           digits = 2,
+          #           omit.table.layout = "n",
+          #           add.lines = list(
+          #             c("Unit", rep("Keb.", 6), rep("Wor.", 6)),
+          #             c("Year FE", rep("Y", 12)),
+          #             c("Unit FE", rep("Y", 12))
+          #           ),
+          #           out=file.path(paper_tables,
+          #                         paste0("MA_table",log,"_theta",theta,"_",unit,"_",time_period,"_ols",trans_type_suffix,".tex")))
           
           ## IV Stargazer
-          stargazer(iv1k,
-                    iv2k,
-                    iv3k,
-                    iv4k,
-                    iv5k,
-                    iv6k,
-                    iv1w,
-                    iv2w,
-                    iv3w,
-                    iv4w,
-                    iv5w,
-                    iv6w,
-                    dep.var.labels.include = T,
-                    dep.var.labels   = c("NTL", "Urban", "Cropland",
-                                         "NTL", "Urban", "Cropland"), # "NTL$\\geq$2", "NTL$\\geq6$",
-                    #keep=c("MA_var"),
-                    omit = c("temp_avg", "precipitation"),
-                    covariate.labels = c("MA",
-                                         "MA$\\times NTL_{96}$ Low",
-                                         "MA$\\times NTL_{96}$ Med",
-                                         "MA$\\times NTL_{96}$ High"),
-                    dep.var.caption = "",
-                    omit.stat = c("f","ser"), 
-                    align=TRUE,
-                    no.space=TRUE,
-                    float=FALSE,
-                    column.sep.width = "8pt",
-                    digits = 2,
-                    omit.table.layout = "n",
-                    add.lines = list(
-                      c("Unit", rep("Keb.", 6), rep("Wor.", 6)),
-                      c("Year FE", rep("Y", 12)),
-                      c("Unit FE", rep("Y", 12))
-                    ),
-                    out=file.path(paper_tables,
-                                  paste0("MA_table",log,"_theta",theta,exclude,"_",unit,"_",time_period,"_iv",trans_type_suffix,".tex")))
+          modelsummary_tab(list("NTL" = iv1k,
+                            "NTL" = iv2k,
+                            "Urban" = iv3k,
+                            "Urban" = iv4k,
+                            "Cropland" = iv5k,
+                            "Cropland" = iv6k,
+                            "NTL" = iv1w,
+                            "NTL" = iv2w,
+                            "Urban" = iv3w,
+                            "Urban" = iv4w,
+                            "Cropland" = iv5w,
+                            "Cropland" = iv6w),
+                       stars = c('*' = .05, '**' = .01, "***" = 0.001),
+                       coef_map = c("fit_MA_var" = "MA",
+                                    "fit_MA_varXdmspols_harmon_1996_bin4_2" = "MA$\\times NTL_{96}$ Low",
+                                    "fit_MA_varXdmspols_harmon_1996_bin4_3" = "MA$\\times NTL_{96}$ Med",
+                                    "fit_MA_varXdmspols_harmon_1996_bin4_4" = "MA$\\times NTL_{96}$ High"),
+                       gof_map = c("nobs", "adj.r.squared"),
+                       escape = FALSE,
+                       add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
+                                          'Unit', "Keb.","Keb.","Keb.","Keb.","Keb.","Keb.","Wor.","Wor.","Wor.","Wor.","Wor.","Wor.",
+                                          'Year FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y",
+                                          'Unit FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y"),
+                       output = file.path(paper_tables,
+                                          paste0("MA_table",log,"_theta",theta,exclude,"_",unit,"_",time_period,"_iv",trans_type_suffix,".tex")))
+          
+          # stargazer(iv1k,
+          #           iv2k,
+          #           iv3k,
+          #           iv4k,
+          #           iv5k,
+          #           iv6k,
+          #           iv1w,
+          #           iv2w,
+          #           iv3w,
+          #           iv4w,
+          #           iv5w,
+          #           iv6w,
+          #           dep.var.labels.include = T,
+          #           dep.var.labels   = c("NTL", "Urban", "Cropland",
+          #                                "NTL", "Urban", "Cropland"), # "NTL$\\geq$2", "NTL$\\geq6$",
+          #           #keep=c("MA_var"),
+          #           omit = c("temp_avg", "precipitation"),
+          #           covariate.labels = c("MA",
+          #                                "MA$\\times NTL_{96}$ Low",
+          #                                "MA$\\times NTL_{96}$ Med",
+          #                                "MA$\\times NTL_{96}$ High"),
+          #           dep.var.caption = "",
+          #           omit.stat = c("f","ser"), 
+          #           align=TRUE,
+          #           no.space=TRUE,
+          #           float=FALSE,
+          #           column.sep.width = "8pt",
+          #           digits = 2,
+          #           omit.table.layout = "n",
+          #           add.lines = list(
+          #             c("Unit", rep("Keb.", 6), rep("Wor.", 6)),
+          #             c("Year FE", rep("Y", 12)),
+          #             c("Unit FE", rep("Y", 12))
+          #           ),
+          #           out=file.path(paper_tables,
+          #                         paste0("MA_table",log,"_theta",theta,exclude,"_",unit,"_",time_period,"_iv",trans_type_suffix,".tex")))
           
         }
       }

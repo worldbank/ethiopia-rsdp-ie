@@ -70,6 +70,21 @@ data$dmspols_harmon_1996_bin4_2 <- as.numeric(data$dmspols_harmon_1996_bin4 == 2
 data$dmspols_harmon_1996_bin4_3 <- as.numeric(data$dmspols_harmon_1996_bin4 == 3)
 data$dmspols_harmon_1996_bin4_4 <- as.numeric(data$dmspols_harmon_1996_bin4 == 4)
 
+# Add lat/lon centroid ---------------------------------------------------------
+grid_sf <- readRDS(file.path(panel_rsdp_imp_dir, "dmspols_grid_ethiopia", "individual_datasets", "points.Rds")) %>%
+  st_as_sf() 
+
+grid_coords_df <- grid_sf %>%
+  st_centroid() %>%
+  st_coordinates() %>%
+  as.data.frame() %>%
+  dplyr::rename(longitude = X,
+                latitude = Y)
+grid_coords_df$cell_id <- grid_sf$cell_id
+
+data <- data %>%
+  left_join(grid_coords_df, by = "cell_id")
+
 # Export -----------------------------------------------------------------------
 saveRDS(data, file.path(panel_rsdp_imp_dir, "dmspols_grid_ethiopia",
                         "merged_datasets", "panel_data_clean.Rds"))

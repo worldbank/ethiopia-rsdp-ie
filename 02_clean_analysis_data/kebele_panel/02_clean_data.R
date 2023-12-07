@@ -23,6 +23,10 @@ data$distance_improvedroad_randrestrict              <- apply(data[,paste0("dist
 data$distance_improvedroad_50aboveafter_randrestrict <- apply(data[,paste0("distance_improvedroad_speedafter_randrestrict_",c(50,70))], 1, FUN = min_na)
 data$distance_improvedroad_below50after_randrestrict <- apply(data[,paste0("distance_improvedroad_speedafter_randrestrict_",c(10,15,20,25,30,35,45))], 1, FUN = min_na)
 
+names(data) %>% str_subset("distance_improvedroad_speedafter_randtreat_[:digit:]") %>% sort()
+data$distance_improvedroad_randtreat              <- apply(data[,paste0("distance_improvedroad_speedafter_randtreat_",c(10,15,20,25,30,35,50,70))], 1, FUN = min_na)
+data$distance_improvedroad_50aboveafter_randtreat <- apply(data[,paste0("distance_improvedroad_speedafter_randtreat_",c(50,70))], 1, FUN = min_na)
+data$distance_improvedroad_below50after_randtreat <- apply(data[,paste0("distance_improvedroad_speedafter_randtreat_",c(10,15,20,25,30,35))], 1, FUN = min_na)
 
 names(data) %>% str_subset("distance_improvedroad_speedafter_p1to3") %>% sort()
 data$distance_improvedroad_p1to3              <- apply(data[,paste0("distance_improvedroad_speedafter_p1to3_",c(45,50,70))], 1, FUN = min_na)
@@ -53,11 +57,15 @@ roadimproved_df <- lapply(c("distance_improvedroad",
                             
                             "distance_improvedroad_randrestrict", 
                             "distance_improvedroad_50aboveafter_randrestrict", 
-                            "distance_improvedroad_below50after_randrestrict"),
+                            "distance_improvedroad_below50after_randrestrict",
                             
-                            # "distance_improvedroad_p1to3", 
-                            # "distance_improvedroad_p1to3_50aboveafter", 
-                            # "distance_improvedroad_p1to3_below50after",
+                            "distance_improvedroad_randtreat", 
+                            "distance_improvedroad_50aboveafter_randtreat", 
+                            "distance_improvedroad_below50after_randtreat",
+                            
+                            "distance_improvedroad_p1to3",
+                            "distance_improvedroad_p1to3_50aboveafter",
+                            "distance_improvedroad_p1to3_below50after"),
                             # 
                             # "distance_improvedroad_p4", 
                             # "distance_improvedroad_p4_50aboveafter", 
@@ -109,6 +117,50 @@ for(speed_i in speeds_vec){
   var_label(data[[paste0("distance_road_speed_",speed_i,"above")]]) <- 
     paste0("Min distance to road of ", speed_i, "km/h and above")
 }
+
+# Compute spatial lags ---------------------------------------------------------
+kebele_sf <- readRDS(file.path(panel_rsdp_imp_dir, "kebele", "individual_datasets", "points.Rds")) %>% 
+  st_as_sf()
+
+sp_lag_df <- map_df(unique(data$year), function(year_i){
+  print(year_i)
+  
+  data_i <- data[data$year %in% year_i,] %>%
+    dplyr::select(cell_id, 
+                  dmspols_harmon, dmspols_harmon_viirs,
+                  globcover_urban, globcover_urban_sum,
+                  globcover_cropland, globcover_cropland_sum)
+  kebele_data_sf <- kebele_sf %>%
+    left_join(data_i, by = "cell_id")
+  
+  geo <- sf::st_geometry(kebele_data_sf)
+  nb <- st_contiguity(geo)
+  wt <- st_weights(nb, allow_zero = T)
+  
+  kebele_data_sf$dmspols_harmon_splag         <- st_lag(kebele_data_sf$dmspols_harmon,         nb, wt, na_ok = T, allow_zero = T)
+  kebele_data_sf$dmspols_harmon_viirs_splag   <- st_lag(kebele_data_sf$dmspols_harmon_viirs,   nb, wt, na_ok = T, allow_zero = T)
+  kebele_data_sf$globcover_urban_splag        <- st_lag(kebele_data_sf$globcover_urban,        nb, wt, na_ok = T, allow_zero = T)
+  kebele_data_sf$globcover_urban_sum_splag    <- st_lag(kebele_data_sf$globcover_urban_sum,    nb, wt, na_ok = T, allow_zero = T)
+  kebele_data_sf$globcover_cropland_splag     <- st_lag(kebele_data_sf$globcover_cropland,     nb, wt, na_ok = T, allow_zero = T)
+  kebele_data_sf$globcover_cropland_sum_splag <- st_lag(kebele_data_sf$globcover_cropland_sum, nb, wt, na_ok = T, allow_zero = T)
+  kebele_data_sf$year <- year_i
+  
+  kebele_data_df <- kebele_data_sf %>%
+    st_drop_geometry()
+  
+  return(kebele_data_df)
+})
+
+sp_lag_df <- sp_lag_df %>%
+  dplyr::select(-c(dmspols_harmon,
+                   dmspols_harmon_viirs,
+                   globcover_urban,
+                   globcover_urban_sum,
+                   globcover_cropland,
+                   globcover_cropland_sum))
+
+data <- data %>%
+  left_join(sp_lag_df, by = c("cell_id", "year"))
 
 # Log Variables ----------------------------------------------------------------
 ma_var <- data %>% names() %>% str_subset("^MA_")
@@ -204,6 +256,21 @@ data$far_addis <- as.numeric(data$distance_city_addisababa >= 100*1000)
 
 data$dmspols_harmon_ihs2013 <- data$dmspols_harmon_ihs
 data$dmspols_harmon_ihs2013[data$year > 2013] <- NA
+
+# Add lat/lon centroid ---------------------------------------------------------
+kebele_sf <- readRDS(file.path(panel_rsdp_imp_dir, "kebele", "individual_datasets", "points.Rds")) %>%
+  st_as_sf() 
+
+kebele_coords_df <- kebele_sf %>%
+  st_centroid() %>%
+  st_coordinates() %>%
+  as.data.frame() %>%
+  dplyr::rename(longitude = X,
+                latitude = Y)
+kebele_coords_df$cell_id <- kebele_sf$cell_id
+
+data <- data %>%
+  left_join(kebele_coords_df, by = "cell_id")
 
 # Export -----------------------------------------------------------------------
 saveRDS(data, file.path(panel_rsdp_imp_dir, "kebele", "merged_datasets", "panel_data_clean.Rds"))

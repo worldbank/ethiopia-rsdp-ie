@@ -47,6 +47,7 @@ DATASETS_TIME_VARYING <- c("viirs_bm.Rds",
                            "distance_roads_improved_by_speedlimit_after.Rds",
                            "distance_roads_improved_by_speedlimit_after_rand.Rds",
                            "distance_roads_improved_by_speedlimit_after_randrestrict.Rds",
+                           "distance_roads_improved_by_speedlimit_after_randtreated.Rds",
                            "distance_roads_by_speedlimit.Rds")
 
 # Merge ------------------------------------------------------------------------
@@ -65,6 +66,11 @@ for(dataset in DATASETS_TIME_VARYING){
   if(dataset == "distance_roads_improved_by_speedlimit_after_randrestrict.Rds"){
     names(dataset_temp) <- names(dataset_temp) %>%
       str_replace_all("speedafter", "speedafter_randrestrict")
+  }
+  
+  if(dataset == "distance_roads_improved_by_speedlimit_after_randtreated.Rds"){
+    names(dataset_temp) <- names(dataset_temp) %>%
+      str_replace_all("speedafter", "speedafter_randtreat")
   }
   
   points_all <- merge(points_all, dataset_temp, by=c("cell_id", "year"), all=T)

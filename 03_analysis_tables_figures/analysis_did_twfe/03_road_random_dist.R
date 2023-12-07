@@ -28,7 +28,8 @@ diff_rand %>%
   geom_col(aes(x = diff,
                y = n)) +
   labs(x = "Year difference between original and randomly assigned road completion year",
-       y = "N roads") +
+       y = "N roads",
+       title = "Road completion year randomly sorted") +
   theme_classic2()
 
 ggsave(filename = file.path(paper_figures, "completion_year_rand.png"),
@@ -43,7 +44,9 @@ diff_yr_rt %>%
   geom_col(aes(x = diff,
                y = n)) +
   labs(x = "Year difference between original and randomly assigned road completion year",
-       y = "N roads") +
+       y = "N roads",
+       title = "Road completion year randomly assigned",
+       subtitle = "Randomly assigned completion year restricted to not be the same as the true completion year") +
   theme_classic2()
 
 ggsave(filename = file.path(paper_figures, "completion_year_randrestrict.png"),

@@ -1,28 +1,14 @@
 # Check Spatial Autocorrelation
 
+# conleyreg
+# https://cran.r-project.org/web/packages/conleyreg/vignettes/conleyreg_introduction.html
+
 # Load data --------------------------------------------------------------------
 #### Analysis Data
 data <- readRDS(file.path(panel_rsdp_imp_dir, "kebele", "merged_datasets", "panel_data_clean.Rds"))
 
 data <- data %>%
   dplyr::filter(!is.na(years_since_improvedroad))
-
-
-library(spdep)
-library(lfe)
-library(fwildclusterboot)
-
-boot <- boottest(lm_fit,
-                 B = 9999,
-                 param = "treatment",
-                 clustid = "group_id1"
-)
-
-
-
-
-
-
 
 #### Kebele Data
 kebele_clean <- readRDS(file.path(panel_rsdp_imp_dir, "kebele", "individual_datasets", "points.Rds"))
@@ -60,11 +46,11 @@ lm_crop  <- felm(globcover_cropland_sum_ihs ~ years_since_improvedroad | year + 
 data_gc$lm_urban_resid <- lm_urban$residuals %>% as.numeric()
 data_gc$lm_crop_resid  <- lm_crop$residuals  %>% as.numeric()
 
-data_w_gc <- data_gc %>%
-  group_by(woreda_id, year) %>%
-  dplyr::summarise(lm_urban_resid = sum(lm_urban_resid),
-                   lm_crop_resid = sum(lm_crop_resid)) %>%
-  ungroup()
+# data_w_gc <- data_gc %>%
+#   group_by(woreda_id, year) %>%
+#   dplyr::summarise(lm_urban_resid = sum(lm_urban_resid),
+#                    lm_crop_resid = sum(lm_crop_resid)) %>%
+#   ungroup()
 
 ## Nighttime lights
 data_ntl <- data %>%
@@ -74,20 +60,74 @@ lm_ntl <- felm(dmspols_harmon_ihs ~ years_since_improvedroad | year + cell_id | 
 
 data_ntl$lm_ntl_resid <- lm_ntl$residuals %>% as.numeric()
 
-data_w_ntl <- data_ntl %>%
-  group_by(woreda_id, year) %>%
-  dplyr::summarise(lm_ntl_resid = sum(lm_ntl_resid)) %>%
-  ungroup()
+# data_w_ntl <- data_ntl %>%
+#   group_by(woreda_id, year) %>%
+#   dplyr::summarise(lm_ntl_resid = sum(lm_ntl_resid)) %>%
+#   ungroup()
 
 ## Merge
-data_w <- data_w_gc %>%
-  left_join(data_w_ntl, by = c("woreda_id", "year"))
+# data_w <- data_gc %>%
+#   dplyr::select(cell_id, year, lm_crop_resid, lm_urban_resid) %>%
+#   left_join(data_ntl, by = c("cell_id", "year"))
 
 # Check Morans I ---------------------------------------------------------------
 # https://mgimond.github.io/Spatial/spatial-autocorrelation-in-r.html
 # 
 # nb <- poly2nb(s1, queen=TRUE)
 # lw <- nb2listw(nb, style="W", zero.policy=TRUE)
+
+data_ntl_yr <- data_ntl[data_ntl$year %in% 2000,]
+
+kebele_clean_c_ntl <- kebele_clean_c[kebele_clean_c$cell_id %in% data_ntl$cell_id,]
+kebele_clean_c_ntl@data <- kebele_clean_c_ntl@data %>%
+  left_join(data_ntl_yr, by = c("cell_id"))
+
+kebele_clean_c_ntl.dist  <-  dnearneigh(kebele_clean_c_ntl, 0, 5) # km 
+lw <- nb2listw(kebele_clean_c_ntl.dist, style="W",zero.policy=T) 
+moran.test(kebele_clean_c_ntl$lm_ntl_resid, lw, zero.policy=T)
+moran.mc(kebele_clean_c_ntl$lm_ntl_resid, lw, nsim=1000, zero.policy=T)
+
+kebele_clean_c_ntl_sf <- kebele_clean_c_ntl %>% st_as_sf()
+ggplot() +
+  geom_sf(data = kebele_clean_c_ntl_sf,
+             aes(color = lm_ntl_resid)) +
+  scale_color_distiller(palette = "Spectral")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 year_i <- 2000
 
@@ -151,14 +191,7 @@ kebele_clean_c_ntl@data <- kebele_clean_c_ntl@data %>%
 
 
 
-kebele_clean_c_ntl <- kebele_clean_c[kebele_clean_c$cell_id %in% data_sum_ntl$cell_id,]
-kebele_clean_c_ntl@data <- kebele_clean_c_ntl@data %>%
-  left_join(data_sum_ntl, by = c("cell_id", "year"))
 
-kebele_clean_c_ntl.dist  <-  dnearneigh(kebele_clean_c_ntl, 0, 100) # km 
-lw <- nb2listw(kebele_clean_c_ntl.dist, style="W",zero.policy=T) 
-moran.test(kebele_clean_c_ntl$lm_ntl_resid, lw, zero.policy=T)
-moran.mc(kebele_clean_c_ntl$lm_ntl_resid, lw, nsim=1000, zero.policy=T)
 
 # i <- 1
 # 

@@ -71,6 +71,13 @@ log <- "_log"
 theta <- "1"
 exclude <- "_exclude20km"
 #for(unit in c("woreda", "kebele")){ # "woreda", "clusters_of_ntl"
+
+log = "_log"
+theta = "3_8"
+exclude = "_exclude20km"
+start_year = "1996"
+end_year = "2009"
+
 for(log in c("_log")){
   for(theta in c("2", "3_8", "5", "8")){ # 
     for(exclude in c("_exclude20km", "_exclude50km", "_exclude100km")){ # "_exclude20km", "_exclude50km", "_exclude100km"
@@ -85,209 +92,319 @@ for(log in c("_log")){
           data_woreda <- prep_data("woreda", log, theta, exclude, start_year, end_year)
           
           #### OLS - Kebele
-          ols1k <- felm(dmspols_harmon_ihs         ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var | 0 | cluster_var, data = data_kebele)
-          ols2k <- felm(dmspols_harmon_ihs         ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var | 0 | cluster_var, data = data_kebele) 
+          ols1k <- feols(dmspols_harmon_ihs         ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(20), data = data_kebele)
+          ols2k <- feols(dmspols_harmon_ihs         ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(20), data = data_kebele) 
           
-          ols3k <- felm(globcover_urban_sum_ihs     ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var | 0 | cluster_var, data = data_kebele)
-          ols4k <- felm(globcover_urban_sum_ihs    ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var | 0 | cluster_var, data = data_kebele) 
+          ols3k <- feols(globcover_urban_sum_ihs     ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(20), data = data_kebele)
+          ols4k <- feols(globcover_urban_sum_ihs    ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(20), data = data_kebele) 
           
-          ols5k <- felm(globcover_cropland_sum_ihs ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var | 0 | cluster_var, data = data_kebele)
-          ols6k <- felm(globcover_cropland_sum_ihs ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var | 0 | cluster_var, data = data_kebele) 
+          ols5k <- feols(globcover_cropland_sum_ihs ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(20), data = data_kebele)
+          ols6k <- feols(globcover_cropland_sum_ihs ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(20), data = data_kebele) 
           
           #### OLS - Woreda
-          ols1w <- felm(dmspols_harmon_ihs         ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var | 0 | cluster_var, data = data_woreda)
-          ols2w <- felm(dmspols_harmon_ihs         ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var | 0 | cluster_var, data = data_woreda) 
+          ols1w <- feols(dmspols_harmon_ihs         ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , vcov = ~cluster_var, data = data_woreda)
+          ols2w <- feols(dmspols_harmon_ihs         ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , vcov = ~cluster_var, data = data_woreda) 
           
-          ols3w <- felm(globcover_urban_sum_ihs     ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var | 0 | cluster_var, data = data_woreda)
-          ols4w <- felm(globcover_urban_sum_ihs    ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var | 0 | cluster_var, data = data_woreda) 
+          ols3w <- feols(globcover_urban_sum_ihs     ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , vcov = ~cluster_var, data = data_woreda)
+          ols4w <- feols(globcover_urban_sum_ihs    ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , vcov = ~cluster_var, data = data_woreda) 
           
-          ols5w <- felm(globcover_cropland_sum_ihs ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var | 0 | cluster_var, data = data_woreda)
-          ols6w <- felm(globcover_cropland_sum_ihs ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var | 0 | cluster_var, data = data_woreda) 
+          ols5w <- feols(globcover_cropland_sum_ihs ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , vcov = ~cluster_var, data = data_woreda)
+          ols6w <- feols(globcover_cropland_sum_ihs ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , vcov = ~cluster_var, data = data_woreda) 
           
           #### IV - Kebele
-          iv1k <- felm(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | (MA_var ~ MA_var_exc)                                                                             | cluster_var, data = data_kebele)
-          iv2k <- felm(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | (MA_var|wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin)      | cluster_var, data = data_kebele)
+          iv1k <- feols(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , conley(20), data = data_kebele)
+          iv2k <- feols(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , conley(20), data = data_kebele)
           
-          iv3k <- felm(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | (MA_var ~ MA_var_exc)                                                                             | cluster_var, data = data_kebele)
-          iv4k <- felm(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | (MA_var|wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin)      | cluster_var, data = data_kebele)
+          iv3k <- feols(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , conley(20), data = data_kebele)
+          iv4k <- feols(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , conley(20), data = data_kebele)
           
-          iv5k <- felm(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | (MA_var ~ MA_var_exc)                                                                             | cluster_var, data = data_kebele)
-          iv6k <- felm(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | (MA_var|wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin)      | cluster_var, data = data_kebele)
+          iv5k <- feols(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , conley(20), data = data_kebele)
+          iv6k <- feols(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , conley(20), data = data_kebele)
           
           #### IV - Woreda
-          iv1w <- felm(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | (MA_var ~ MA_var_exc)                                                                             | cluster_var, data = data_woreda)
-          iv2w <- felm(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | (MA_var|wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin)      | cluster_var, data = data_woreda)
+          iv1w <- feols(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , vcov = ~cluster_var, data = data_woreda)
+          iv2w <- feols(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , vcov = ~cluster_var, data = data_woreda)
           
-          iv3w <- felm(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | (MA_var ~ MA_var_exc)                                                                             | cluster_var, data = data_woreda)
-          iv4w <- felm(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | (MA_var|wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin)      | cluster_var, data = data_woreda)
+          iv3w <- feols(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , vcov = ~cluster_var, data = data_woreda)
+          iv4w <- feols(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , vcov = ~cluster_var, data = data_woreda)
           
-          iv5w <- felm(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | (MA_var ~ MA_var_exc)                                                                             | cluster_var, data = data_woreda)
-          iv6w <- felm(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | (MA_var|wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin)      | cluster_var, data = data_woreda)
+          iv5w <- feols(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , vcov = ~cluster_var, data = data_woreda)
+          iv6w <- feols(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , vcov = ~cluster_var, data = data_woreda)
           
           #### OLS and IV Regression [For Main Text]
-          stargazer(ols1k,
-                    ols2k,
-                    ols3k,
-                    ols4k,
-                    ols5k,
-                    ols6k,
-                    iv1k %>% update_iv_coef_name(),
-                    iv2k %>% update_iv_coef_name(),
-                    iv3k %>% update_iv_coef_name(),
-                    iv4k %>% update_iv_coef_name(),
-                    iv5k %>% update_iv_coef_name(),
-                    iv6k %>% update_iv_coef_name(),
-                    dep.var.labels.include = T,
-                    dep.var.labels   = c("NTL", "Urban", "Cropland",
-                                         "NTL", "Urban", "Cropland"), # "NTL$\\geq$2", "NTL$\\geq6$",
-                    omit = c("Z_CODE", "Constant"),
-                    #keep=c("MA_var", "MA_var_1996", "dmspols_ihs_1996", "dmspols_ihs_pretnd96_92", "globcover_urban_sum_pretnd96_92.y"),
-                    covariate.labels = c("MA",
-                                         "MA$\\times NTL_{96}$ Lit",
-                                         #"MA X Dist Addis",
-                                         "MA, 1996",
-                                         "Log mean light, 1996",
-                                         "Pre-trend: log mean light",
-                                         "Pre-trend: log N urban pixels"),
-                    #covariate.labels = c("log(MA); $\\theta=1$",
-                    #                     "log(MA); $\\theta=8$"),
-                    dep.var.caption = "",
-                    omit.stat = c("f","ser", "rsq"), 
-                    align=TRUE,
-                    no.space=TRUE,
-                    float=FALSE,
-                    column.sep.width = "8pt",
-                    digits = 2,
-                    omit.table.layout = "n",
-                    add.lines = list(
-                      c("Model", rep("OLS", 6), rep("IV", 6))
-                    ),
-                    out=file.path(paper_tables,
-                                  paste0("MA","_table_longdiff_theta",theta,exclude,log,"_","kebele","_startyear",start_year,"_endyear",end_year,"_ols_iv_2ntlgroups.tex")))
+          modelsummary_tab(list("NTL" = ols1k,
+                            "NTL" = ols2k,
+                            "Urban" = ols3k,
+                            "Urban" = ols4k,
+                            "Cropland" = ols5k,
+                            "Cropland" = ols6k,
+                            "NTL" = iv1k,
+                            "NTL" = iv2k,
+                            "Urban" = iv3k,
+                            "Urban" = iv4k,
+                            "Cropland" = iv5k,
+                            "Cropland" = iv6k),
+                       stars = c('*' = .05, '**' = .01, "***" = 0.001),
+                       coef_map = c("MA_var" = "MA",
+                                    "wor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit",
+                                    
+                                    "fit_MA_var" = "MA",
+                                    "fit_wor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit",
+                                    
+                                    "MA_var_1996" = "MA, 1996",
+                                    "MA_var_exc_1996" = "MA, 1996",
+                                    "dmspols_harmon_ihs_1996" = "Log mean light, 1996",
+                                    "dmspols_harmon_ihs_pretnd96_92" = "Pre-trend: log mean light",
+                                    "globcover_urban_sum_ihs_pretnd96_92" = "Pre-trend: log N urban pixels"),
+                       gof_map = c("nobs", "adj.r.squared"),
+                       escape = FALSE,
+                       add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
+                                          'Model', "OLS", "OLS", "OLS", "OLS", "OLS", "OLS", "IV", "IV", "IV", "IV", "IV", "IV"),
+                       output = file.path(paper_tables,
+                                          paste0("MA","_table_longdiff_theta",theta,exclude,log,"_","kebele","_startyear",start_year,"_endyear",end_year,"_ols_iv_2ntlgroups.tex")))
           
-          stargazer(ols1w,
-                    ols2w,
-                    ols3w,
-                    ols4w,
-                    ols5w,
-                    ols6w,
-                    iv1w %>% update_iv_coef_name(),
-                    iv2w %>% update_iv_coef_name(),
-                    iv3w %>% update_iv_coef_name(),
-                    iv4w %>% update_iv_coef_name(),
-                    iv5w %>% update_iv_coef_name(),
-                    iv6w %>% update_iv_coef_name(),
-                    dep.var.labels.include = T,
-                    dep.var.labels   = c("NTL", "Urban", "Cropland",
-                                         "NTL", "Urban", "Cropland"), # "NTL$\\geq$2", "NTL$\\geq6$",
-                    omit = c("Z_CODE", "Constant"),
-                    #keep=c("MA_var", "MA_var_1996", "dmspols_ihs_1996", "dmspols_ihs_pretnd96_92", "globcover_urban_sum_pretnd96_92.y"),
-                    covariate.labels = c("MA",
-                                         "MA$\\times NTL_{96}$ Lit",
-                                         #"MA X Dist Addis",
-                                         "MA, 1996",
-                                         "Log mean light, 1996",
-                                         "Pre-trend: log mean light",
-                                         "Pre-trend: log N urban pixels"),
-                    #covariate.labels = c("log(MA); $\\theta=1$",
-                    #                     "log(MA); $\\theta=8$"),
-                    dep.var.caption = "",
-                    omit.stat = c("f","ser", "rsq"), 
-                    align=TRUE,
-                    no.space=TRUE,
-                    float=FALSE,
-                    column.sep.width = "8pt",
-                    digits = 2,
-                    omit.table.layout = "n",
-                    add.lines = list(
-                      c("Model", rep("OLS", 6), rep("IV", 6))
-                    ),
-                    out=file.path(paper_tables,
-                                  paste0("MA","_table_longdiff_theta",theta,exclude,log,"_","woreda","_startyear",start_year,"_endyear",end_year,"_ols_iv_2ntlgroups.tex")))
           
+          # stargazer(ols1k,
+          #           ols2k,
+          #           ols3k,
+          #           ols4k,
+          #           ols5k,
+          #           ols6k,
+          #           iv1k %>% update_iv_coef_name(),
+          #           iv2k %>% update_iv_coef_name(),
+          #           iv3k %>% update_iv_coef_name(),
+          #           iv4k %>% update_iv_coef_name(),
+          #           iv5k %>% update_iv_coef_name(),
+          #           iv6k %>% update_iv_coef_name(),
+          #           dep.var.labels.include = T,
+          #           dep.var.labels   = c("NTL", "Urban", "Cropland",
+          #                                "NTL", "Urban", "Cropland"), # "NTL$\\geq$2", "NTL$\\geq6$",
+          #           omit = c("Z_CODE", "Constant"),
+          #           #keep=c("MA_var", "MA_var_1996", "dmspols_ihs_1996", "dmspols_ihs_pretnd96_92", "globcover_urban_sum_pretnd96_92.y"),
+          #           covariate.labels = c("MA",
+          #                                "MA$\\times NTL_{96}$ Lit",
+          #                                #"MA X Dist Addis",
+          #                                "MA, 1996",
+          #                                "Log mean light, 1996",
+          #                                "Pre-trend: log mean light",
+          #                                "Pre-trend: log N urban pixels"),
+          #           #covariate.labels = c("log(MA); $\\theta=1$",
+          #           #                     "log(MA); $\\theta=8$"),
+          #           dep.var.caption = "",
+          #           omit.stat = c("f","ser", "rsq"), 
+          #           align=TRUE,
+          #           no.space=TRUE,
+          #           float=FALSE,
+          #           column.sep.width = "8pt",
+          #           digits = 2,
+          #           omit.table.layout = "n",
+          #           add.lines = list(
+          #             c("Model", rep("OLS", 6), rep("IV", 6))
+          #           ),
+          #           out=file.path(paper_tables,
+          #                         paste0("MA","_table_longdiff_theta",theta,exclude,log,"_","kebele","_startyear",start_year,"_endyear",end_year,"_ols_iv_2ntlgroups.tex")))
+
+          modelsummary_tab(list("NTL" = ols1w,
+                            "NTL" = ols2w,
+                            "Urban" = ols3w,
+                            "Urban" = ols4w,
+                            "Cropland" = ols5w,
+                            "Cropland" = ols6w,
+                            "NTL" = iv1w,
+                            "NTL" = iv2w,
+                            "Urban" = iv3w,
+                            "Urban" = iv4w,
+                            "Cropland" = iv5w,
+                            "Cropland" = iv6w),
+                       stars = c('*' = .05, '**' = .01, "***" = 0.001),
+                       coef_map = c("MA_var" = "MA",
+                                    "wor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit",
+                                    
+                                    "fit_MA_var" = "MA",
+                                    "fit_wor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit",
+                                    
+                                    "MA_var_1996" = "MA, 1996",
+                                    "MA_var_exc_1996" = "MA, 1996",
+                                    "dmspols_harmon_ihs_1996" = "Log mean light, 1996",
+                                    "dmspols_harmon_ihs_pretnd96_92" = "Pre-trend: log mean light",
+                                    "globcover_urban_sum_ihs_pretnd96_92" = "Pre-trend: log N urban pixels"),
+                       gof_map = c("nobs", "adj.r.squared"),
+                       escape = FALSE,
+                       add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
+                                          'Model', "OLS", "OLS", "OLS", "OLS", "OLS", "OLS", "IV", "IV", "IV", "IV", "IV", "IV"),
+                       output = file.path(paper_tables,
+                                          paste0("MA","_table_longdiff_theta",theta,exclude,log,"_","woreda","_startyear",start_year,"_endyear",end_year,"_ols_iv_2ntlgroups.tex")))
+          
+          # stargazer(ols1w,
+          #           ols2w,
+          #           ols3w,
+          #           ols4w,
+          #           ols5w,
+          #           ols6w,
+          #           iv1w %>% update_iv_coef_name(),
+          #           iv2w %>% update_iv_coef_name(),
+          #           iv3w %>% update_iv_coef_name(),
+          #           iv4w %>% update_iv_coef_name(),
+          #           iv5w %>% update_iv_coef_name(),
+          #           iv6w %>% update_iv_coef_name(),
+          #           dep.var.labels.include = T,
+          #           dep.var.labels   = c("NTL", "Urban", "Cropland",
+          #                                "NTL", "Urban", "Cropland"), # "NTL$\\geq$2", "NTL$\\geq6$",
+          #           omit = c("Z_CODE", "Constant"),
+          #           #keep=c("MA_var", "MA_var_1996", "dmspols_ihs_1996", "dmspols_ihs_pretnd96_92", "globcover_urban_sum_pretnd96_92.y"),
+          #           covariate.labels = c("MA",
+          #                                "MA$\\times NTL_{96}$ Lit",
+          #                                #"MA X Dist Addis",
+          #                                "MA, 1996",
+          #                                "Log mean light, 1996",
+          #                                "Pre-trend: log mean light",
+          #                                "Pre-trend: log N urban pixels"),
+          #           #covariate.labels = c("log(MA); $\\theta=1$",
+          #           #                     "log(MA); $\\theta=8$"),
+          #           dep.var.caption = "",
+          #           omit.stat = c("f","ser", "rsq"), 
+          #           align=TRUE,
+          #           no.space=TRUE,
+          #           float=FALSE,
+          #           column.sep.width = "8pt",
+          #           digits = 2,
+          #           omit.table.layout = "n",
+          #           add.lines = list(
+          #             c("Model", rep("OLS", 6), rep("IV", 6))
+          #           ),
+          #           out=file.path(paper_tables,
+          #                         paste0("MA","_table_longdiff_theta",theta,exclude,log,"_","woreda","_startyear",start_year,"_endyear",end_year,"_ols_iv_2ntlgroups.tex")))
+          # 
           
           #### OLS Only Regression [For SI]
-          stargazer(ols1k,
-                    ols2k,
-                    ols3k,
-                    ols4k,
-                    ols5k,
-                    ols6k,
-                    #ols1w,
-                    #ols2w,
-                    #ols3w,
-                    #ols4w,
-                    #ols5w,
-                    #ols6w,
-                    dep.var.labels.include = T,
-                    dep.var.labels   = c(#"NTL", "Urban", "Cropland",
-                      "NTL", "Urban", "Cropland"), # "NTL$\\geq$2", "NTL$\\geq6$",
-                    omit = c("Z_CODE", "Constant"),
-                    #keep=c("MA_var", "MA_var_1996", "dmspols_ihs_1996", "dmspols_ihs_pretnd96_92", "globcover_urban_sum_pretnd96_92.y"),
-                    covariate.labels = c("MA",
-                                         "MA$\\times NTL_{96}$ Lit",
-                                         #"MA X Dist Addis",
-                                         "MA, 1996",
-                                         "Log mean light, 1996",
-                                         "Pre-trend: log mean light",
-                                         "Pre-trend: log N urban pixels"),
-                    #covariate.labels = c("log(MA); $\\theta=1$",
-                    #                     "log(MA); $\\theta=8$"),
-                    dep.var.caption = "",
-                    omit.stat = c("f","ser", "rsq"), 
-                    align=TRUE,
-                    no.space=TRUE,
-                    float=FALSE,
-                    column.sep.width = "8pt",
-                    digits = 2,
-                    omit.table.layout = "n",
-                    #add.lines = list(
-                    #  c("Unit", rep("Keb.", 6), rep("Wor.", 6))
-                    #),
-                    out=file.path(paper_tables,
-                                  paste0("MA","_table_longdiff_theta",theta,log,"_",unit,"_startyear",start_year,"_endyear",end_year,"_ols_2ntlgroups.tex")))
+          modelsummary_tab(list("NTL" = ols1k,
+                            "NTL" = ols2k,
+                            "Urban" = ols3k,
+                            "Urban" = ols4k,
+                            "Cropland" = ols5k,
+                            "Cropland" = ols6k),
+                       stars = c('*' = .05, '**' = .01, "***" = 0.001),
+                       coef_map = c("MA_var" = "MA",
+                                    "wor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit",
+
+                                    "MA_var_1996" = "MA, 1996",
+                                    "dmspols_harmon_ihs_1996" = "Log mean light, 1996",
+                                    "dmspols_harmon_ihs_pretnd96_92" = "Pre-trend: log mean light",
+                                    "globcover_urban_sum_ihs_pretnd96_92" = "Pre-trend: log N urban pixels"),
+                       gof_map = c("nobs", "adj.r.squared"),
+                       escape = FALSE,
+                       output = file.path(paper_tables,
+                                          paste0("MA","_table_longdiff_theta",theta,log,"_",unit,"_startyear",start_year,"_endyear",end_year,"_ols_2ntlgroups.tex")))
           
+          
+          # stargazer(ols1k,
+          #           ols2k,
+          #           ols3k,
+          #           ols4k,
+          #           ols5k,
+          #           ols6k,
+          #           dep.var.labels.include = T,
+          #           dep.var.labels   = c(#"NTL", "Urban", "Cropland",
+          #             "NTL", "Urban", "Cropland"), # "NTL$\\geq$2", "NTL$\\geq6$",
+          #           omit = c("Z_CODE", "Constant"),
+          #           #keep=c("MA_var", "MA_var_1996", "dmspols_ihs_1996", "dmspols_ihs_pretnd96_92", "globcover_urban_sum_pretnd96_92.y"),
+          #           covariate.labels = c("MA",
+          #                                "MA$\\times NTL_{96}$ Lit",
+          #                                #"MA X Dist Addis",
+          #                                "MA, 1996",
+          #                                "Log mean light, 1996",
+          #                                "Pre-trend: log mean light",
+          #                                "Pre-trend: log N urban pixels"),
+          #           #covariate.labels = c("log(MA); $\\theta=1$",
+          #           #                     "log(MA); $\\theta=8$"),
+          #           dep.var.caption = "",
+          #           omit.stat = c("f","ser", "rsq"), 
+          #           align=TRUE,
+          #           no.space=TRUE,
+          #           float=FALSE,
+          #           column.sep.width = "8pt",
+          #           digits = 2,
+          #           omit.table.layout = "n",
+          #           #add.lines = list(
+          #           #  c("Unit", rep("Keb.", 6), rep("Wor.", 6))
+          #           #),
+          #           out=file.path(paper_tables,
+          #                         paste0("MA","_table_longdiff_theta",theta,log,"_",unit,"_startyear",start_year,"_endyear",end_year,"_ols_2ntlgroups.tex")))
+          # 
           #### IV Only Regression [For SI]
-          stargazer(iv1k,
-                    iv2k,
-                    iv3k,
-                    iv4k,
-                    iv5k,
-                    iv6k,
-                    iv1w,
-                    iv2w,
-                    iv3w,
-                    iv4w,
-                    iv5w,
-                    iv6w,
-                    dep.var.labels.include = T,
-                    dep.var.labels   = c("NTL", "Urban", "Cropland",
-                                         "NTL", "Urban", "Cropland"), #  "NTL$\\geq$2", "NTL$\\geq6$",
-                    omit = c("Z_CODE", "Constant"),
-                    order = c(5:9, 1:4),
-                    #keep=c("MA_var", "MA_var_1996", "dmspols_ihs_1996", "dmspols_ihs_pretnd96_92", "globcover_urban_sum_pretnd96_92.y"),
-                    covariate.labels = c("MA",
-                                         "MA$\\times NTL_{96}$ Lit",
-                                         #"MA X Dist Addis",
-                                         "MA, 1996",
-                                         "Log mean light, 1996",
-                                         "Pre-trend: log mean light",
-                                         "Pre-trend: log N urban pixels"),
-                    #covariate.labels = c("log(MA); $\\theta=1$",
-                    #                     "log(MA); $\\theta=8$"),
-                    dep.var.caption = "",
-                    omit.stat = c("f","ser", "rsq"), 
-                    align=TRUE,
-                    no.space=TRUE,
-                    float=FALSE,
-                    column.sep.width = "8pt",
-                    digits = 2,
-                    omit.table.layout = "n",
-                    add.lines = list(
-                      c("Unit", rep("Keb.", 6), rep("Wor.", 6))
-                    ),
-                    out=file.path(paper_tables,
-                                  paste0("MA","_table_longdiff_theta",theta,exclude,log,"_","kebeleworeda","_startyear",start_year,"_endyear",end_year,"_iv_2ntlgroups.tex")))
+          modelsummary_tab(list("NTL" = iv1k,
+                            "NTL" = iv2k,
+                            "Urban" = iv3k,
+                            "Urban" = iv4k,
+                            "Cropland" = iv5k,
+                            "Cropland" = iv6k,
+                            "NTL" = iv1w,
+                            "NTL" = iv2w,
+                            "Urban" = iv3w,
+                            "Urban" = iv4w,
+                            "Cropland" = iv5w,
+                            "Cropland" = iv6w),
+                       stars = c('*' = .05, '**' = .01, "***" = 0.001),
+                       coef_map = c("MA_var" = "MA",
+                                    "wor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit",
+                                    
+                                    "fit_MA_var" = "MA",
+                                    "fit_wor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit",
+                                    
+                                    "MA_var_1996" = "MA, 1996",
+                                    "MA_var_exc_1996" = "MA, 1996",
+                                    "dmspols_harmon_ihs_1996" = "Log mean light, 1996",
+                                    "dmspols_harmon_ihs_pretnd96_92" = "Pre-trend: log mean light",
+                                    "globcover_urban_sum_ihs_pretnd96_92" = "Pre-trend: log N urban pixels"),
+                       gof_map = c("nobs", "adj.r.squared"),
+                       escape = FALSE,
+                       add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
+                                          'Unit', "Keb.", "Keb.", "Keb.", "Keb.", "Keb.", "Keb.", "Wor.", "Wor.", "Wor.", "Wor.", "Wor.", "Wor."),
+                       output = file.path(paper_tables,
+                                          paste0("MA","_table_longdiff_theta",theta,exclude,log,"_","kebeleworeda","_startyear",start_year,"_endyear",end_year,"_iv_2ntlgroups.tex")))
+          
+          
+          
+          # stargazer(iv1k,
+          #           iv2k,
+          #           iv3k,
+          #           iv4k,
+          #           iv5k,
+          #           iv6k,
+          #           iv1w,
+          #           iv2w,
+          #           iv3w,
+          #           iv4w,
+          #           iv5w,
+          #           iv6w,
+          #           dep.var.labels.include = T,
+          #           dep.var.labels   = c("NTL", "Urban", "Cropland",
+          #                                "NTL", "Urban", "Cropland"), #  "NTL$\\geq$2", "NTL$\\geq6$",
+          #           omit = c("Z_CODE", "Constant"),
+          #           order = c(5:9, 1:4),
+          #           #keep=c("MA_var", "MA_var_1996", "dmspols_ihs_1996", "dmspols_ihs_pretnd96_92", "globcover_urban_sum_pretnd96_92.y"),
+          #           covariate.labels = c("MA",
+          #                                "MA$\\times NTL_{96}$ Lit",
+          #                                #"MA X Dist Addis",
+          #                                "MA, 1996",
+          #                                "Log mean light, 1996",
+          #                                "Pre-trend: log mean light",
+          #                                "Pre-trend: log N urban pixels"),
+          #           #covariate.labels = c("log(MA); $\\theta=1$",
+          #           #                     "log(MA); $\\theta=8$"),
+          #           dep.var.caption = "",
+          #           omit.stat = c("f","ser", "rsq"), 
+          #           align=TRUE,
+          #           no.space=TRUE,
+          #           float=FALSE,
+          #           column.sep.width = "8pt",
+          #           digits = 2,
+          #           omit.table.layout = "n",
+          #           add.lines = list(
+          #             c("Unit", rep("Keb.", 6), rep("Wor.", 6))
+          #           ),
+          #           out=file.path(paper_tables,
+          #                         paste0("MA","_table_longdiff_theta",theta,exclude,log,"_","kebeleworeda","_startyear",start_year,"_endyear",end_year,"_iv_2ntlgroups.tex")))
         }
       }
     }

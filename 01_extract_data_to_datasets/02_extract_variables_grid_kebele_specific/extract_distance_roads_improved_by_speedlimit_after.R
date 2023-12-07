@@ -13,7 +13,7 @@
 # Load data and reporject to Ethiopia UTM. UTM better for distance calculations 
 # than WGS84.
 
-for(dataset_type in c("rsdp_rand", "rsdp_rand_restrict", "rsdp")){
+for(dataset_type in c("rsdp_rand_treated", "rsdp_rand", "rsdp_rand_restrict", "rsdp")){
   
   #### Load points
   if(GRID_DATASET){
@@ -42,6 +42,10 @@ for(dataset_type in c("rsdp_rand", "rsdp_rand_restrict", "rsdp")){
     out_suffix <- "_randrestrict"
   }
   
+  if(dataset_type == "rsdp_rand_treated"){
+    roads_sdf <- readRDS(file.path(rsdp_dir, "FinalData", "RoadNetworkPanelData_1996_2016_rand_year_treated.Rds"))
+    out_suffix <- "_randtreated"
+  }
   
   roads_sdf$id <- 1 # useful to have a variable the same for all obs when aggreagting roads later
   roads_sdf <- roads_sdf %>% spTransform(CRS(UTM_ETH))

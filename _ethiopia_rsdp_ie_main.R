@@ -118,8 +118,8 @@ NEAR_CUTOFF <- 5000 # meters
 # 4. Packages ------------------------------------------------------------------
 #### Install select packages from Github
 if(!require("velox"))        install_github("hunzikp/velox")
-if(!require("facetscales"))  install_github("zeehio/facetscales")
-if(!require("blackmarbler")) install_github("ramarty/blackmarbler")
+#if(!require("facetscales"))  install_github("zeehio/facetscales")
+#if(!require("blackmarbler")) install_github("ramarty/blackmarbler")
 
 #### Packages from CRAN
 if(!require("pacman")) install.packages("pacman")
@@ -140,10 +140,11 @@ pacman::p_load(AER,
                dplyr,
                dvmisc,
                estimatr,
-               facetscales,
+               #facetscales,
                gdistance,
                ggplot2,
                ggpubr,
+               geodata,
                haven,
                hrbrthemes,
                labelled,
@@ -156,6 +157,7 @@ pacman::p_load(AER,
                rasterVis,
                RColorBrewer,
                readr,
+               modelsummary,
                reshape,
                rgdal,
                rgeos,
@@ -163,12 +165,14 @@ pacman::p_load(AER,
                scales,
                sf,
                shp2graph,
+               sfdep,
                spatialEco,
                spdep,
                spex,
                stargazer,
                stringr,
                terra,
+               fixest,
                tibble,
                tidyr,
                tidyselect,
@@ -176,7 +180,8 @@ pacman::p_load(AER,
                velox,
                viridis,
                wesanderson,
-               exactextractr)
+               exactextractr,
+               conleyreg)
 
 library(did)
 library(blackmarbler)
@@ -186,6 +191,21 @@ library(blackmarbler)
 source("https://raw.githubusercontent.com/ramarty/fast-functions/master/R/functions_in_chunks.R")
 source(file.path(code_dir, "_functions", "clean_data_functions.R"))
 source(file.path(code_dir, "_functions", "update_iv_coef_name.R"))
+
+# Update modelsummary to not include table environment; only include tabular environment
+modelsummary_tab <- function(...,
+                             output = NULL){
+  latex_output <- capture.output(modelsummary(..., output = "latex"))
+  
+  # Remove the "\begin{table}" and "\end{table}" lines
+  latex_output <- latex_output[-c(1, length(latex_output))]
+  latex_output <- latex_output[-1]
+  
+  # Print the customized LaTeX output without table environment
+  sink(output)
+  cat(latex_output, sep = "\n")
+  sink()
+}
 
 # 6. Delete Processed Files ----------------------------------------------------
 # Code to delete processed files; ie, data files that are created from the code.

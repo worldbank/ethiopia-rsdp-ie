@@ -9,8 +9,8 @@ NEAR_THRESHOLD <- 5*1000
 # - DMSP-OLS until 2012
 # - Globcover until 2018
 # - Roads until 2016 (for globcover, could use roads in 2016 and globcover in 2018)
-base_end_df <- data.frame(baseline = c(1996, 1996, 1996, 1996, 2012, 2012),
-                          endline =  c(2012, 2009, 2016, 2018, 2016, 2018))
+base_end_df <- data.frame(baseline = c(1996, 1996, 1996, 1996, 2012, 2012, 2006, 2006),
+                          endline =  c(2012, 2009, 2016, 2018, 2016, 2018, 2009, 2016))
 
 # Load Data --------------------------------------------------------------------
 data <- readRDS(file.path(panel_rsdp_imp_dir, "kebele", "merged_datasets", "panel_data_clean.Rds"))
@@ -64,6 +64,7 @@ for(i in 1:nrow(base_end_df)){
                     cell_id, woreda_id, R_CODE, Z_CODE, # Pop2007
                     area_polygon, distance_city_addisababa,
                     distance_elec_trans,
+                    latitude, longitude,
                     wor_ntlgroup_2bin)) 
   
   ## Merge
