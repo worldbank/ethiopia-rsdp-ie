@@ -465,4 +465,8 @@ if(RUN_CODE){
   # Table: N units near MSTs
   source(file.path(analysis_code_dir, "table_mst_n_units_near.R"))
   
+  ### SECTION: Urban Land Cover Classification Along Roads
+  # Table: Proportion of urban area along roads
+  source(file.path(analysis_code_dir, "figure_roads_urban_analysis.R"))
+  
 }

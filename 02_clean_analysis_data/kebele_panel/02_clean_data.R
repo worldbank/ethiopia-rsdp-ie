@@ -66,16 +66,97 @@ roadimproved_df <- lapply(c("distance_improvedroad",
                             "distance_improvedroad_p1to3",
                             "distance_improvedroad_p1to3_50aboveafter",
                             "distance_improvedroad_p1to3_below50after"),
-                            # 
-                            # "distance_improvedroad_p4", 
-                            # "distance_improvedroad_p4_50aboveafter", 
-                            # "distance_improvedroad_p4_below50after"),
+                          # 
+                          # "distance_improvedroad_p4", 
+                          # "distance_improvedroad_p4_50aboveafter", 
+                          # "distance_improvedroad_p4_below50after"),
                           generate_road_improved_variables, 
                           data, 
                           ALL_YEARS_IMPROVED_VAR,
-                          NEAR_CUTOFF) %>% 
+                          NEAR_CUTOFF,
+                          0) %>% 
   bind_cols()
 data <- bind_cols(data, roadimproved_df)
+
+# Years Since / Post Improved Variables: Different Road Cut-Offs ---------------
+#### 5 to 10km
+roadimproved_df <- lapply(c("distance_improvedroad", 
+                            "distance_improvedroad_50aboveafter", 
+                            "distance_improvedroad_below50after"),
+                          generate_road_improved_variables, 
+                          data, 
+                          ALL_YEARS_IMPROVED_VAR,
+                          5000,
+                          0) %>% 
+  bind_cols()
+names(roadimproved_df) <- names(roadimproved_df) %>% paste0("_0to5km")
+data <- bind_cols(data, roadimproved_df)
+
+#### 5 to 10km
+roadimproved_df <- lapply(c("distance_improvedroad", 
+                            "distance_improvedroad_50aboveafter", 
+                            "distance_improvedroad_below50after"),
+                          generate_road_improved_variables, 
+                          data, 
+                          ALL_YEARS_IMPROVED_VAR,
+                          10000,
+                          5000) %>% 
+  bind_cols()
+names(roadimproved_df) <- names(roadimproved_df) %>% paste0("_5to10km")
+data <- bind_cols(data, roadimproved_df)
+
+#### 10 to 15km
+roadimproved_df <- lapply(c("distance_improvedroad", 
+                            "distance_improvedroad_50aboveafter", 
+                            "distance_improvedroad_below50after"),
+                          generate_road_improved_variables, 
+                          data, 
+                          ALL_YEARS_IMPROVED_VAR,
+                          15000,
+                          10000) %>% 
+  bind_cols()
+names(roadimproved_df) <- names(roadimproved_df) %>% paste0("_10to15km")
+data <- bind_cols(data, roadimproved_df)
+
+#### 15 to 20km
+roadimproved_df <- lapply(c("distance_improvedroad", 
+                            "distance_improvedroad_50aboveafter", 
+                            "distance_improvedroad_below50after"),
+                          generate_road_improved_variables, 
+                          data, 
+                          ALL_YEARS_IMPROVED_VAR,
+                          20000,
+                          15000) %>% 
+  bind_cols()
+names(roadimproved_df) <- names(roadimproved_df) %>% paste0("_15to20km")
+data <- bind_cols(data, roadimproved_df)
+
+#### 20 to 25km
+roadimproved_df <- lapply(c("distance_improvedroad", 
+                            "distance_improvedroad_50aboveafter", 
+                            "distance_improvedroad_below50after"),
+                          generate_road_improved_variables, 
+                          data, 
+                          ALL_YEARS_IMPROVED_VAR,
+                          25000,
+                          20000) %>% 
+  bind_cols()
+names(roadimproved_df) <- names(roadimproved_df) %>% paste0("_20to25km")
+data <- bind_cols(data, roadimproved_df)
+
+#### 250 to 30km
+roadimproved_df <- lapply(c("distance_improvedroad", 
+                            "distance_improvedroad_50aboveafter", 
+                            "distance_improvedroad_below50after"),
+                          generate_road_improved_variables, 
+                          data, 
+                          ALL_YEARS_IMPROVED_VAR,
+                          30000,
+                          25000) %>% 
+  bind_cols()
+names(roadimproved_df) <- names(roadimproved_df) %>% paste0("_25to30km")
+data <- bind_cols(data, roadimproved_df)
+
 
 # Road Variables ---------------------------------------------------------------
 # Variables for road length above Xkm in each year
@@ -119,48 +200,48 @@ for(speed_i in speeds_vec){
 }
 
 # Compute spatial lags ---------------------------------------------------------
-kebele_sf <- readRDS(file.path(panel_rsdp_imp_dir, "kebele", "individual_datasets", "points.Rds")) %>% 
-  st_as_sf()
-
-sp_lag_df <- map_df(unique(data$year), function(year_i){
-  print(year_i)
-  
-  data_i <- data[data$year %in% year_i,] %>%
-    dplyr::select(cell_id, 
-                  dmspols_harmon, dmspols_harmon_viirs,
-                  globcover_urban, globcover_urban_sum,
-                  globcover_cropland, globcover_cropland_sum)
-  kebele_data_sf <- kebele_sf %>%
-    left_join(data_i, by = "cell_id")
-  
-  geo <- sf::st_geometry(kebele_data_sf)
-  nb <- st_contiguity(geo)
-  wt <- st_weights(nb, allow_zero = T)
-  
-  kebele_data_sf$dmspols_harmon_splag         <- st_lag(kebele_data_sf$dmspols_harmon,         nb, wt, na_ok = T, allow_zero = T)
-  kebele_data_sf$dmspols_harmon_viirs_splag   <- st_lag(kebele_data_sf$dmspols_harmon_viirs,   nb, wt, na_ok = T, allow_zero = T)
-  kebele_data_sf$globcover_urban_splag        <- st_lag(kebele_data_sf$globcover_urban,        nb, wt, na_ok = T, allow_zero = T)
-  kebele_data_sf$globcover_urban_sum_splag    <- st_lag(kebele_data_sf$globcover_urban_sum,    nb, wt, na_ok = T, allow_zero = T)
-  kebele_data_sf$globcover_cropland_splag     <- st_lag(kebele_data_sf$globcover_cropland,     nb, wt, na_ok = T, allow_zero = T)
-  kebele_data_sf$globcover_cropland_sum_splag <- st_lag(kebele_data_sf$globcover_cropland_sum, nb, wt, na_ok = T, allow_zero = T)
-  kebele_data_sf$year <- year_i
-  
-  kebele_data_df <- kebele_data_sf %>%
-    st_drop_geometry()
-  
-  return(kebele_data_df)
-})
-
-sp_lag_df <- sp_lag_df %>%
-  dplyr::select(-c(dmspols_harmon,
-                   dmspols_harmon_viirs,
-                   globcover_urban,
-                   globcover_urban_sum,
-                   globcover_cropland,
-                   globcover_cropland_sum))
-
-data <- data %>%
-  left_join(sp_lag_df, by = c("cell_id", "year"))
+# kebele_sf <- readRDS(file.path(panel_rsdp_imp_dir, "kebele", "individual_datasets", "points.Rds")) %>% 
+#   st_as_sf()
+# 
+# sp_lag_df <- map_df(unique(data$year), function(year_i){
+#   print(year_i)
+#   
+#   data_i <- data[data$year %in% year_i,] %>%
+#     dplyr::select(cell_id, 
+#                   dmspols_harmon, dmspols_harmon_viirs,
+#                   globcover_urban, globcover_urban_sum,
+#                   globcover_cropland, globcover_cropland_sum)
+#   kebele_data_sf <- kebele_sf %>%
+#     left_join(data_i, by = "cell_id")
+#   
+#   geo <- sf::st_geometry(kebele_data_sf)
+#   nb <- st_contiguity(geo)
+#   wt <- st_weights(nb, allow_zero = T)
+#   
+#   kebele_data_sf$dmspols_harmon_splag         <- st_lag(kebele_data_sf$dmspols_harmon,         nb, wt, na_ok = T, allow_zero = T)
+#   kebele_data_sf$dmspols_harmon_viirs_splag   <- st_lag(kebele_data_sf$dmspols_harmon_viirs,   nb, wt, na_ok = T, allow_zero = T)
+#   kebele_data_sf$globcover_urban_splag        <- st_lag(kebele_data_sf$globcover_urban,        nb, wt, na_ok = T, allow_zero = T)
+#   kebele_data_sf$globcover_urban_sum_splag    <- st_lag(kebele_data_sf$globcover_urban_sum,    nb, wt, na_ok = T, allow_zero = T)
+#   kebele_data_sf$globcover_cropland_splag     <- st_lag(kebele_data_sf$globcover_cropland,     nb, wt, na_ok = T, allow_zero = T)
+#   kebele_data_sf$globcover_cropland_sum_splag <- st_lag(kebele_data_sf$globcover_cropland_sum, nb, wt, na_ok = T, allow_zero = T)
+#   kebele_data_sf$year <- year_i
+#   
+#   kebele_data_df <- kebele_data_sf %>%
+#     st_drop_geometry()
+#   
+#   return(kebele_data_df)
+# })
+# 
+# sp_lag_df <- sp_lag_df %>%
+#   dplyr::select(-c(dmspols_harmon,
+#                    dmspols_harmon_viirs,
+#                    globcover_urban,
+#                    globcover_urban_sum,
+#                    globcover_cropland,
+#                    globcover_cropland_sum))
+# 
+# data <- data %>%
+#   left_join(sp_lag_df, by = c("cell_id", "year"))
 
 # Log Variables ----------------------------------------------------------------
 ma_var <- data %>% names() %>% str_subset("^MA_")

@@ -36,7 +36,7 @@ p <- ggplot() +
 
 ggsave(p, 
        filename = file.path(paper_figures, "cloud_free_raster.png"),
-       height = 5, width = 10)
+       height = 5, width = 7)
 
 # Extract data to Woredas ------------------------------------------------------
 wor_df <- map_df(1:22, function(i){

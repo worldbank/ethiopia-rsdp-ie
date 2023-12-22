@@ -6,6 +6,10 @@
 OBJECTS_BEFORE_CODE <- ls()
 
 # Functions --------------------------------------------------------------------
+round_char <- function(x){
+  x %>% round(2) %>% as.character()
+}
+
 prep_data <- function(unit, log, theta, exclude, time_period){
   
   #### Load/Subset Data
@@ -195,10 +199,23 @@ for(log in c("_log")){
                      add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
                                         'Unit', "Keb.","Keb.","Keb.","Keb.","Keb.","Keb.","Wor.","Wor.","Wor.","Wor.","Wor.","Wor.",
                                         'Year FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y",
-                                        'Unit FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y"),
+                                        'Unit FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y",
+                                        "1st Stage F-Stat",
+                                        fitstat(iv1k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                        fitstat(iv2k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                        fitstat(iv3k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                        fitstat(iv4k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                        fitstat(iv5k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                        fitstat(iv6k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                        fitstat(iv1w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                        fitstat(iv2w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                        fitstat(iv3w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                        fitstat(iv4w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                        fitstat(iv5w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                        fitstat(iv6w, type = "ivf", simplify = T)$stat %>% round_char()
+                                        ),
                      output = file.path(paper_tables,
                                         paste0("MA_table",log,"_theta",theta,exclude,"_",unit,"_",time_period,"_iv_2ntlgroups.tex")))
-        
         
         # stargazer(iv1k,
         #           iv2k,

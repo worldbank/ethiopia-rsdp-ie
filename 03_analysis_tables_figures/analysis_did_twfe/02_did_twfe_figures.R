@@ -30,7 +30,8 @@ did_df <- file.path(panel_rsdp_imp_dir,
   dplyr::rename(years_since_improved = time,
                 b = att) %>%
   mutate(p025 = b - se * critical_value_95p,
-         p975 = b + se * critical_value_95p) 
+         p975 = b + se * critical_value_95p) %>%
+  dplyr::filter(!(indep_var %>% str_detect("km")))
 
 # did_df <- did_df %>%
 #   dplyr::filter(dataset == "kebele",
@@ -316,6 +317,10 @@ for(dataset_i in c("kebele", "dmspols_grid_nearroad")){ #
         for(trans_type in c("ihs", "log")){ # "ihs", "log"
           for(indep_var_type_i in c("", "_p1to3", "_rand", "_randrestrict", "_randtreat")){
             
+            if( (est_type_i == "tw") & (addis_dist_i == "Far") ){
+              next
+            }
+            
             if( (indep_var_type_i == "_p1to3") & (est_type_i == "tw") ){
               next
             }
@@ -367,8 +372,8 @@ for(dataset_i in c("kebele", "dmspols_grid_nearroad")){ #
               trans_type_suffix <- ""
               
               if(dataset_i == "kebele"){
-              df_sub <- df %>%
-                dplyr::filter(dep_var_raw %>% str_detect("_ihs$"))
+                df_sub <- df %>%
+                  dplyr::filter(dep_var_raw %>% str_detect("_ihs$"))
               } else{
                 df_sub <- df %>%
                   dplyr::filter(dep_var_raw %in% c("globcover_urban",
@@ -388,7 +393,7 @@ for(dataset_i in c("kebele", "dmspols_grid_nearroad")){ #
                                                    "globcover_cropland",
                                                    "dmspols_harmon_log"))
               }
-
+              
             }
             
             df_sub_dmsp <- df_sub %>%
@@ -691,44 +696,46 @@ for(dataset_i in c("kebele", "dmspols_grid_nearroad")){ #
             
             # Don't create for diff-in-diff with 1km grid
             if(! ((est_type_i == "did") & (dataset_i == "dmspols_grid_nearroad")) ){
-              
-              p <- df_sub %>%
-                dplyr::filter(dataset %in% dataset_i,
-                              addis_distance %in% addis_dist_i,
-                              indep_var_type %in% indep_var_type_i,
-                              ntl_num_groups %in% 2,
-                              ntl_group != "all",
-                              indep_var %in% "All",
-                              controls == controls_i,
-                              est_type == est_type_i) %>%
-                ggplot(aes(x = years_since_improved, 
-                           y = b, 
-                           ymin = p025, 
-                           ymax=p975,
-                           group = ntl_group, 
-                           color = ntl_group)) +
-                geom_point(position = position_dodge(width = p_dodge_width_si),size=1) + 
-                geom_linerange(position = position_dodge(width = p_dodge_width_si),size=0.5) +
-                geom_vline(xintercept=0,size=.5,alpha=0.5) +
-                geom_hline(yintercept=0,size=.5,alpha=0.5) +
-                labs(x="Years Since Road Improved",
-                     y="Coefficient (+/- 95% CI)",
-                     color="Baseline\nNighttime\nLights") +
-                scale_alpha_manual(values = c(0.1, 1)) +
-                scale_color_manual(values = c("gray20", "darkorange"),
-                                   guide = guide_legend(reverse = TRUE)) +
-                theme_minimal() +
-                theme(strip.text = element_text(face = "bold", color = "black")) +
-                facet_wrap(~dep_var,
-                           scales = "free_y",
-                           nrow = fig_nrow_si)
-              
-              ggsave(p,
-                     filename = file.path(paper_figures, 
-                                          paste0(est_type_i,"_by2ntlgroups_",dataset_i,"_",addis_dist_i,trans_type_suffix,indep_var_type_i,controls_suffix_i,".png")),
-                     height = fig_height_si, 
-                     width = fig_width_si,
-                     dpi = dpi)
+              if( !(est_type_i == "tw") ){
+                
+                p <- df_sub %>%
+                  dplyr::filter(dataset %in% dataset_i,
+                                addis_distance %in% addis_dist_i,
+                                indep_var_type %in% indep_var_type_i,
+                                ntl_num_groups %in% 2,
+                                ntl_group != "all",
+                                indep_var %in% "All",
+                                controls == controls_i,
+                                est_type == est_type_i) %>%
+                  ggplot(aes(x = years_since_improved, 
+                             y = b, 
+                             ymin = p025, 
+                             ymax=p975,
+                             group = ntl_group, 
+                             color = ntl_group)) +
+                  geom_point(position = position_dodge(width = p_dodge_width_si),size=1) + 
+                  geom_linerange(position = position_dodge(width = p_dodge_width_si),size=0.5) +
+                  geom_vline(xintercept=0,size=.5,alpha=0.5) +
+                  geom_hline(yintercept=0,size=.5,alpha=0.5) +
+                  labs(x="Years Since Road Improved",
+                       y="Coefficient (+/- 95% CI)",
+                       color="Baseline\nNighttime\nLights") +
+                  scale_alpha_manual(values = c(0.1, 1)) +
+                  scale_color_manual(values = c("gray20", "darkorange"),
+                                     guide = guide_legend(reverse = TRUE)) +
+                  theme_minimal() +
+                  theme(strip.text = element_text(face = "bold", color = "black")) +
+                  facet_wrap(~dep_var,
+                             scales = "free_y",
+                             nrow = fig_nrow_si)
+                
+                ggsave(p,
+                       filename = file.path(paper_figures, 
+                                            paste0(est_type_i,"_by2ntlgroups_",dataset_i,"_",addis_dist_i,trans_type_suffix,indep_var_type_i,controls_suffix_i,".png")),
+                       height = fig_height_si, 
+                       width = fig_width_si,
+                       dpi = dpi)
+              }
             }
             
             

@@ -14,6 +14,13 @@ ROUND_NUM <- 1 # number of digits to round numbers
 # For naming files
 rsdp_type <- "rsdp123"
 
+to_delete <- paper_tables %>%
+  list.files() %>%
+  str_subset("^iv_near_|^ols_iv_near")
+for(file_i in to_delete){
+  file.remove(file_i)
+}
+
 # Prep Data Function -----------------------------------------------------------
 
 # Function that preps data for a specific dataset
@@ -227,7 +234,7 @@ modelsummary_tab(list("NTL" = lm_dmspols_ihs_k,
              output = file.path(paper_tables, 
                                 paste0("ols_iv_near_mst_cost_distance_5km_","kebele","_results_",rsdp_type,"_regions_2ntlgroups.tex")))
 
-# LOG vs DHS ===================================================================
+# LOG vs IHS ===================================================================
 
 # APPENDIX RESULTS TABLES ==================================================
 
@@ -500,4 +507,8 @@ OBJECTS_TO_DELETE <- setdiff(OBJECTS_AFTER_CODE, OBJECTS_BEFORE_CODE)
 rm(list = OBJECTS_TO_DELETE)
 
 gc(); gc(); gc()
+
+
+
+
 

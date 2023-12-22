@@ -14,9 +14,20 @@ addis_distance = "All"
 ntl_num_groups = 2
 ntl_group = "all"
 
+if(OVERWRITE_FILES %in% T){
+  to_delete <- file.path(panel_rsdp_imp_dir,
+            "all_units", "results_datasets",
+            "individual_datasets") %>%
+    list.files(pattern = "twowayFE",
+               full.names = T)
+  for(file_delete_i in to_delete){
+    file.remove(file_delete_i)
+  }
+}
+
 # Loop Over Datasets -----------------------------------------------------------
-for(dataset in c("kebele", "dmspols_grid_nearroad")){ # dmspols_grid_nearroad
-  for(se_type in c("conley", "cluster")){
+for(dataset in rev(c("kebele", "dmspols_grid_nearroad"))){ # dmspols_grid_nearroad
+  for(se_type in rev(c("conley", "cluster"))){
     
     if(se_type == "cluster") se_type_suffix <- ""
     if(se_type == "conley")  se_type_suffix <- "conley"
@@ -38,7 +49,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){ # dmspols_grid_nearroad
     data <- readRDS(file.path(panel_rsdp_imp_dir, dataset, "merged_datasets", "panel_data_clean.Rds"))
     
     for(dep_var in dep_var_vec){
-      for(indep_var in c("years_since_improvedroad", 
+      for(indep_var in rev(c("years_since_improvedroad", 
                          "years_since_improvedroad_50aboveafter",
                          "years_since_improvedroad_below50after",
                          
@@ -56,10 +67,10 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){ # dmspols_grid_nearroad
                          
                          "years_since_improvedroad_randtreat", 
                          "years_since_improvedroad_50aboveafter_randtreat",
-                         "years_since_improvedroad_below50after_randtreat")){
+                         "years_since_improvedroad_below50after_randtreat"))){
         for(controls in c("")){ # "+temp_avg+precipitation"
-          for(addis_distance in c("All", "Far")){
-            for(ntl_num_groups in c(2,4)){
+          for(addis_distance in c("All")){ # "Far"
+            for(ntl_num_groups in c(4)){ #2,4
               
               if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "0", "1")
               if(ntl_num_groups %in% 4) ntl_group_vec <- c("all", "1", "2", "3", "4")
@@ -113,7 +124,7 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){ # dmspols_grid_nearroad
                                   "all_units", "results_datasets",
                                   "individual_datasets",
                                   filename)
-
+                
                 if(!file.exists(file) | OVERWRITE_FILES){
                   
                   print(filename)

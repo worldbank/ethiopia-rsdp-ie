@@ -6,6 +6,10 @@
 OBJECTS_BEFORE_CODE <- ls()
 
 # Functions --------------------------------------------------------------------
+round_char <- function(x){
+  x %>% round(2) %>% as.character()
+}
+
 prep_data <- function(unit, log, theta, exclude, start_year, end_year){
   
   #### Load Data
@@ -29,6 +33,7 @@ prep_data <- function(unit, log, theta, exclude, start_year, end_year){
     data$globcover_urban_sum_ihs_pretnd96_92 <- data$globcover_urban_sum_ihs_pretnd11_07
     
     data$wor_ntlgroup_2bin <- data$wor_ntlgroup_2011_2bin
+    
   }
   
   #### Cluster Var and FE Var
@@ -45,10 +50,10 @@ prep_data <- function(unit, log, theta, exclude, start_year, end_year){
   
   ## MA Variables
   data$MA_var      <- data[[paste0("MA_pop2000_tt_theta",theta, log)]]
-  data$MA_var_1996 <- data[[paste0("MA_pop2000_tt_theta",theta, log, "_", start_year)]]
+  data$MA_var_1996 <- data[[paste0("MA_pop2000_tt_theta",theta, log, "_", start_year_m1)]]
   
   data$MA_var_exc      <- data[[paste0("MA_pop2000_tt_theta",theta, exclude, log)]]
-  data$MA_var_exc_1996 <- data[[paste0("MA_pop2000_tt_theta",theta, exclude, log, "_", start_year)]]
+  data$MA_var_exc_1996 <- data[[paste0("MA_pop2000_tt_theta",theta, exclude, log, "_", start_year_m1)]]
   
   ## Interactions - MA
   data$MA_varXdistance_city_addisababa <- data$MA_var * data$distance_city_addisababa
@@ -159,7 +164,15 @@ for(log in c("_log")){
                        gof_map = c("nobs", "adj.r.squared"),
                        escape = FALSE,
                        add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
-                                          'Model', "OLS", "OLS", "OLS", "OLS", "OLS", "OLS", "IV", "IV", "IV", "IV", "IV", "IV"),
+                                          'Model', "OLS", "OLS", "OLS", "OLS", "OLS", "OLS", "IV", "IV", "IV", "IV", "IV", "IV",
+                                          "1st Stage F-Stat",
+                                          "NA","NA","NA","NA","NA","NA",
+                                          fitstat(iv1k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv2k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv3k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv4k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv5k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv6k, type = "ivf", simplify = T)$stat %>% round_char()),
                        output = file.path(paper_tables,
                                           paste0("MA","_table_longdiff_theta",theta,exclude,log,"_","kebele","_startyear",start_year,"_endyear",end_year,"_ols_iv_2ntlgroups.tex")))
           
@@ -231,7 +244,15 @@ for(log in c("_log")){
                        gof_map = c("nobs", "adj.r.squared"),
                        escape = FALSE,
                        add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
-                                          'Model', "OLS", "OLS", "OLS", "OLS", "OLS", "OLS", "IV", "IV", "IV", "IV", "IV", "IV"),
+                                          'Model', "OLS", "OLS", "OLS", "OLS", "OLS", "OLS", "IV", "IV", "IV", "IV", "IV", "IV",
+                                          "1st Stage F-Stat",
+                                          "NA","NA","NA","NA","NA","NA",
+                                          fitstat(iv1w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv2w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv3w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv4w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv5w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv6w, type = "ivf", simplify = T)$stat %>% round_char()),
                        output = file.path(paper_tables,
                                           paste0("MA","_table_longdiff_theta",theta,exclude,log,"_","woreda","_startyear",start_year,"_endyear",end_year,"_ols_iv_2ntlgroups.tex")))
           
@@ -359,7 +380,20 @@ for(log in c("_log")){
                        gof_map = c("nobs", "adj.r.squared"),
                        escape = FALSE,
                        add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
-                                          'Unit', "Keb.", "Keb.", "Keb.", "Keb.", "Keb.", "Keb.", "Wor.", "Wor.", "Wor.", "Wor.", "Wor.", "Wor."),
+                                          'Unit', "Keb.", "Keb.", "Keb.", "Keb.", "Keb.", "Keb.", "Wor.", "Wor.", "Wor.", "Wor.", "Wor.", "Wor.",
+                                          "1st Stage F-Stat",
+                                          fitstat(iv1k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv2k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv3k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv4k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv5k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv6k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv1w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv2w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv3w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv4w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv5w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                          fitstat(iv6w, type = "ivf", simplify = T)$stat %>% round_char()),
                        output = file.path(paper_tables,
                                           paste0("MA","_table_longdiff_theta",theta,exclude,log,"_","kebeleworeda","_startyear",start_year,"_endyear",end_year,"_iv_2ntlgroups.tex")))
           

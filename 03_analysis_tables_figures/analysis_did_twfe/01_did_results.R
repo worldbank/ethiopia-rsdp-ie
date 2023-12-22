@@ -12,6 +12,42 @@ addis_distance = "All"
 controls = "none"
 ntl_group = "4"
 
+buff_suffix <- c("_0to5km", "_5to10km", "_10to15km", "_15to20km", "_20to25km", "_25to30km")
+buff_suffix_rx <- buff_suffix %>% paste(collapse = "|")
+
+# to_delete <- file.path(panel_rsdp_imp_dir,
+#                        "all_units",
+#                        "results_datasets",
+#                        "individual_datasets") %>%
+#   list.files(full.names = T) %>%
+#   str_subset("dynamic_did") %>%
+#   str_subset("to") %>%
+#   str_subset("km")
+# for(i in to_delete){
+#   file.remove(i)
+# }
+
+# file.path(panel_rsdp_imp_dir,
+#           "all_units",
+#           "results_datasets",
+#           "individual_datasets") %>%
+#   list.files() %>%
+#   str_subset("")
+
+# to_delete <- c(
+#   "dynamic_did_attgt_kebele_globcover_urban_sum_ihs_year_improvedroad_none_All_numgroups4_groupall.Rds",
+#   "dynamic_did_attgt_kebele_globcover_urban_sum_ihs_year_improvedroad_50aboveafter_none_All_numgroups4_groupall.Rds",
+#   "dynamic_did_attgt_kebele_globcover_urban_sum_ihs_year_improvedroad_below50after_none_All_numgroups4_groupall.Rds"
+# )
+# to_delete <- file.path(panel_rsdp_imp_dir,
+#                        "all_units",
+#                        "results_datasets",
+#                        "individual_datasets",
+#                        to_delete)
+# for(i in to_delete){
+#   file.remove(i)
+# }
+
 # Loop through datasets, variables & subsets -----------------------------------
 for(dataset in c("kebele")){ # dmspols_grid_nearroad 
   
@@ -30,6 +66,10 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                        "year_improvedroad_50aboveafter",
                        "year_improvedroad_below50after",
                        
+                       paste0("year_improvedroad", buff_suffix),
+                       paste0("year_improvedroad_50aboveafter", buff_suffix),
+                       paste0("year_improvedroad_below50after", buff_suffix),
+                       
                        "year_improvedroad_p1to3",
                        "year_improvedroad_p1to3_50aboveafter",
                        "year_improvedroad_p1to3_below50after",
@@ -47,7 +87,7 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                        "year_improvedroad_below50after_randrestrict")){
       for(addis_distance in rev(c("All", "Far"))){ # "All", "Far"
         for(ntl_num_groups in c(2,4)){ # 
-          for(controls in c("none", "splag")){ # temp_precip, precip
+          for(controls in c("none")){ # temp_precip, precip, "splag"
             
             if(ntl_num_groups %in% 2) ntl_group_vec <- c("all", "0", "1")
             if(ntl_num_groups %in% 4) ntl_group_vec <- c("all", "1", "2", "3", "4")
@@ -56,6 +96,18 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
               
               # Skip certain subsets ---------------------------------------------
               # For road type, only calculate for all groups
+              if( str_detect(indep_var, buff_suffix_rx) & (addis_distance == "Far")  ){
+                next
+              }
+              
+              if( str_detect(indep_var, buff_suffix_rx) & (ntl_group != "all")  ){
+                next
+              }
+              
+              if( str_detect(indep_var, buff_suffix_rx) & (ntl_num_groups == 2)  ){
+                next
+              }
+              
               if((indep_var %in% c("year_improvedroad_50aboveafter", "year_improvedroad_below50after")) &
                  (ntl_group != "all")){
                 next
@@ -119,18 +171,6 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                                          "individual_datasets",
                                          paste0("dynamic_did_attgt_",OUT_PATH_SUFFIX, ".Rds"))
               
-              if(F){
-                a <- file.path(panel_rsdp_imp_dir,
-                               "all_units",
-                               "results_datasets",
-                               "individual_datasets") %>%
-                  list.files(full.names = T) %>%
-                  str_subset("p4|p1to3")
-                for(file_i in a){
-                  file.remove(a)
-                }
-              }
-              
               if(OVERWRITE_FILES | !file.exists(file_to_check)){
                 
                 print(OUT_PATH_SUFFIX)
@@ -189,6 +229,7 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                 # not being in all the datasets
                 if(controls %in% "none"){
                   data <- data[,names(data) %in% c("dep_var", "indep_var", "cell_id", "year", "woreda_id")]
+                  
                   
                 } else if (controls %in% "temp_precip"){
                   data <- data[,names(data) %in% c("dep_var", "indep_var", "cell_id", "year", "woreda_id", 
