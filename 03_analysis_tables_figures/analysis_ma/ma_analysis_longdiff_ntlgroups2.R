@@ -97,44 +97,44 @@ for(log in c("_log")){
           data_woreda <- prep_data("woreda", log, theta, exclude, start_year, end_year)
           
           #### OLS - Kebele
-          ols1k <- feols(dmspols_harmon_ihs         ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(20), data = data_kebele)
-          ols2k <- feols(dmspols_harmon_ihs         ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(20), data = data_kebele) 
+          ols1k <- feols(dmspols_harmon_ihs         ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(50), data = data_kebele)
+          ols2k <- feols(dmspols_harmon_ihs         ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(50), data = data_kebele) 
           
-          ols3k <- feols(globcover_urban_sum_ihs     ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(20), data = data_kebele)
-          ols4k <- feols(globcover_urban_sum_ihs    ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(20), data = data_kebele) 
+          ols3k <- feols(globcover_urban_sum_ihs     ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(50), data = data_kebele)
+          ols4k <- feols(globcover_urban_sum_ihs    ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(50), data = data_kebele) 
           
-          ols5k <- feols(globcover_cropland_sum_ihs ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(20), data = data_kebele)
-          ols6k <- feols(globcover_cropland_sum_ihs ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(20), data = data_kebele) 
+          ols5k <- feols(globcover_cropland_sum_ihs ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(50), data = data_kebele)
+          ols6k <- feols(globcover_cropland_sum_ihs ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(50), data = data_kebele) 
           
           #### OLS - Woreda
-          ols1w <- feols(dmspols_harmon_ihs         ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , vcov = ~cluster_var, data = data_woreda)
-          ols2w <- feols(dmspols_harmon_ihs         ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , vcov = ~cluster_var, data = data_woreda) 
+          ols1w <- feols(dmspols_harmon_ihs         ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(50), data = data_woreda)
+          ols2w <- feols(dmspols_harmon_ihs         ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(50), data = data_woreda) 
           
-          ols3w <- feols(globcover_urban_sum_ihs     ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , vcov = ~cluster_var, data = data_woreda)
-          ols4w <- feols(globcover_urban_sum_ihs    ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , vcov = ~cluster_var, data = data_woreda) 
+          ols3w <- feols(globcover_urban_sum_ihs     ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(50), data = data_woreda)
+          ols4w <- feols(globcover_urban_sum_ihs    ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(50), data = data_woreda) 
           
-          ols5w <- feols(globcover_cropland_sum_ihs ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , vcov = ~cluster_var, data = data_woreda)
-          ols6w <- feols(globcover_cropland_sum_ihs ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , vcov = ~cluster_var, data = data_woreda) 
+          ols5w <- feols(globcover_cropland_sum_ihs ~ MA_var                                                                                         + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(50), data = data_woreda)
+          ols6w <- feols(globcover_cropland_sum_ihs ~ MA_var + wor_ntlgroup_2bin  + MA_var_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92   | fe_var   , conley(50), data = data_woreda) 
           
           #### IV - Kebele
-          iv1k <- feols(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , conley(20), data = data_kebele)
-          iv2k <- feols(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , conley(20), data = data_kebele)
+          iv1k <- feols(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , conley(50), data = data_kebele)
+          iv2k <- feols(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , conley(50), data = data_kebele)
           
-          iv3k <- feols(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , conley(20), data = data_kebele)
-          iv4k <- feols(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , conley(20), data = data_kebele)
+          iv3k <- feols(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , conley(50), data = data_kebele)
+          iv4k <- feols(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , conley(50), data = data_kebele)
           
-          iv5k <- feols(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , conley(20), data = data_kebele)
-          iv6k <- feols(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , conley(20), data = data_kebele)
+          iv5k <- feols(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , conley(50), data = data_kebele)
+          iv6k <- feols(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , conley(50), data = data_kebele)
           
           #### IV - Woreda
-          iv1w <- feols(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , vcov = ~cluster_var, data = data_woreda)
-          iv2w <- feols(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , vcov = ~cluster_var, data = data_woreda)
+          iv1w <- feols(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , conley(50), data = data_woreda)
+          iv2w <- feols(dmspols_harmon_ihs         ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , conley(50), data = data_woreda)
           
-          iv3w <- feols(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , vcov = ~cluster_var, data = data_woreda)
-          iv4w <- feols(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , vcov = ~cluster_var, data = data_woreda)
+          iv3w <- feols(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , conley(50), data = data_woreda)
+          iv4w <- feols(globcover_urban_sum_ihs    ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , conley(50), data = data_woreda)
           
-          iv5w <- feols(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , vcov = ~cluster_var, data = data_woreda)
-          iv6w <- feols(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , vcov = ~cluster_var, data = data_woreda)
+          iv5w <- feols(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var |  MA_var ~ MA_var_exc                                                                             , conley(50), data = data_woreda)
+          iv6w <- feols(globcover_cropland_sum_ihs ~ MA_var_exc_1996 + dmspols_harmon_ihs_1996 + dmspols_harmon_ihs_pretnd96_92 + globcover_urban_sum_ihs_pretnd96_92 | fe_var | MA_var + wor_ntlgroup_2bin      ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin      , conley(50), data = data_woreda)
           
           #### OLS and IV Regression [For Main Text]
           modelsummary_tab(list("NTL" = ols1k,
@@ -149,7 +149,7 @@ for(log in c("_log")){
                             "Urban" = iv4k,
                             "Cropland" = iv5k,
                             "Cropland" = iv6k),
-                       stars = c('*' = .05, '**' = .01, "***" = 0.001),
+                       stars = c('*' = .1, '**' = .05, "***" = 0.01),
                        coef_map = c("MA_var" = "MA",
                                     "wor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit",
                                     
@@ -229,7 +229,7 @@ for(log in c("_log")){
                             "Urban" = iv4w,
                             "Cropland" = iv5w,
                             "Cropland" = iv6w),
-                       stars = c('*' = .05, '**' = .01, "***" = 0.001),
+                       stars = c('*' = .1, '**' = .05, "***" = 0.01),
                        coef_map = c("MA_var" = "MA",
                                     "wor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit",
                                     
@@ -304,7 +304,7 @@ for(log in c("_log")){
                             "Urban" = ols4k,
                             "Cropland" = ols5k,
                             "Cropland" = ols6k),
-                       stars = c('*' = .05, '**' = .01, "***" = 0.001),
+                       stars = c('*' = .1, '**' = .05, "***" = 0.01),
                        coef_map = c("MA_var" = "MA",
                                     "wor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit",
 
@@ -365,7 +365,7 @@ for(log in c("_log")){
                             "Urban" = iv4w,
                             "Cropland" = iv5w,
                             "Cropland" = iv6w),
-                       stars = c('*' = .05, '**' = .01, "***" = 0.001),
+                       stars = c('*' = .1, '**' = .05, "***" = 0.01),
                        coef_map = c("MA_var" = "MA",
                                     "wor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit",
                                     

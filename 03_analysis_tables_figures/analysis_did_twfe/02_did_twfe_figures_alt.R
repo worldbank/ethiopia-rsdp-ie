@@ -17,8 +17,6 @@ fig_nrow_si      <- 1
 ## General params
 dpi = 600
 
-roads_colors <- c("black", "darkorange", "dodgerblue1")
-
 # Load Data --------------------------------------------------------------------
 did_df <- file.path(panel_rsdp_imp_dir,
                     "all_units",
@@ -194,39 +192,39 @@ df$indep_var[df$indep_var_type == "_rand"] %>% table()
 df$indep_var[df$indep_var_type == "_randrestrict"] %>% table()
 
 # Individual Figure ------------------------------------------------------------
-  # df_sub <- df %>%
-  #   dplyr::filter(dataset %in% "kebele",
-  #                 addis_distance %in% "All",
-  #                 controls %in% "none",
-  #                 est_type %in% "did",
-  #                 ntl_group == "all",
-  #                 ntl_num_groups == 4,
-  #                 dep_var_raw == "globcover_urban_sum_ihs",
-  #                 indep_var == "Federal and\nAsphalt Roads\n ",
-  #                 indep_var_type %in% "") # did, tw
-  # df_sub$years_since_improved %>% table()
-  # 
-  # p_dodge_width <- 1
-  # df_sub %>%
-  #   ggplot(aes(x = years_since_improved,
-  #              y = b,
-  #              ymin = p025,
-  #              ymax=p975,
-  #              group = indep_var,
-  #              color = indep_var)) +
-  #   geom_point(position = position_dodge(width = p_dodge_width),size=1) +
-  #   geom_linerange(position = position_dodge(width = p_dodge_width),size=0.5) +
-  #   geom_vline(xintercept=0,size=.5,alpha=0.5) +
-  #   geom_hline(yintercept=0,size=.5,alpha=0.5) +
-  #   labs(x="Years Since Road Improved",
-  #        y="Coefficient (+/- 95% CI)",
-  #        color="Baseline\nNighttime\nLights") +
-  #   scale_alpha_manual(values = c(0.1, 1)) +
-  #   theme_minimal() +
-  #   theme(strip.text = element_text(face = "bold", color = "black")) +
-  #   facet_wrap(dep_var~ntl_group,
-  #              scales = "free_y",
-  #              ncol = 4)
+# df_sub <- df %>%
+#   dplyr::filter(dataset %in% "kebele",
+#                 addis_distance %in% "All",
+#                 controls %in% "none",
+#                 est_type %in% "did",
+#                 ntl_group == "all",
+#                 ntl_num_groups == 4,
+#                 dep_var_raw == "globcover_urban_sum_ihs",
+#                 indep_var == "Federal and\nAsphalt Roads\n ",
+#                 indep_var_type %in% "") # did, tw
+# df_sub$years_since_improved %>% table()
+# 
+# p_dodge_width <- 1
+# df_sub %>%
+#   ggplot(aes(x = years_since_improved,
+#              y = b,
+#              ymin = p025,
+#              ymax=p975,
+#              group = indep_var,
+#              color = indep_var)) +
+#   geom_point(position = position_dodge(width = p_dodge_width),size=1) +
+#   geom_linerange(position = position_dodge(width = p_dodge_width),size=0.5) +
+#   geom_vline(xintercept=0,size=.5,alpha=0.5) +
+#   geom_hline(yintercept=0,size=.5,alpha=0.5) +
+#   labs(x="Years Since Road Improved",
+#        y="Coefficient (+/- 95% CI)",
+#        color="Baseline\nNighttime\nLights") +
+#   scale_alpha_manual(values = c(0.1, 1)) +
+#   theme_minimal() +
+#   theme(strip.text = element_text(face = "bold", color = "black")) +
+#   facet_wrap(dep_var~ntl_group,
+#              scales = "free_y",
+#              ncol = 4)
 
 # Loop over figures ------------------------------------------------------------
 dataset_i = "kebele"
@@ -252,10 +250,6 @@ for(dataset_i in c("kebele", "dmspols_grid_nearroad")){ #
             
             if( (est_type_i == "tw") & (addis_dist_i == "Far") ){
               next
-            }
-            
-            if( (dataset_i == "dmspols_grid_nearroad") & (est_type_i == "did") ){
-             # next
             }
             
             if( (indep_var_type_i == "_p1to3") & (est_type_i == "tw") ){
@@ -359,15 +353,15 @@ for(dataset_i in c("kebele", "dmspols_grid_nearroad")){ #
                (trans_type == "ihs")){
               
               ## Main text
-              p_dodge_width <- p_dodge_width_main
-              fig_height <- fig_height_main
-              fig_width <- fig_width_main
-              fig_nrow <- fig_nrow_main
+              # p_dodge_width <- p_dodge_width_main
+              # fig_height <- fig_height_main
+              # fig_width <- fig_width_main
+              # fig_nrow <- fig_nrow_main
               
-              # p_dodge_width <- p_dodge_width_si
-              # fig_height <- fig_height_si
-              # fig_width <- fig_width_si
-              # fig_nrow <- fig_nrow_si
+              p_dodge_width <- p_dodge_width_si
+              fig_height <- fig_height_si
+              fig_width <- fig_width_si
+              fig_nrow <- fig_nrow_si
               
             } else{
               
@@ -402,9 +396,7 @@ for(dataset_i in c("kebele", "dmspols_grid_nearroad")){ #
                           ggplot(aes(x = years_since_improved, 
                                      y = b, 
                                      ymin = p025, 
-                                     ymax=p975,
-                                     group = indep_var, 
-                                     color = indep_var)) +
+                                     ymax=p975)) +
                           geom_point(position = position_dodge(width = p_dodge_width),size=1) + 
                           geom_linerange(position = position_dodge(width = p_dodge_width),size=0.5) +
                           geom_vline(xintercept=0,size=.5,alpha=0.5) +
@@ -413,19 +405,18 @@ for(dataset_i in c("kebele", "dmspols_grid_nearroad")){ #
                                y="Coefficient (+/- 95% CI)",
                                color="Road Type") +
                           scale_alpha_manual(values = c(0.1, 1)) +
-                          scale_color_manual(values = roads_colors,
+                          scale_color_manual(values = c("dodgerblue1", "darkorange", "black"),
                                              guide = guide_legend(reverse = TRUE)) +
                           theme_minimal() +
                           theme(strip.text = element_text(face = "bold", color = "black")) +
-                          facet_wrap(~dep_var,
-                                     scales = "free_y",
-                                     nrow = fig_nrow)
+                          facet_grid(dep_var~indep_var,
+                                     scales = "free")
                         
                         ggsave(p,
                                filename = file.path(paper_figures, 
                                                     paste0(est_type_i,"_byroad_",dataset_i,"_",addis_dist_i,trans_type_suffix,indep_var_type_i,controls_suffix_i,"_dmsp_viirs.png")),
-                               height = fig_height, 
-                               width = fig_width,
+                               height = 5, #fig_height, 
+                               width = 5, #fig_width,
                                dpi = dpi)
                         
                         # Figure: By 4 Speeds --------------------------------------------------
@@ -467,215 +458,17 @@ for(dataset_i in c("kebele", "dmspols_grid_nearroad")){ #
                                width = fig_width,
                                dpi = dpi)
                       }
+                      
                     }
                   }
                 }
               }
             }
             
-            # Figure: By Road Type -------------------------------------------------
-            p <- df_sub %>%
-              dplyr::filter(dataset %in% dataset_i,
-                            addis_distance %in% addis_dist_i,
-                            indep_var_type %in% indep_var_type_i,
-                            ntl_num_groups %in% 4,
-                            ntl_group == "all",
-                            controls == controls_i,
-                            est_type == est_type_i) %>%
-              ggplot(aes(x = years_since_improved, 
-                         y = b, 
-                         ymin = p025, 
-                         ymax=p975,
-                         group = indep_var, 
-                         color = indep_var)) +
-              geom_point(position = position_dodge(width = p_dodge_width),size=1) + 
-              geom_linerange(position = position_dodge(width = p_dodge_width),size=0.5) +
-              geom_vline(xintercept=0,size=.5,alpha=0.5) +
-              geom_hline(yintercept=0,size=.5,alpha=0.5) +
-              labs(x="Years Since Road Improved",
-                   y="Coefficient (+/- 95% CI)",
-                   color="Road Type") +
-              scale_alpha_manual(values = c(0.1, 1)) +
-              scale_color_manual(values = roads_colors,
-                                 guide = guide_legend(reverse = TRUE)) +
-              theme_minimal() +
-              theme(strip.text = element_text(face = "bold", color = "black")) +
-              facet_wrap(~dep_var,
-                         scales = "free_y",
-                         nrow = fig_nrow)
+
             
-            ggsave(p,
-                   filename = file.path(paper_figures, 
-                                        paste0(est_type_i,"_byroad_",dataset_i,"_",addis_dist_i,trans_type_suffix,indep_var_type_i,controls_suffix_i,".png")),
-                   height = fig_height, 
-                   width = fig_width,
-                   dpi = dpi)
-            
-            # Figure: By 4 Speeds --------------------------------------------------
-            p <- df_sub %>%
-              dplyr::filter(dataset %in% dataset_i,
-                            addis_distance %in% addis_dist_i,
-                            indep_var_type %in% indep_var_type_i,
-                            ntl_num_groups %in% 4,
-                            ntl_group != "all",
-                            indep_var %in% "All",
-                            controls == controls_i,
-                            est_type == est_type_i) %>%
-              ggplot(aes(x = years_since_improved, 
-                         y = b, 
-                         ymin = p025, 
-                         ymax=p975,
-                         group = ntl_group, 
-                         color = ntl_group)) +
-              geom_point(position = position_dodge(width = p_dodge_width),size=1) + 
-              geom_linerange(position = position_dodge(width = p_dodge_width),size=0.5) +
-              geom_vline(xintercept=0,size=.5,alpha=0.5) +
-              geom_hline(yintercept=0,size=.5,alpha=0.5) +
-              labs(x="Years Since Road Improved",
-                   y="Coefficient (+/- 95% CI)",
-                   color="Baseline\nNighttime\nLights") +
-              scale_alpha_manual(values = c(0.1, 1)) +
-              scale_color_manual(values = c("gray20", "gray60", "darkorange", "firebrick2"),
-                                 guide = guide_legend(reverse = TRUE)) +
-              theme_minimal() +
-              theme(strip.text = element_text(face = "bold", color = "black")) +
-              facet_wrap(~dep_var,
-                         scales = "free_y",
-                         nrow = fig_nrow)
-            
-            ggsave(p,
-                   filename = file.path(paper_figures, 
-                                        paste0(est_type_i,"_by4ntlgroups_",dataset_i,"_",addis_dist_i,trans_type_suffix,indep_var_type_i,controls_suffix_i,".png")),
-                   height = fig_height, 
-                   width = fig_width,
-                   dpi = dpi)
-            
-            # Figure: By 4 Speeds - FOR PPT (force SI params) ----------------------
-            p <- df_sub %>%
-              dplyr::filter(dataset %in% dataset_i,
-                            addis_distance %in% addis_dist_i,
-                            indep_var_type %in% indep_var_type_i,
-                            ntl_num_groups %in% 4,
-                            ntl_group != "all",
-                            indep_var %in% "All",
-                            controls == controls_i,
-                            est_type == est_type_i) %>%
-              ggplot(aes(x = years_since_improved, 
-                         y = b, 
-                         ymin = p025, 
-                         ymax=p975,
-                         group = ntl_group, 
-                         color = ntl_group)) +
-              geom_point(position = position_dodge(width = p_dodge_width_si),size=1) + 
-              geom_linerange(position = position_dodge(width = p_dodge_width_si),size=0.5) +
-              geom_vline(xintercept=0,size=.5,alpha=0.5) +
-              geom_hline(yintercept=0,size=.5,alpha=0.5) +
-              labs(x="Years Since Road Improved",
-                   y="Coefficient (+/- 95% CI)",
-                   color="Baseline\nNighttime\nLights") +
-              scale_alpha_manual(values = c(0.1, 1)) +
-              scale_color_manual(values = c("gray20", "gray60", "darkorange", "firebrick2"),
-                                 guide = guide_legend(reverse = TRUE)) +
-              theme_minimal() +
-              theme(strip.text = element_text(face = "bold", color = "black")) +
-              facet_wrap(~dep_var,
-                         scales = "free_y",
-                         nrow = fig_nrow_si)
-            
-            ggsave(p,
-                   filename = file.path(paper_figures, 
-                                        paste0(est_type_i,"_by4ntlgroups_",dataset_i,"_",addis_dist_i,trans_type_suffix,indep_var_type_i,controls_suffix_i,"_FOR_PPT.png")),
-                   height = 4, 
-                   width = 11.5,
-                   dpi = dpi)
-            
-            # Figure: By 4 Speeds - FOR PPT (force SI params), NO CROP ----------------------
-            p <- df_sub %>%
-              dplyr::filter(dataset %in% dataset_i,
-                            addis_distance %in% addis_dist_i,
-                            indep_var_type %in% indep_var_type_i,
-                            ntl_num_groups %in% 4,
-                            ntl_group != "all",
-                            indep_var %in% "All",
-                            controls == controls_i,
-                            est_type == est_type_i) %>%
-              dplyr::filter(dep_var != "Dependent Variable: Cropland") %>%
-              ggplot(aes(x = years_since_improved, 
-                         y = b, 
-                         ymin = p025, 
-                         ymax=p975,
-                         group = ntl_group, 
-                         color = ntl_group)) +
-              geom_point(position = position_dodge(width = p_dodge_width_si),size=1) + 
-              geom_linerange(position = position_dodge(width = p_dodge_width_si),size=0.5) +
-              geom_vline(xintercept=0,size=.5,alpha=0.5) +
-              geom_hline(yintercept=0,size=.5,alpha=0.5) +
-              labs(x="Years Since Road Improved",
-                   y="Coefficient (+/- 95% CI)",
-                   color="Baseline\nNighttime\nLights") +
-              scale_alpha_manual(values = c(0.1, 1)) +
-              scale_color_manual(values = c("gray20", "gray60", "darkorange", "firebrick2"),
-                                 guide = guide_legend(reverse = TRUE)) +
-              theme_minimal() +
-              theme(strip.text = element_text(face = "bold", color = "black")) +
-              facet_wrap(~dep_var,
-                         scales = "free_y",
-                         nrow = fig_nrow_si)
-            
-            ggsave(p,
-                   filename = file.path(paper_figures, 
-                                        paste0(est_type_i,"_by4ntlgroups_",dataset_i,"_",addis_dist_i,trans_type_suffix,indep_var_type_i,controls_suffix_i,"_nocrop_FOR_PPT.png")),
-                   height = fig_height_si, 
-                   width = 8,
-                   dpi = dpi)
-            
-            # Figure: By 2 Speeds --------------------------------------------------
-            
-            # Don't create for diff-in-diff with 1km grid
-            if(! ((est_type_i == "did") & (dataset_i == "dmspols_grid_nearroad")) ){
-              if( !(est_type_i == "tw") ){
-                
-                p <- df_sub %>%
-                  dplyr::filter(dataset %in% dataset_i,
-                                addis_distance %in% addis_dist_i,
-                                indep_var_type %in% indep_var_type_i,
-                                ntl_num_groups %in% 2,
-                                ntl_group != "all",
-                                indep_var %in% "All",
-                                controls == controls_i,
-                                est_type == est_type_i) %>%
-                  ggplot(aes(x = years_since_improved, 
-                             y = b, 
-                             ymin = p025, 
-                             ymax=p975,
-                             group = ntl_group, 
-                             color = ntl_group)) +
-                  geom_point(position = position_dodge(width = p_dodge_width_si),size=1) + 
-                  geom_linerange(position = position_dodge(width = p_dodge_width_si),size=0.5) +
-                  geom_vline(xintercept=0,size=.5,alpha=0.5) +
-                  geom_hline(yintercept=0,size=.5,alpha=0.5) +
-                  labs(x="Years Since Road Improved",
-                       y="Coefficient (+/- 95% CI)",
-                       color="Baseline\nNighttime\nLights") +
-                  scale_alpha_manual(values = c(0.1, 1)) +
-                  scale_color_manual(values = c("gray20", "darkorange"),
-                                     guide = guide_legend(reverse = TRUE)) +
-                  theme_minimal() +
-                  theme(strip.text = element_text(face = "bold", color = "black")) +
-                  facet_wrap(~dep_var,
-                             scales = "free_y",
-                             nrow = fig_nrow_si)
-                
-                ggsave(p,
-                       filename = file.path(paper_figures, 
-                                            paste0(est_type_i,"_by2ntlgroups_",dataset_i,"_",addis_dist_i,trans_type_suffix,indep_var_type_i,controls_suffix_i,".png")),
-                       height = fig_height_si, 
-                       width = fig_width_si,
-                       dpi = dpi)
-              }
-            }
-            
-            
+
+      
             
           }
         }

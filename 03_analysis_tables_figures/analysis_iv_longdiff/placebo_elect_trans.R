@@ -28,13 +28,13 @@ for(end_date in c(2009, 2016)){
     dplyr::mutate(cluster_var = woreda_id)
   
   # Regressions ------------------------------------------------------------------
-  dmspols_k <- feols(dv_dmspols ~ near_elec_trans, vcov = conley(20), data = df)
-  urban_k   <- feols(dv_gcurban ~ near_elec_trans, vcov = conley(20), data = df)
-  crop_k    <- feols(dv_gccrop  ~ near_elec_trans, vcov = conley(20), data = df)
+  dmspols_k <- feols(dv_dmspols ~ near_elec_trans, vcov = conley(50), data = df)
+  urban_k   <- feols(dv_gcurban ~ near_elec_trans, vcov = conley(50), data = df)
+  crop_k    <- feols(dv_gccrop  ~ near_elec_trans, vcov = conley(50), data = df)
   
-  dmspols_b_k <- feols(dv_dmspols ~ near_elec_trans + near_elec_transXdmspols_1996_bin4_2 + near_elec_transXdmspols_1996_bin4_3 + near_elec_transXdmspols_1996_bin4_4, vcov = conley(20), data = df)
-  urban_b_k <- feols(dv_gcurban ~ near_elec_trans + near_elec_transXdmspols_1996_bin4_2 + near_elec_transXdmspols_1996_bin4_3 + near_elec_transXdmspols_1996_bin4_4, vcov = conley(20), data = df)
-  crop_b_k  <- feols(dv_gccrop  ~ near_elec_trans + near_elec_transXdmspols_1996_bin4_2 + near_elec_transXdmspols_1996_bin4_3 + near_elec_transXdmspols_1996_bin4_4, vcov = conley(20), data = df)
+  dmspols_b_k <- feols(dv_dmspols ~ near_elec_trans + near_elec_transXdmspols_1996_bin4_2 + near_elec_transXdmspols_1996_bin4_3 + near_elec_transXdmspols_1996_bin4_4, vcov = conley(50), data = df)
+  urban_b_k <- feols(dv_gcurban ~ near_elec_trans + near_elec_transXdmspols_1996_bin4_2 + near_elec_transXdmspols_1996_bin4_3 + near_elec_transXdmspols_1996_bin4_4, vcov = conley(50), data = df)
+  crop_b_k  <- feols(dv_gccrop  ~ near_elec_trans + near_elec_transXdmspols_1996_bin4_2 + near_elec_transXdmspols_1996_bin4_3 + near_elec_transXdmspols_1996_bin4_4, vcov = conley(50), data = df)
   
   modelsummary_tab(list("NTL" = dmspols_k,
                     "Urban" = urban_k,
@@ -43,7 +43,7 @@ for(end_date in c(2009, 2016)){
                     "NTL" = dmspols_b_k,
                     "Urban" = urban_b_k,
                     "Crop" = crop_b_k),
-               stars = c('*' = .05, '**' = .01, "***" = 0.001),
+               stars = c('*' = .1, '**' = .05, "***" = 0.01),
                coef_map = c("near_elec_trans" = "Trans. Lines",
                             "near_elec_transXdmspols_1996_bin4_2" = "Trans. Lines$\\times NTL_{96}$ Low",
                             "near_elec_transXdmspols_1996_bin4_3" = "Trans. Lines$\\times NTL_{96}$ Med",

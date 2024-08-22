@@ -12,44 +12,31 @@ addis_distance = "All"
 controls = "none"
 ntl_group = "4"
 
-buff_suffix <- c("_0to5km", "_5to10km", "_10to15km", "_15to20km", "_20to25km", "_25to30km")
+buff_suffix <- c("_0to1km", "_1to2km", "_2to3km","_3to4km","_4to5km","_0to5km", "_5to10km", "_10to15km", "_15to20km", "_20to25km", "_25to30km")
 buff_suffix_rx <- buff_suffix %>% paste(collapse = "|")
 
+to_delete <- c(
+  "dynamic_did_attgt_kebele_globcover_urban_sum_ihs_year_improvedroad_none_All_numgroups4_groupall.Rds",
+  "dynamic_did_attgt_kebele_globcover_urban_sum_ihs_year_improvedroad_50aboveafter_none_All_numgroups4_groupall.Rds",
+  "dynamic_did_attgt_kebele_globcover_urban_sum_ihs_year_improvedroad_below50after_none_All_numgroups4_groupall.Rds"
+)
+to_delete <- file.path(panel_rsdp_imp_dir,
+                       "all_units",
+                       "results_datasets",
+                       "individual_datasets",
+                       to_delete)
 # to_delete <- file.path(panel_rsdp_imp_dir,
 #                        "all_units",
 #                        "results_datasets",
 #                        "individual_datasets") %>%
-#   list.files(full.names = T) %>%
-#   str_subset("dynamic_did") %>%
-#   str_subset("to") %>%
-#   str_subset("km")
-# for(i in to_delete){
-#   file.remove(i)
-# }
-
-# file.path(panel_rsdp_imp_dir,
-#           "all_units",
-#           "results_datasets",
-#           "individual_datasets") %>%
-#   list.files() %>%
-#   str_subset("")
-
-# to_delete <- c(
-#   "dynamic_did_attgt_kebele_globcover_urban_sum_ihs_year_improvedroad_none_All_numgroups4_groupall.Rds",
-#   "dynamic_did_attgt_kebele_globcover_urban_sum_ihs_year_improvedroad_50aboveafter_none_All_numgroups4_groupall.Rds",
-#   "dynamic_did_attgt_kebele_globcover_urban_sum_ihs_year_improvedroad_below50after_none_All_numgroups4_groupall.Rds"
-# )
-# to_delete <- file.path(panel_rsdp_imp_dir,
-#                        "all_units",
-#                        "results_datasets",
-#                        "individual_datasets",
-#                        to_delete)
+#   list.files(pattern = "*dynamic_did_attgt_",
+#              full.names = T)
 # for(i in to_delete){
 #   file.remove(i)
 # }
 
 # Loop through datasets, variables & subsets -----------------------------------
-for(dataset in c("kebele")){ # dmspols_grid_nearroad 
+for(dataset in c("kebele", "dmspols_grid_nearroad")){ # dmspols_grid_nearroad 
   
   # Define Dependent Variables -------------------------------------------------
   if(dataset %in% "kebele"){
@@ -63,29 +50,29 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
   
   for(dep_var in dep_var_vec){
     for(indep_var in c("year_improvedroad",
-                       "year_improvedroad_50aboveafter",
-                       "year_improvedroad_below50after",
-                       
-                       paste0("year_improvedroad", buff_suffix),
-                       paste0("year_improvedroad_50aboveafter", buff_suffix),
-                       paste0("year_improvedroad_below50after", buff_suffix),
-                       
-                       "year_improvedroad_p1to3",
-                       "year_improvedroad_p1to3_50aboveafter",
-                       "year_improvedroad_p1to3_below50after",
-                       
-                       "year_improvedroad_rand", 
-                       "year_improvedroad_50aboveafter_rand",
-                       "year_improvedroad_below50after_rand",
-                       
-                       "year_improvedroad_randtreat", 
-                       "year_improvedroad_50aboveafter_randtreat",
-                       "year_improvedroad_below50after_randtreat",
-                       
-                       "year_improvedroad_randrestrict",
-                       "year_improvedroad_50aboveafter_randrestrict",
-                       "year_improvedroad_below50after_randrestrict")){
-      for(addis_distance in rev(c("All", "Far"))){ # "All", "Far"
+                           "year_improvedroad_50aboveafter",
+                           "year_improvedroad_below50after",
+                           
+                           paste0("year_improvedroad", buff_suffix),
+                           paste0("year_improvedroad_50aboveafter", buff_suffix),
+                           paste0("year_improvedroad_below50after", buff_suffix),
+                           
+                           "year_improvedroad_p1to3",
+                           "year_improvedroad_p1to3_50aboveafter",
+                           "year_improvedroad_p1to3_below50after",
+                           
+                           "year_improvedroad_rand", 
+                           "year_improvedroad_50aboveafter_rand",
+                           "year_improvedroad_below50after_rand",
+                           
+                           "year_improvedroad_randtreat", 
+                           "year_improvedroad_50aboveafter_randtreat",
+                           "year_improvedroad_below50after_randtreat",
+                           
+                           "year_improvedroad_randrestrict",
+                           "year_improvedroad_50aboveafter_randrestrict",
+                           "year_improvedroad_below50after_randrestrict")){
+      for(addis_distance in c("All", "Far")){ # "All", "Far"
         for(ntl_num_groups in c(2,4)){ # 
           for(controls in c("none")){ # temp_precip, precip, "splag"
             
@@ -122,6 +109,12 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
               }
               
               if((dataset == "dmspols_grid_nearroad") & (controls == "splag")){
+                next
+              }
+              
+              if( (dataset == "dmspols_grid_nearroad") & !(indep_var %in% c("year_improvedroad",
+                                                                      "year_improvedroad_50aboveafter",
+                                                                      "year_improvedroad_below50after")) ){
                 next
               }
               
@@ -205,9 +198,9 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                 #           
                 #                  
                 
-                if(dep_var %>% str_detect("globcover")) end_year_i <- 2018
+                if(dep_var %>% str_detect("globcover"))      end_year_i <- 2018 #2018
                 if(dep_var %>% str_detect("dmspols_harmon")) end_year_i <- 2018 # could update to 2021
-                if(dep_var %>% str_detect("viirs_bm")) end_year_i <- 2022 # could update to 2021
+                if(dep_var %>% str_detect("viirs_bm"))       end_year_i <- 2022 # could update to 2021
                 
                 data = data %>%
                   ungroup() %>%
@@ -229,7 +222,6 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                 # not being in all the datasets
                 if(controls %in% "none"){
                   data <- data[,names(data) %in% c("dep_var", "indep_var", "cell_id", "year", "woreda_id")]
-                  
                   
                 } else if (controls %in% "temp_precip"){
                   data <- data[,names(data) %in% c("dep_var", "indep_var", "cell_id", "year", "woreda_id", 
@@ -270,6 +262,7 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                                           xformla = ~1,
                                           data = data,
                                           control_group = "notyettreated",
+                                          base_period = "universal",
                                           clustervars = cluster_var,
                                           print_details = T
                   )
@@ -281,6 +274,7 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                                           xformla = ~temp_avg+precipitation,
                                           data = data,
                                           control_group = "notyettreated",
+                                          base_period = "universal",
                                           clustervars = cluster_var,
                                           print_details = T
                                           
@@ -293,6 +287,7 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                                           xformla = ~precipitation,
                                           data = data,
                                           control_group = "notyettreated",
+                                          base_period = "universal",
                                           clustervars = cluster_var,
                                           print_details = T
                                           
@@ -305,6 +300,7 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                                           xformla = ~dep_var_splag,
                                           data = data,
                                           control_group = "notyettreated",
+                                          base_period = "universal",
                                           clustervars = cluster_var,
                                           print_details = T
                                           
@@ -313,6 +309,7 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                 
                 ## Aggregate ATTs
                 agg.simple.dynamic <- aggte(example_attgt, type = "dynamic", na.rm = TRUE)
+                #agg.simple <- aggte(example_attgt, type = "simple", na.rm = TRUE)
                 
                 #agg.simple.group <- aggte(example_attgt, type = "group", na.rm = TRUE)
                 #p_group <- ggdid(agg.simple.group)
@@ -337,6 +334,25 @@ for(dataset in c("kebele")){ # dmspols_grid_nearroad
                                   "results_datasets",
                                   "individual_datasets",
                                   paste0("dynamic_did_attgt_",OUT_PATH_SUFFIX, ".Rds")))
+                
+                #### Simple
+                # dynamic_df <- data.frame(att                = agg.simple$overall.att,
+                #                          se                 = agg.simple$overall.se,
+                #                          critical_value_95p = as.numeric(agg.simple$crit.val.egt)) %>%
+                #   mutate(dataset = dataset,
+                #          dep_var = dep_var,
+                #          indep_var = indep_var,
+                #          ntl_group = ntl_group,
+                #          ntl_num_groups = ntl_num_groups,
+                #          addis_distance = addis_distance,
+                #          controls = controls)
+                # 
+                # saveRDS(dynamic_df, 
+                #         file.path(panel_rsdp_imp_dir,
+                #                   "all_units",
+                #                   "results_datasets",
+                #                   "individual_datasets",
+                #                   paste0("dynamic_did_attgt_",OUT_PATH_SUFFIX, ".Rds")))
                 
                 #### Wald Test p-value
                 # wald_df <- data.frame(wald_pvalue = wald_pvalue) %>%

@@ -7,8 +7,10 @@ MAP_BACKGROUND_FILL <- "gray91" # darkseagreen
 #for(MAP_BACKGROUND_FILL in c("ivory", "honeydew1", "darkseagreen", "gray90", "black", "snow", "papayawhip")){
 
 # Load Data --------------------------------------------------------------------
-roads <- readRDS(file.path(rsdp_dir, "RawData", "RoadNetworkPanelData_1996_2016.Rds"))
-eth_adm <- readRDS(file.path(wb_boundaries_dir, "FinalData", "ethiopia.Rds"))
+roads <- readRDS(file.path(rsdp_dir, "RawData", "RoadNetworkPanelData_1996_2016.Rds")) %>%
+  st_as_sf()
+eth_adm <- readRDS(file.path(wb_boundaries_dir, "FinalData", "ethiopia.Rds")) %>%
+  st_as_sf()
 
 dmsp1996 <- raster(file.path(ntl_harmon_dir, "RawData", "Harmonized_DN_NTL_1992_calDMSP.tif")) %>% 
   crop(eth_adm) %>% mask(eth_adm)
@@ -40,8 +42,8 @@ dmsp2012_df$value_log <- log(dmsp2012_df$value + 1)
 make_dmsp_figure <- function(df, title){
   
   ggplot() +
-    geom_polygon(data = eth_adm,
-                 aes(x = long, y = lat, group = group),
+    geom_sf(data = eth_adm,
+                 #aes(x = long, y = lat, group = group),
                  color = "black", 
                  fill = MAP_BACKGROUND_FILL,
                  size = .15) +
@@ -54,7 +56,7 @@ make_dmsp_figure <- function(df, title){
                          midpoint = 2, 
                          limits = c(0, 4.2)) +
     labs(title = title) +
-    coord_quickmap() +
+    coord_sf() +
     theme_void() +
     theme(legend.position = "none",
           plot.background = element_rect(fill = "white",
@@ -75,9 +77,9 @@ gc1996_df <- gc1996 %>%
 gc1996_df$value <- gc1996[]
 gc1996_df <- gc1996_df[gc1996_df$value %in% 190,]
 
-coordinates(gc1996_df) <- ~x+y
-crs(gc1996_df) <- CRS("+init=epsg:4326")
-gc1996_df <- gBuffer(gc1996_df, width = 2/111.12, byid = T)
+gc1996_sf <- gc1996_df %>% 
+  st_as_sf(coords = c("x", "y"), crs = 4326) %>%
+  st_buffer(dist = 2000)
 
 ## 2016
 gc2016_df <- gc2016 %>%
@@ -86,24 +88,22 @@ gc2016_df <- gc2016 %>%
 gc2016_df$value <- gc2016[]
 gc2016_df <- gc2016_df[gc2016_df$value %in% 190,]
 
-coordinates(gc2016_df) <- ~x+y
-crs(gc2016_df) <- CRS("+init=epsg:4326")
-gc2016_df <- gBuffer(gc2016_df, width = 2/111.12, byid = T)
+gc2016_sf <- gc2016_df %>% 
+  st_as_sf(coords = c("x", "y"), crs = 4326) %>%
+  st_buffer(dist = 2000)
 
 #### Map
 make_gc_figure <- function(df, title){
   
   ggplot() +
-    geom_polygon(data = eth_adm,
-                 aes(x = long, y = lat, group = group),
-                 color = "black", 
-                 fill = MAP_BACKGROUND_FILL,
-                 size = .15) +
-    geom_polygon(data = df, 
-                aes(x = long, y = lat, group = group),
-                fill = "red") + 
+    geom_sf(data = eth_adm,
+            color = "black", 
+            fill = MAP_BACKGROUND_FILL,
+            size = .15) +
+    geom_sf(data = df, 
+            color = "red") + 
     labs(title = title) +
-    coord_quickmap() +
+    coord_sf() +
     theme_void() +
     theme(legend.position = "none",
           plot.background = element_rect(fill = "white",
@@ -112,8 +112,8 @@ make_gc_figure <- function(df, title){
   
 }
 
-p_gc1996_urban <- make_gc_figure(gc1996_df, "Urban Land")
-p_gc2016_urban <- make_gc_figure(gc2016_df, "Urban Land")
+p_gc1996_urban <- make_gc_figure(gc1996_sf, "Urban Land")
+p_gc2016_urban <- make_gc_figure(gc2016_sf, "Urban Land")
 
 # GlobCover-Cropland --------------------------------------------------------------
 #### Prep Data
@@ -135,16 +135,16 @@ gc2016_df <- gc2016_df[gc2016_df$value %in% c(10,11,12,20,30),]
 make_gc_figure <- function(df, title){
   
   ggplot() +
-    geom_polygon(data = eth_adm,
-                 aes(x = long, y = lat, group = group),
-                 color = "black", 
-                 fill = MAP_BACKGROUND_FILL,
-                 size = .15) +
+    geom_sf(data = eth_adm,
+            #aes(x = long, y = lat, group = group),
+            color = "black", 
+            fill = MAP_BACKGROUND_FILL,
+            size = .15) +
     geom_raster(data = df[df$value > 0,] , 
                 aes(x = x, y = y),
                 fill = "chartreuse3") + 
     labs(title = title) +
-    coord_quickmap() +
+    coord_sf() +
     theme_void() +
     theme(legend.position = "none",
           plot.background = element_rect(fill = "white",
@@ -158,7 +158,7 @@ p_gc2016_crop <- make_gc_figure(gc2016_df, "Cropland")
 
 # RSDP Upgrades ----------------------------------------------------------------
 ## Road completion year
-roads@data <- roads@data %>%
+roads <- roads %>%
   dplyr::rename(completion_year = Complete_G) %>%
   dplyr::select(completion_year)
 
@@ -166,27 +166,27 @@ roads_existing <- roads[roads$completion_year <= 1996,]
 roads_improved <- roads[roads$completion_year > 1996,]
 
 ## Tidy dataframe
-roads_improved$id <- row.names(roads_improved)
-roads_improved_tidy <- tidy(roads_improved)
-roads_improved_tidy <- merge(roads_improved_tidy, roads_improved@data, by = "id")
+# roads_improved$id <- row.names(roads_improved)
+# roads_improved_tidy <- tidy(roads_improved)
+# roads_improved_tidy <- merge(roads_improved_tidy, roads_improved@data, by = "id")
 
 ## Factor 
 p_rsdp <- ggplot() +
-  geom_polygon(data = eth_adm,
-               aes(x = long, y = lat, group = group),
-               fill = MAP_BACKGROUND_FILL, 
-               color = "black", size=.2) + # gray40
-  geom_path(data = roads_existing,
-            aes(x = long, y = lat, group = group),
-            color = "gray",
-            size = .15) +
-  geom_path(data = roads_improved_tidy,
-            aes(x = long, y = lat, group = group),
-            color = "gray70",
-            size = .4) +
-  geom_path(data = roads_improved_tidy,
-            aes(x = long, y = lat, group = group, color = completion_year),
-            size = .3) +
+  geom_sf(data = eth_adm,
+          #aes(x = long, y = lat, group = group),
+          fill = MAP_BACKGROUND_FILL, 
+          color = "black", size=.2) + # gray40
+  geom_sf(data = roads_existing,
+          #aes(x = long, y = lat, group = group),
+          color = "gray",
+          size = .15) +
+  geom_sf(data = roads_improved,
+          #aes(x = long, y = lat, group = group),
+          color = "gray70",
+          size = .4) +
+  geom_sf(data = roads_improved,
+          aes(color = completion_year),
+          size = .3) +
   theme_void() +
   scale_colour_gradientn(colours = rev(brewer.pal(n = 11, name = "Spectral"))) +
   labs(color = "Road\nImprovement\nYear",
@@ -196,7 +196,7 @@ p_rsdp <- ggplot() +
         plot.title = element_text(hjust = 0.5, color = "black", face = "bold"),
         legend.title = element_text(color = "black", hjust = 0.5),
         legend.text = element_text(color = "black")) +
-  coord_quickmap() 
+  coord_sf() 
 
 # Append and Export ------------------------------------------------------------
 p_b <- ggarrange(p_dmsp1996, p_gc1996_urban, p_gc1996_crop, nrow = 1) %>%
@@ -214,8 +214,6 @@ p_all <- ggarrange(p_b,
                    p_rsdp,
                    ncol = 1,
                    heights = c(0.25, 0.25, 0.5)) 
-
-#}
 
 ggsave(p_all, 
        filename = file.path(paper_figures,

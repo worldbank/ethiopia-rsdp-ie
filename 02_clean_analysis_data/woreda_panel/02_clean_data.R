@@ -157,6 +157,24 @@ data$far_addis <- as.numeric(data$distance_city_addisababa >= 100*1000)
 data$dmspols_harmon_ihs2013 <- data$dmspols_harmon_ihs
 data$dmspols_harmon_ihs2013[data$year > 2013] <- NA
 
+# Add coordinates --------------------------------------------------------------
+wor_sf <- readRDS(file.path(panel_rsdp_imp_dir, "kebele", "individual_datasets", "points.Rds")) %>%
+  st_as_sf()
+wor_df <- wor_sf %>%
+  st_drop_geometry()
+
+center_df <- wor_sf %>%
+  st_centroid() %>%
+  st_coordinates() %>%
+  as.data.frame() %>%
+  dplyr::rename(longitude = X,
+                latitude = Y)
+
+center_df <- bind_cols(center_df, wor_df)
+
+data <- data %>%
+  left_join(center_df, by = "cell_id")
+
 # Export -----------------------------------------------------------------------
 saveRDS(data, file.path(panel_rsdp_imp_dir, "woreda", "merged_datasets", "panel_data_clean.Rds"))
 

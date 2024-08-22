@@ -2,13 +2,14 @@
 
 # Load Data --------------------------------------------------------------------
 ## RSDP Roads
-roads <- readRDS(file.path(rsdp_dir, "RawData", "RoadNetworkPanelData_1996_2016.Rds"))
-roads <- spTransform(roads, CRS(UTM_ETH))
+roads <- readRDS(file.path(rsdp_dir, "RawData", "RoadNetworkPanelData_1996_2016.Rds")) %>% 
+  st_as_sf()
+roads <- st_transform(roads, 4326)
 
 ## Province Data
-eth <- readOGR(file.path(woreda_dir, "RawData", "Ethioworeda.shp"))
+eth <- read_sf(file.path(woreda_dir, "RawData", "Ethioworeda.shp"))
 
-eth@data <- eth@data %>%
+eth <- eth %>%
   dplyr::mutate(R_NAME = R_NAME %>% as.character(),
                 R_NAME = case_when(
                   R_NAME == "Addis  Abeba" ~ "Addis Ababa",
@@ -24,11 +25,15 @@ eth@data <- eth@data %>%
                 )) %>%
   dplyr::rename(REGIONNAME = R_NAME)
 
-#eth <- readOGR(dsn = file.path(data_file_path, "Woreda Boundaries - 2013", "RawData"),
-#               layer = "Eth_Woreda_2013")
-eth <- spTransform(eth, CRS(UTM_ETH))
-eth <- gBuffer(eth, width = 0, byid = T)
-province_sdf <- raster::aggregate(eth, by="REGIONNAME")
+eth <- st_transform(eth, 4326)
+eth <- eth %>% st_make_valid()
+#eth <- gBuffer(eth, width = 0, byid = T)
+#province_sdf <- raster::aggregate(eth, by="REGIONNAME")
+
+province_sdf <- eth %>%
+  group_by(REGIONNAME) %>%
+  dplyr::summarise(geometry = st_union(geometry)) %>%
+  ungroup()
 
 # Process Data -----------------------------------------------------------------
 # Dataframe that shows, for each province, total road length and length
@@ -42,15 +47,15 @@ results_df <- map_df(province_sdf$REGIONNAME, function(region){
   province_sdf_i <- province_sdf[province_sdf$REGIONNAME %in% region,]
   
   ## Restrict roads to that region
-  roads_i <- raster::intersect(roads, province_sdf_i)
+  roads_i <- st_intersection(roads, province_sdf_i)
   
   out <- data.frame(
     province = region,
-    rd_length = gLength(roads_i) / 1000,
-    improved_phase_1 = gLength(roads_i[roads_i$rsdp_phase %in% 1,]) / 1000,
-    improved_phase_2 = gLength(roads_i[roads_i$rsdp_phase %in% 2,]) / 1000,
-    improved_phase_3 = gLength(roads_i[roads_i$rsdp_phase %in% 3,]) / 1000,
-    improved_phase_4 = gLength(roads_i[roads_i$rsdp_phase %in% 4,]) / 1000
+    rd_length = as.numeric(sum(st_length(roads_i))) / 1000,
+    improved_phase_1 = as.numeric(sum(st_length(roads_i[roads_i$rsdp_phase %in% 1,]))) / 1000,
+    improved_phase_2 = as.numeric(sum(st_length(roads_i[roads_i$rsdp_phase %in% 2,]))) / 1000,
+    improved_phase_3 = as.numeric(sum(st_length(roads_i[roads_i$rsdp_phase %in% 3,]))) / 1000,
+    improved_phase_4 = as.numeric(sum(st_length(roads_i[roads_i$rsdp_phase %in% 4,]))) / 1000
   )
   
   return(out)

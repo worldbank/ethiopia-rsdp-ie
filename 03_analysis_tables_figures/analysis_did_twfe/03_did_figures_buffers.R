@@ -29,8 +29,15 @@ did_df <- file.path(panel_rsdp_imp_dir,
     indep_var_base == "year_improvedroad_50aboveafter" ~ "Federal and\nAsphalt Roads\n ", # ">=50 km/h",
     indep_var_base == "year_improvedroad_below50after" ~ "URRAP and\nLow to\nIntermediate\nClass Gravel\nRoads\n "
   )) %>%
+  dplyr::filter(!(buff_dist %in% c("0 to 5 km",
+                                   "20 to 25 km",
+                                   "25 to 30 km"))) %>%
   mutate(buff_dist = buff_dist %>%
-           factor(levels = c("0 to 5 km",
+           factor(levels = c("0 to 1 km",
+                             "1 to 2 km",
+                             "2 to 3 km",
+                             "3 to 4 km",
+                             "4 to 5 km",
                              "5 to 10 km",
                              "10 to 15 km",
                              "15 to 20 km",
@@ -113,7 +120,7 @@ p <- annotate_figure(p, top = text_grob("Dependent Variable: Nighttime Lights",
                                         color = "black", face = "bold", size = 14))
 
 ggsave(p, filename = file.path(paper_figures, "did_buffer_ntl.png"),
-       height = 7, width = 8)
+       height = 7, width = 9)
 
 #### Urban
 p <- ggarrange(
@@ -126,7 +133,7 @@ p <- annotate_figure(p, top = text_grob("Dependent Variable: Urban",
                                       color = "black", face = "bold", size = 14))
 
 ggsave(p, filename = file.path(paper_figures, "did_buffer_urban.png"),
-       height = 7, width = 8)
+       height = 7, width = 9)
 
 #### Cropland
 p <- ggarrange(
@@ -139,4 +146,4 @@ p <- annotate_figure(p, top = text_grob("Dependent Variable: Cropland",
                                         color = "black", face = "bold", size = 14))
 
 ggsave(p, filename = file.path(paper_figures, "did_buffer_crop.png"),
-       height = 7, width = 8)
+       height = 7, width = 9)

@@ -18,12 +18,12 @@ prep_data <- function(unit, log, theta, exclude, time_period){
   #### Time Period
   if(time_period == "all")       data <- data %>% filter(year >= 1996)
   if(time_period == "rsdpi_iii") data <- data %>% filter(year >= 1996) %>% filter(year <= 2009)
-  if(time_period == "rsdpiv")    data <- data %>% filter(year >= 2012)
+  if(time_period == "rsdpiv")    data <- data %>% filter(year >= 2012) %>% filter(year <= 2016)
   
   #### Prep RSDP IV Variables
   if(time_period == "rsdpiv"){
-    data$dmspols_harmon_ihs_1996 <- data$viirs_bm_ihs_2011
-    data$dmspols_harmon_ihs      <- data$viirs_bm_ihs
+    data$dmspols_harmon_ihs_1996 <- data$dmspols_harmon_ihs_2011
+    #data$dmspols_harmon_ihs      <- data$viirs_bm_ihs
     
     data$globcover_urban_1996         <- data$globcover_urban_2011
     data$globcover_urban_sum_ihs_1996 <- data$globcover_urban_sum_ihs_2011
@@ -76,9 +76,9 @@ time_period <- "all"
 
 for(log in c("_log")){
   for(theta in c("3_8")){ # 
-    for(exclude in c("_exclude20km", "_exclude50km", "_exclude100km")){ 
-      for(trans_type in c("log")){ # ihs, log
-        for(time_period in c("all", "rsdpi_iii")){
+    for(exclude in c("_exclude50km")){ # "_exclude20km", "_exclude50km", "_exclude100km"
+      for(trans_type in c("ihs")){ # ihs, log
+        for(time_period in c("rsdpiv", "all", "rsdpi_iii")){
           
           data_kebele <- prep_data("kebele", log, theta, exclude, time_period)
           data_woreda <- prep_data("woreda", log, theta, exclude, time_period)
@@ -103,14 +103,14 @@ for(log in c("_log")){
           }
           
           ## OLS - Kebele
-          ols1k <- feols(dmspols_harmon_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id                       , vcov = conley(20), data = data_kebele)
-          ols2k <- feols(dmspols_harmon_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id    , vcov = conley(20), data = data_kebele)
+          ols1k <- feols(dmspols_harmon_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id                       , vcov = conley(50), data = data_kebele)
+          ols2k <- feols(dmspols_harmon_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id    , vcov = conley(50), data = data_kebele)
           
-          ols3k <- feols(globcover_urban_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id                       , vcov = conley(20), data = data_kebele)
-          ols4k <- feols(globcover_urban_sum_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id    , vcov = conley(20), data = data_kebele)
+          ols3k <- feols(globcover_urban_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id                       , vcov = conley(50), data = data_kebele)
+          ols4k <- feols(globcover_urban_sum_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id    , vcov = conley(50), data = data_kebele)
           
-          ols5k <- feols(globcover_cropland_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id                       , vcov = conley(20), data = data_kebele)
-          ols6k <- feols(globcover_cropland_sum_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id    , vcov = conley(20), data = data_kebele)
+          ols5k <- feols(globcover_cropland_sum_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id                       , vcov = conley(50), data = data_kebele)
+          ols6k <- feols(globcover_cropland_sum_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id    , vcov = conley(50), data = data_kebele)
           
           ## OLS - Woreda
           ols1w <- feols(dmspols_harmon_ihs ~ MA_var                                       + temp_avg + precipitation | year + cell_id                       , vcov = ~cluster_var, data = data_woreda)
@@ -123,14 +123,14 @@ for(log in c("_log")){
           ols6w <- feols(globcover_cropland_sum_ihs ~ MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 + temp_avg + precipitation | year + cell_id    , vcov = ~cluster_var, data = data_woreda)
           
           ## IV - Kebele
-          iv1k <- feols(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = conley(20), data = data_kebele) 
-          iv2k <- feols(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id | MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4 , vcov = conley(20), data = data_kebele) 
+          iv1k <- feols(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = conley(50), data = data_kebele) 
+          iv2k <- feols(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id | MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4 , vcov = conley(50), data = data_kebele) 
           
-          iv3k <- feols(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = conley(20), data = data_kebele) 
-          iv4k <- feols(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id | MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4 , vcov = conley(20), data = data_kebele) 
+          iv3k <- feols(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = conley(50), data = data_kebele) 
+          iv4k <- feols(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id | MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4 , vcov = conley(50), data = data_kebele) 
           
-          iv5k <- feols(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = conley(20), data = data_kebele) 
-          iv6k <- feols(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id | MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4 , vcov = conley(20), data = data_kebele) 
+          iv5k <- feols(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = conley(50), data = data_kebele) 
+          iv6k <- feols(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id | MA_var + MA_varXdmspols_harmon_1996_bin4_2 + MA_varXdmspols_harmon_1996_bin4_3 + MA_varXdmspols_harmon_1996_bin4_4 ~ MA_var_exc + MA_var_excXdmspols_harmon_1996_bin4_2 + MA_var_excXdmspols_harmon_1996_bin4_3 + MA_var_excXdmspols_harmon_1996_bin4_4 , vcov = conley(50), data = data_kebele) 
           
           ## IV - Woreda
           iv1w <- feols(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = ~cluster_var, data = data_woreda) 
@@ -155,7 +155,7 @@ for(log in c("_log")){
                             "Urban" = ols4w,
                             "Cropland" = ols5w,
                             "Cropland" = ols6w),
-                       stars = c('*' = .05, '**' = .01, "***" = 0.001),
+                       stars = c('*' = .1, '**' = .05, "***" = 0.01),
                        coef_map = c("MA_var" = "MA",
                                     "MA_varXdmspols_harmon_1996_bin4_2" = "MA$\\times NTL_{96}$ Low",
                                     "MA_varXdmspols_harmon_1996_bin4_3" = "MA$\\times NTL_{96}$ Med",
@@ -219,7 +219,7 @@ for(log in c("_log")){
                             "Urban" = iv4w,
                             "Cropland" = iv5w,
                             "Cropland" = iv6w),
-                       stars = c('*' = .05, '**' = .01, "***" = 0.001),
+                       stars = c('*' = .1, '**' = .05, "***" = 0.01),
                        coef_map = c("fit_MA_var" = "MA",
                                     "fit_MA_varXdmspols_harmon_1996_bin4_2" = "MA$\\times NTL_{96}$ Low",
                                     "fit_MA_varXdmspols_harmon_1996_bin4_3" = "MA$\\times NTL_{96}$ Med",

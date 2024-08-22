@@ -79,6 +79,71 @@ roadimproved_df <- lapply(c("distance_improvedroad",
 data <- bind_cols(data, roadimproved_df)
 
 # Years Since / Post Improved Variables: Different Road Cut-Offs ---------------
+#### 0 to 1km
+roadimproved_df <- lapply(c("distance_improvedroad", 
+                            "distance_improvedroad_50aboveafter", 
+                            "distance_improvedroad_below50after"),
+                          generate_road_improved_variables, 
+                          data, 
+                          ALL_YEARS_IMPROVED_VAR,
+                          1000,
+                          0) %>% 
+  bind_cols()
+names(roadimproved_df) <- names(roadimproved_df) %>% paste0("_0to1km")
+data <- bind_cols(data, roadimproved_df)
+
+#### 1 to 2km
+roadimproved_df <- lapply(c("distance_improvedroad", 
+                            "distance_improvedroad_50aboveafter", 
+                            "distance_improvedroad_below50after"),
+                          generate_road_improved_variables, 
+                          data, 
+                          ALL_YEARS_IMPROVED_VAR,
+                          2000,
+                          1000) %>% 
+  bind_cols()
+names(roadimproved_df) <- names(roadimproved_df) %>% paste0("_1to2km")
+data <- bind_cols(data, roadimproved_df)
+
+#### 2 to 3km
+roadimproved_df <- lapply(c("distance_improvedroad", 
+                            "distance_improvedroad_50aboveafter", 
+                            "distance_improvedroad_below50after"),
+                          generate_road_improved_variables, 
+                          data, 
+                          ALL_YEARS_IMPROVED_VAR,
+                          3000,
+                          2000) %>% 
+  bind_cols()
+names(roadimproved_df) <- names(roadimproved_df) %>% paste0("_2to3km")
+data <- bind_cols(data, roadimproved_df)
+
+#### 3 to 4km
+roadimproved_df <- lapply(c("distance_improvedroad", 
+                            "distance_improvedroad_50aboveafter", 
+                            "distance_improvedroad_below50after"),
+                          generate_road_improved_variables, 
+                          data, 
+                          ALL_YEARS_IMPROVED_VAR,
+                          4000,
+                          3000) %>% 
+  bind_cols()
+names(roadimproved_df) <- names(roadimproved_df) %>% paste0("_3to4km")
+data <- bind_cols(data, roadimproved_df)
+
+#### 4 to 5km
+roadimproved_df <- lapply(c("distance_improvedroad", 
+                            "distance_improvedroad_50aboveafter", 
+                            "distance_improvedroad_below50after"),
+                          generate_road_improved_variables, 
+                          data, 
+                          ALL_YEARS_IMPROVED_VAR,
+                          5000,
+                          4000) %>% 
+  bind_cols()
+names(roadimproved_df) <- names(roadimproved_df) %>% paste0("_4to5km")
+data <- bind_cols(data, roadimproved_df)
+
 #### 5 to 10km
 roadimproved_df <- lapply(c("distance_improvedroad", 
                             "distance_improvedroad_50aboveafter", 

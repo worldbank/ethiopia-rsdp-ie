@@ -112,24 +112,3 @@ saveRDS(rsdp_yr_rt_sp,    file.path(rsdp_dir, "FinalData", "RoadNetworkPanelData
 saveRDS(rsdp_yr_untrt_sp, file.path(rsdp_dir, "FinalData", "RoadNetworkPanelData_1996_2016_rand_year_treated.Rds"))
 
 
-# 
-# 
-# 
-# 
-# 
-# diff <- (rsdp_rand_sp$Complete_G - rsdp_rand_sp$Complete_G_orig)
-# diff <- (rsdp_yr_rt_sp$Complete_G - rsdp_yr_rt_sp$Complete_G_orig)
-# 
-# diff %>% table %>% View()
-# 
-# rsdp_sp$Speed2016       %>% table()
-# rsdp_rand_sp$Speed2016  %>% table()
-# rsdp_yr_rt_sp$Speed2016 %>% table()
-# 
-# a <- rsdp_rand_sp[rsdp_rand_sp$Speed2016 == 120,]
-# a$Speed1996
-# 
-# table(rsdp_sp$Speed2016 > rsdp_sp$Speed1996)
-# table(rsdp_rand_sp$Speed2016 > rsdp_rand_sp$Speed1996)
-# table(rsdp_yr_rt_sp$Speed2016 > rsdp_yr_rt_sp$Speed1996)
-# 

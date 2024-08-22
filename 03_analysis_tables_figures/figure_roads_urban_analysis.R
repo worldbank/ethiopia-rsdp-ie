@@ -71,12 +71,13 @@ prop_urban_df <- prop_urban_df %>%
 
 sink(file.path(paper_tables, "speed_length_urban.tex"))
 cat("\\begin{tabular}{lllc} ")
-cat("\\hline")
+cat("\\hline ")
 cat("Speed & Road Classification & Length & Prop. Urban \\\\ \n")
+cat("\\hline ")
 prop_urban_df$tex %>%
   paste(collapse = " ") %>%
   cat()
-cat("\\hline")
+cat("\\hline ")
 cat("\\end{tabular}")
 sink()
 

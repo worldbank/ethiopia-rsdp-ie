@@ -57,6 +57,7 @@ for(i in 1:nrow(base_end_df)){
                     ends_with("_pretnd11_07"),
                     cell_id, R_CODE, Z_CODE, Pop2007, 
                     area_polygon, distance_city_addisababa,
+                    latitude, longitude,
                     wor_ntlgroup_2bin)) 
   
   ## Merge

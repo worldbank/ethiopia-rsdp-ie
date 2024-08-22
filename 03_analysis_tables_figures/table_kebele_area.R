@@ -1,14 +1,14 @@
 # Table of Kebeles Area
 
 # Load Data ------------------------------------------------------------------
-kebele <- readRDS(file.path(panel_rsdp_imp_dir, 
+kebele_sf <- readRDS(file.path(panel_rsdp_imp_dir, 
                             "kebele", "individual_datasets", 
-                            "polygons.Rds"))
+                            "polygons.Rds")) %>%
+  st_as_sf()
 
 # Stats ------------------------------------------------------------------------
 # Buffering fixes some issues with the polygon
-kebele <- kebele %>% gBuffer_chunks(width = 0, chunk_size = 100)
-kebele_sf <- kebele %>% st_as_sf()
+kebele_sf <- kebele_sf %>% st_make_valid()
 kebele_sf$area_m <- kebele_sf %>% st_area()
 kebele_sf$area_km <- kebele_sf$area_m / (1000^2)
 kebele_sf$area_km <- kebele_sf$area_km %>% as.numeric()

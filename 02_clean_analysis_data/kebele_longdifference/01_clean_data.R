@@ -35,6 +35,13 @@ for(i in 1:nrow(base_end_df)){
   #a$MA_pop2000_tt_theta1
   #data_first_diff$MA_pop2000_tt_theta1[data_first_diff$cell_id %in% 36]
   
+  data <- data %>%
+    group_by(cell_id) %>%
+    dplyr::mutate(year_improvedroad_first_imp = min(year[post_improvedroad %in% 1 ])) %>%
+    ungroup()
+  
+  data$year_improvedroad_first_imp[data$year_improvedroad_first_imp %in% Inf] <- NA
+  
   data_first_diff <- data %>%
     arrange(year) %>%
     dplyr::filter(year %in% c(base_year, end_year)) %>%
@@ -65,6 +72,7 @@ for(i in 1:nrow(base_end_df)){
                     area_polygon, distance_city_addisababa,
                     distance_elec_trans,
                     latitude, longitude,
+                    year_improvedroad_first_imp,
                     wor_ntlgroup_2bin)) 
   
   ## Merge

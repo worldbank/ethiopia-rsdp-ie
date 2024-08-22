@@ -9,7 +9,7 @@ generate_road_improved_variables <- function(road_var,
                                              data,
                                              all_years_improved_var,
                                              NEAR_CUTOFF,
-                                             NEAR_CUTOFF_BASE = 0){
+                                             NEAR_CUTOFF_BASE){
   # DESCRIPTION: Creates variables indicating years since road improved,
   # and first year road was improved.
   
@@ -29,7 +29,7 @@ generate_road_improved_variables <- function(road_var,
   data <- data %>%
     
     # Whether near improved road
-    mutate(near_roadTEMP = (distance_roadTEMP <= NEAR_CUTOFF) & (distance_roadTEMP >= NEAR_CUTOFF_BASE) ) %>%
+    mutate(near_roadTEMP = as.numeric((distance_roadTEMP <= NEAR_CUTOFF) & (distance_roadTEMP >= NEAR_CUTOFF_BASE) ) ) %>%
 
     # Year road improved (if any). Only consider earliest improved road. If cell near
     # area where another road was improved, we don't consider this. So:

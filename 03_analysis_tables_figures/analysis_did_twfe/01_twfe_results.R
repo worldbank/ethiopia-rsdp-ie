@@ -36,6 +36,10 @@ for(dataset in rev(c("kebele", "dmspols_grid_nearroad"))){ # dmspols_grid_nearro
       next
     }
     
+    # if( (dataset == "kebele") & (se_type == "cluster") ){
+    #   next
+    # }
+    
     # Define Dependent Variables -------------------------------------------------
     if(dataset %in% "kebele"){
       dep_var_vec <- c("globcover_urban_sum_ihs", "globcover_cropland_sum_ihs", "dmspols_harmon_ihs") # "viirs_bm_ihs"
@@ -76,9 +80,13 @@ for(dataset in rev(c("kebele", "dmspols_grid_nearroad"))){ # dmspols_grid_nearro
               if(ntl_num_groups %in% 4) ntl_group_vec <- c("all", "1", "2", "3", "4")
               
               for(ntl_group in ntl_group_vec){
-                
+              
                 # Skip certain subsets ---------------------------------------------
                 if( (dataset == "dmspols_grid_nearroad") & (se_type == "conley") ){
+                  next
+                }
+                
+                if( (dataset == "kebele") & (se_type == "cluster") ){
                   next
                 }
                 
@@ -144,16 +152,6 @@ for(dataset in rev(c("kebele", "dmspols_grid_nearroad"))){ # dmspols_grid_nearro
                   if(ntl_group %in% "3")        data_temp <- data_temp[data_temp$ntl_group %in% 3,]
                   if(ntl_group %in% "4")        data_temp <- data_temp[data_temp$ntl_group %in% 4,]
                   
-                  # if(indep_var %>% str_detect("improvedroad_p1to3")){
-                  #   data_temp <- data_temp %>%
-                  #     dplyr::filter(year <= 2009)
-                  # }
-                  # 
-                  # if(indep_var %>% str_detect("improvedroad_p4")){
-                  #   data_temp <- data_temp %>%
-                  #     dplyr::filter(year >= 2012)
-                  # }
-                  
                   data_temp$dep_var   <- data_temp[[dep_var]]
                   data_temp$indep_var <- data_temp[[indep_var]]
                   
@@ -162,7 +160,7 @@ for(dataset in rev(c("kebele", "dmspols_grid_nearroad"))){ # dmspols_grid_nearro
                     
                     results_df_temp <- tryCatch({     
                       
-                      feols(dep_var ~ indep_var | year + cell_id, data = data_temp, conley(20)) %>%
+                      feols(dep_var ~ indep_var | year + cell_id, data = data_temp, conley(50)) %>%
                         lm_confint_tidy("indep_var") %>%
                         mutate(addis_distance = addis_distance,
                                dep_var = dep_var,
@@ -170,7 +168,8 @@ for(dataset in rev(c("kebele", "dmspols_grid_nearroad"))){ # dmspols_grid_nearro
                                ntl_num_groups = ntl_num_groups,
                                controls = controls,
                                indep_var = indep_var,
-                               dataset = dataset)
+                               dataset = dataset,
+                               se_type = se_type)
                       
                     }, error=function(e) data.frame(NULL))
                   }
@@ -186,19 +185,9 @@ for(dataset in rev(c("kebele", "dmspols_grid_nearroad"))){ # dmspols_grid_nearro
                              ntl_num_groups = ntl_num_groups,
                              controls = controls,
                              indep_var = indep_var,
-                             dataset = dataset)
-                    
-                    # paste(dep_var, "~", indep_var, controls, "| year + cell_id | 0 | woreda_id") %>%
-                    #   as.formula() %>%
-                    #   felm(data = data_temp) %>%
-                    #   lm_confint_tidy(indep_var) %>%
-                    #   mutate(addis_distance = addis_distance,
-                    #          dep_var = dep_var,
-                    #          ntl_group = ntl_group,
-                    #          ntl_num_groups = ntl_num_groups,
-                    #          controls = controls,
-                    #          indep_var = indep_var,
-                    #          dataset = dataset)
+                             dataset = dataset,
+                             se_type = se_type)
+
                     
                   }, error=function(e) data.frame(NULL))
                   

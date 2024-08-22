@@ -86,9 +86,21 @@ make_raster_transition <- function(year){
   #### Rasterize
   roads_r <- r
   roads_r[] <- 0
-  roads_r_vx <- velox(roads_r)
-  roads_r_vx$rasterize(roads, field="SpeedYYYY", background=WALKING_SPEED) # background should be walking speed (5km/h); https://en.wikipedia.org/wiki/Preferred_walking_speed
-  roads_r <- roads_r_vx$as.RasterLayer()
+  
+  # roads_sf <- roads %>% 
+  #   st_as_sf() %>%
+  #   st_buffer(dist = 100)
+  roads_r <- rasterize(roads %>% st_as_sf(), 
+                       r %>% rast(), 
+                       field = "SpeedYYYY", 
+                       fun="max",
+                       background = WALKING_SPEED,
+                       touches = T) %>%
+    raster()
+  
+  #roads_r_vx <- velox(roads_r)
+  #roads_r_vx$rasterize(roads, field="SpeedYYYY", background=WALKING_SPEED) # background should be walking speed (5km/h); https://en.wikipedia.org/wiki/Preferred_walking_speed
+  #roads_r <- roads_r_vx$as.RasterLayer()
   
   #### Make Transition Layer
   # Roads is currently speed; calculate how long it takes to move across cell Now, values are the number
@@ -166,7 +178,10 @@ r_eth_16 <- ggplot() +
 
 # Example Travel Time Raster ---------------------------------------------------
 p_area <- woreda_points[woreda_points$cell_id %in% c(308, 728),] %>% 
-  gBuffer(width = 130000, byid=T) %>%
+  st_as_sf() %>%
+  st_buffer(dist = 130000) %>%
+  as("Spatial") %>%
+  #gBuffer(width = 130000, byid=T) %>%
   bbox()
 
 r_1996_c <- crop(r_1996, p_area)
@@ -192,7 +207,7 @@ tt_96 <- shortestPath(t_1996,
                       woreda_points[woreda_points$cell_id %in% 308,],
                       woreda_points[woreda_points$cell_id %in% 728,],
                       output = "SpatialLines")
-gLength(tt_96) / 1000
+#gLength(tt_96) / 1000
 tt_96$id <- 1
 
 costDistance(t_2016,
@@ -202,7 +217,7 @@ tt_16 <- shortestPath(t_2016,
                       woreda_points[woreda_points$cell_id %in% 308,],
                       woreda_points[woreda_points$cell_id %in% 728,],
                       output = "SpatialLines")
-gLength(tt_16) / 1000
+#gLength(tt_16) / 1000
 tt_16$id <- 1
 
 woreda_points_df <- as.data.frame(woreda_points)
@@ -217,7 +232,7 @@ r_eth_96_c <- ggplot() +
                   fill = value),
               alpha = 0.7) +
   geom_point(data = woreda_points_df[woreda_points_df$cell_id %in% c(308, 728),],
-             aes(x = x, y = y),
+             aes(x = coords.x1, y = coords.x2),
              color = "green") +
   labs(title = "1996",
        fill = "Speed\nLimit\n(km/h)",
@@ -227,7 +242,7 @@ r_eth_96_c <- ggplot() +
             color = "white",
             size = 0.35) +
   geom_point(data = woreda_points_df[woreda_points_df$cell_id %in% c(308, 728),],
-             aes(x = x, y = y),
+             aes(x = coords.x1, y = coords.x2),
              pch = 21,
              size=3,
              fill = "green2",
@@ -255,7 +270,7 @@ r_eth_16_c <- ggplot() +
             color = "white",
             size = 0.35) +
   geom_point(data = woreda_points_df[woreda_points_df$cell_id %in% c(308, 728),],
-             aes(x = x, y = y),
+             aes(x = coords.x1, y = coords.x2),
              pch = 21,
              size=3,
              fill = "green2",

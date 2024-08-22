@@ -101,101 +101,101 @@ df_grid   <- prep_data("dmspols_grid_ethiopia")
 df_kebele <- prep_data("kebele")
 
 # OLS --------------------------------------------------------------------------
-# vcov = conley(20)
+# vcov = conley(50)
 
 ## Grid
-lm_dmspols_ihs_g     <- feols(dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log , vcov = conley(20), data = df_grid)
-lm_globcover_urban_g <- feols(dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log , vcov = conley(20), data = df_grid)
-lm_globcover_crop_g  <- feols(dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log , vcov = conley(20), data = df_grid)
+lm_dmspols_ihs_g     <- feols(dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log , vcov = conley(50), data = df_grid)
+lm_globcover_urban_g <- feols(dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log , vcov = conley(50), data = df_grid)
+lm_globcover_crop_g  <- feols(dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log , vcov = conley(50), data = df_grid)
 
-lm_dmspols_ihs_basentl_g     <- feols(dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin , vcov = conley(20), data = df_grid)
-lm_globcover_urban_basentl_g <- feols(dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin , vcov = conley(20), data = df_grid)
-lm_globcover_crop_basentl_g  <- feols(dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin , vcov = conley(20), data = df_grid)
+lm_dmspols_ihs_basentl_g     <- feols(dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin , vcov = conley(50), data = df_grid)
+lm_globcover_urban_basentl_g <- feols(dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin , vcov = conley(50), data = df_grid)
+lm_globcover_crop_basentl_g  <- feols(dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin , vcov = conley(50), data = df_grid)
 
 ## Kebele
-lm_dmspols_ihs_k     <- feols(dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log , vcov = conley(20), data = df_kebele)
-lm_globcover_urban_k <- feols(dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log , vcov = conley(20), data = df_kebele)
-lm_globcover_crop_k  <- feols(dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log , vcov = conley(20), data = df_kebele)
+lm_dmspols_ihs_k     <- feols(dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log , vcov = conley(50), data = df_kebele)
+lm_globcover_urban_k <- feols(dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log , vcov = conley(50), data = df_kebele)
+lm_globcover_crop_k  <- feols(dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log , vcov = conley(50), data = df_kebele)
 
-lm_dmspols_ihs_basentl_k     <- feols(dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin , vcov = conley(20), data = df_kebele)
-lm_globcover_urban_basentl_k <- feols(dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin , vcov = conley(20), data = df_kebele)
-lm_globcover_crop_basentl_k  <- feols(dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin , vcov = conley(20), data = df_kebele)
+lm_dmspols_ihs_basentl_k     <- feols(dv_dmspols ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin , vcov = conley(50), data = df_kebele)
+lm_globcover_urban_basentl_k <- feols(dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin , vcov = conley(50), data = df_kebele)
+lm_globcover_crop_basentl_k  <- feols(dv_gccrop  ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xwor_ntlgroup_2bin , vcov = conley(50), data = df_kebele)
 
 # MST - Cost Distance --------------------------------------------------------
 ## Grid
-iv_cd_dmspols_ihs_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc, vcov = conley(20), data = df_grid)
-iv_cd_globcover_urban_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc, vcov = conley(20), data = df_grid)
-iv_cd_globcover_crop_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc, vcov = conley(20), data = df_grid)
+iv_cd_dmspols_ihs_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc, vcov = conley(50), data = df_grid)
+iv_cd_globcover_urban_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc, vcov = conley(50), data = df_grid)
+iv_cd_globcover_crop_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc, vcov = conley(50), data = df_grid)
 
-iv_cd_dmspols_ihs_basentl_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc + near_mst_lcXwor_ntlgroup_2bin, vcov = conley(20), data = df_grid)
-iv_cd_globcover_urban_basentl_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc + near_mst_lcXwor_ntlgroup_2bin, vcov = conley(20), data = df_grid)
-iv_cd_globcover_crop_basentl_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc + near_mst_lcXwor_ntlgroup_2bin, vcov = conley(20), data = df_grid)
+iv_cd_dmspols_ihs_basentl_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc + near_mst_lcXwor_ntlgroup_2bin, vcov = conley(50), data = df_grid)
+iv_cd_globcover_urban_basentl_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc + near_mst_lcXwor_ntlgroup_2bin, vcov = conley(50), data = df_grid)
+iv_cd_globcover_crop_basentl_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc + near_mst_lcXwor_ntlgroup_2bin, vcov = conley(50), data = df_grid)
 
 ## Kebele
-iv_cd_dmspols_ihs_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc, vcov = conley(20), data = df_kebele)
-iv_cd_globcover_urban_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc, vcov = conley(20), data = df_kebele)
-iv_cd_globcover_crop_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc, vcov = conley(20), data = df_kebele)
+iv_cd_dmspols_ihs_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc, vcov = conley(50), data = df_kebele)
+iv_cd_globcover_urban_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc, vcov = conley(50), data = df_kebele)
+iv_cd_globcover_crop_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc, vcov = conley(50), data = df_kebele)
 
-iv_cd_dmspols_ihs_basentl_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc + near_mst_lcXwor_ntlgroup_2bin, vcov = conley(20), data = df_kebele)
-iv_cd_globcover_urban_basentl_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc + near_mst_lcXwor_ntlgroup_2bin, vcov = conley(20), data = df_kebele)
-iv_cd_globcover_crop_basentl_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc + near_mst_lcXwor_ntlgroup_2bin, vcov = conley(20), data = df_kebele)
+iv_cd_dmspols_ihs_basentl_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc + near_mst_lcXwor_ntlgroup_2bin, vcov = conley(50), data = df_kebele)
+iv_cd_globcover_urban_basentl_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc + near_mst_lcXwor_ntlgroup_2bin, vcov = conley(50), data = df_kebele)
+iv_cd_globcover_crop_basentl_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc + near_mst_lcXwor_ntlgroup_2bin, vcov = conley(50), data = df_kebele)
 
 # MST - Least Distance -------------------------------------------------------
 ## Grid
-iv_ld_dmspols_ihs_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc, vcov = conley(20), data = df_grid)
-iv_ld_globcover_urban_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc, vcov = conley(20), data = df_grid)
-iv_ld_globcover_crop_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc, vcov = conley(20), data = df_grid)
+iv_ld_dmspols_ihs_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc, vcov = conley(50), data = df_grid)
+iv_ld_globcover_urban_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc, vcov = conley(50), data = df_grid)
+iv_ld_globcover_crop_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc, vcov = conley(50), data = df_grid)
 
-iv_ld_dmspols_ihs_basentl_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc + near_mst_eucXwor_ntlgroup_2bin, vcov = conley(20), data = df_grid)
-iv_ld_globcover_urban_basentl_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc + near_mst_eucXwor_ntlgroup_2bin, vcov = conley(20), data = df_grid)
-iv_ld_globcover_crop_basentl_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc + near_mst_eucXwor_ntlgroup_2bin, vcov = conley(20), data = df_grid)
+iv_ld_dmspols_ihs_basentl_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc + near_mst_eucXwor_ntlgroup_2bin, vcov = conley(50), data = df_grid)
+iv_ld_globcover_urban_basentl_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc + near_mst_eucXwor_ntlgroup_2bin, vcov = conley(50), data = df_grid)
+iv_ld_globcover_crop_basentl_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc + near_mst_eucXwor_ntlgroup_2bin, vcov = conley(50), data = df_grid)
 
 ## Kebele
-iv_ld_dmspols_ihs_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc, vcov = conley(20), data = df_kebele)
-iv_ld_globcover_urban_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc, vcov = conley(20), data = df_kebele)
-iv_ld_globcover_crop_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc, vcov = conley(20), data = df_kebele)
+iv_ld_dmspols_ihs_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc, vcov = conley(50), data = df_kebele)
+iv_ld_globcover_urban_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc, vcov = conley(50), data = df_kebele)
+iv_ld_globcover_crop_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc, vcov = conley(50), data = df_kebele)
 
-iv_ld_dmspols_ihs_basentl_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc + near_mst_eucXwor_ntlgroup_2bin, vcov = conley(20), data = df_kebele)
-iv_ld_globcover_urban_basentl_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc + near_mst_eucXwor_ntlgroup_2bin, vcov = conley(20), data = df_kebele)
-iv_ld_globcover_crop_basentl_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc + near_mst_eucXwor_ntlgroup_2bin, vcov = conley(20), data = df_kebele)
+iv_ld_dmspols_ihs_basentl_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc + near_mst_eucXwor_ntlgroup_2bin, vcov = conley(50), data = df_kebele)
+iv_ld_globcover_urban_basentl_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc + near_mst_eucXwor_ntlgroup_2bin, vcov = conley(50), data = df_kebele)
+iv_ld_globcover_crop_basentl_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc + near_mst_eucXwor_ntlgroup_2bin, vcov = conley(50), data = df_kebele)
 
 # MST Regions - Cost Distance ------------------------------------------------
 ## Grid
-iv_cd_dmspols_ihs_regions_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc_region, vcov = conley(20), data = df_grid)
-iv_cd_globcover_urban_regions_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc_region, vcov = conley(20), data = df_grid)
-iv_cd_globcover_crop_regions_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc_region, vcov = conley(20), data = df_grid)
+iv_cd_dmspols_ihs_regions_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_grid)
+iv_cd_globcover_urban_regions_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_grid)
+iv_cd_globcover_crop_regions_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_grid)
 
-iv_cd_dmspols_ihs_basentl_regions_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc_region + near_mst_lc_regionXwor_ntlgroup_2bin, vcov = conley(20), data = df_grid)
-iv_cd_globcover_urban_basentl_regions_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc_region + near_mst_lc_regionXwor_ntlgroup_2bin, vcov = conley(20), data = df_grid)
-iv_cd_globcover_crop_basentl_regions_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc_region + near_mst_lc_regionXwor_ntlgroup_2bin, vcov = conley(20), data = df_grid)
+iv_cd_dmspols_ihs_basentl_regions_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc_region + near_mst_lc_regionXwor_ntlgroup_2bin, vcov = conley(50), data = df_grid)
+iv_cd_globcover_urban_basentl_regions_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc_region + near_mst_lc_regionXwor_ntlgroup_2bin, vcov = conley(50), data = df_grid)
+iv_cd_globcover_crop_basentl_regions_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc_region + near_mst_lc_regionXwor_ntlgroup_2bin, vcov = conley(50), data = df_grid)
 
 ## Kebele
-iv_cd_dmspols_ihs_regions_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc_region, vcov = conley(20), data = df_kebele)
-iv_cd_globcover_urban_regions_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc_region, vcov = conley(20), data = df_kebele)
-iv_cd_globcover_crop_regions_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc_region, vcov = conley(20), data = df_kebele)
+iv_cd_dmspols_ihs_regions_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele)
+iv_cd_globcover_urban_regions_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele)
+iv_cd_globcover_crop_regions_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele)
 
-iv_cd_dmspols_ihs_basentl_regions_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc_region + near_mst_lc_regionXwor_ntlgroup_2bin, vcov = conley(20), data = df_kebele)
-iv_cd_globcover_urban_basentl_regions_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc_region + near_mst_lc_regionXwor_ntlgroup_2bin, vcov = conley(20), data = df_kebele)
-iv_cd_globcover_crop_basentl_regions_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc_region + near_mst_lc_regionXwor_ntlgroup_2bin, vcov = conley(20), data = df_kebele)
+iv_cd_dmspols_ihs_basentl_regions_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc_region + near_mst_lc_regionXwor_ntlgroup_2bin, vcov = conley(50), data = df_kebele)
+iv_cd_globcover_urban_basentl_regions_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc_region + near_mst_lc_regionXwor_ntlgroup_2bin, vcov = conley(50), data = df_kebele)
+iv_cd_globcover_crop_basentl_regions_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_lc_region + near_mst_lc_regionXwor_ntlgroup_2bin, vcov = conley(50), data = df_kebele)
 
 # MST Regions - Least Distance -------------------------------------------------------
 ## Grid
-iv_ld_dmspols_ihs_regions_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc_region, vcov = conley(20), data = df_grid)
-iv_ld_globcover_urban_regions_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc_region, vcov = conley(20), data = df_grid)
-iv_ld_globcover_crop_regions_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc_region, vcov = conley(20), data = df_grid)
+iv_ld_dmspols_ihs_regions_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc_region, vcov = conley(50), data = df_grid)
+iv_ld_globcover_urban_regions_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc_region, vcov = conley(50), data = df_grid)
+iv_ld_globcover_crop_regions_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc_region, vcov = conley(50), data = df_grid)
 
-iv_ld_dmspols_ihs_basentl_regions_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc_region + near_mst_euc_regionXwor_ntlgroup_2bin, vcov = conley(20), data = df_grid)
-iv_ld_globcover_urban_basentl_regions_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc_region + near_mst_euc_regionXwor_ntlgroup_2bin, vcov = conley(20), data = df_grid)
-iv_ld_globcover_crop_basentl_regions_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc_region + near_mst_euc_regionXwor_ntlgroup_2bin, vcov = conley(20), data = df_grid)
+iv_ld_dmspols_ihs_basentl_regions_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc_region + near_mst_euc_regionXwor_ntlgroup_2bin, vcov = conley(50), data = df_grid)
+iv_ld_globcover_urban_basentl_regions_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc_region + near_mst_euc_regionXwor_ntlgroup_2bin, vcov = conley(50), data = df_grid)
+iv_ld_globcover_crop_basentl_regions_g  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc_region + near_mst_euc_regionXwor_ntlgroup_2bin, vcov = conley(50), data = df_grid)
 
 ## Kebele
-iv_ld_dmspols_ihs_regions_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc_region, vcov = conley(20), data = df_kebele)
-iv_ld_globcover_urban_regions_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc_region, vcov = conley(20), data = df_kebele)
-iv_ld_globcover_crop_regions_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc_region, vcov = conley(20), data = df_kebele)
+iv_ld_dmspols_ihs_regions_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc_region, vcov = conley(50), data = df_kebele)
+iv_ld_globcover_urban_regions_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc_region, vcov = conley(50), data = df_kebele)
+iv_ld_globcover_crop_regions_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 ~ near_mst_euc_region, vcov = conley(50), data = df_kebele)
 
-iv_ld_dmspols_ihs_basentl_regions_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc_region + near_mst_euc_regionXwor_ntlgroup_2bin, vcov = conley(20), data = df_kebele)
-iv_ld_globcover_urban_basentl_regions_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc_region + near_mst_euc_regionXwor_ntlgroup_2bin, vcov = conley(20), data = df_kebele)
-iv_ld_globcover_crop_basentl_regions_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc_region + near_mst_euc_regionXwor_ntlgroup_2bin, vcov = conley(20), data = df_kebele)
+iv_ld_dmspols_ihs_basentl_regions_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc_region + near_mst_euc_regionXwor_ntlgroup_2bin, vcov = conley(50), data = df_kebele)
+iv_ld_globcover_urban_basentl_regions_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc_region + near_mst_euc_regionXwor_ntlgroup_2bin, vcov = conley(50), data = df_kebele)
+iv_ld_globcover_crop_basentl_regions_k  <- feols(dv_gccrop  ~ distance_rsdp123_targettedlocs_log |  near_rsdp123 + near_rsdp123Xwor_ntlgroup_2bin ~ near_mst_euc_region + near_mst_euc_regionXwor_ntlgroup_2bin, vcov = conley(50), data = df_kebele)
 
 # MAIN RESULTS TABLES ==========================================================
 round_char <- function(x){
@@ -215,7 +215,7 @@ modelsummary_tab(list("NTL" = lm_dmspols_ihs_k,
                   "Urban" = iv_cd_globcover_urban_basentl_regions_k, 
                   "Cropland" = iv_cd_globcover_crop_regions_k, 
                   "Cropland" = iv_cd_globcover_crop_basentl_regions_k),
-             stars = c('*' = .05, '**' = .01, "***" = 0.001),
+             stars = c('*' = .1, '**' = .05, "***" = 0.01),
              coef_map = c("near_rsdp123" = "Imp Rd",
                           "near_rsdp123Xwor_ntlgroup_2bin" = "Imp Rd.$\\times NTL_{96}$ Lit",
                           "fit_near_rsdp123" = "Imp Rd",
@@ -294,7 +294,7 @@ make_stargzer <- function(lm_dmspols_ihs_g,
                     "Urban" = lm_globcover_urban_basentl_k, 
                     "Cropland" = lm_globcover_crop_k, 
                     "Cropland" = lm_globcover_crop_basentl_k),
-               stars = c('*' = .05, '**' = .01, "***" = 0.001),
+               stars = c('*' = .1, '**' = .05, "***" = 0.01),
                coef_map = c("near_rsdp123" = "Imp Rd",
                             "near_rsdp123Xwor_ntlgroup_2bin" = "Imp Rd.$\\times NTL_{96}$ Lit",
                             "fit_near_rsdp123" = "Imp Rd",
@@ -439,7 +439,7 @@ if(F){
   #                   "Urban" = iv_cd_globcover_urban_basentl_regions_k, 
   #                   "Cropland" = iv_cd_globcover_crop_regions_k, 
   #                   "Cropland" = iv_cd_globcover_crop_basentl_regions_k),
-  #              stars = c('*' = .05, '**' = .01, "***" = 0.001),
+  #              stars = c('*' = .1, '**' = .05, "***" = 0.01),
   #              coef_map = c("near_rsdp123" = "Imp Rd",
   #                           "near_rsdp123Xwor_ntlgroup_2bin" = "Imp Rd.$\\times NTL_{96}$ Lit",
   #                           "fit_near_rsdp123" = "Imp Rd",
