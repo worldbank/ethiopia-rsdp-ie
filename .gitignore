@@ -109,3 +109,5 @@ password/
 passwords/
 
 !/**/*.geojson
+
+!/**/*how_shapefile_created.pdf
