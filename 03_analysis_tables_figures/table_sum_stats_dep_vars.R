@@ -67,19 +67,19 @@ make_sum_stats <- function(var,
     
     if(fun %in% "mean"){
       value_1996 <- data[[var]][data$year %in% 1996] %>% mean(na.rm = T) %>% round(ROUND_NUM)
-      value_2013 <- data[[var]][data$year %in% 2013] %>% mean(na.rm = T) %>% round(ROUND_NUM)
+      value_2010 <- data[[var]][data$year %in% 2010] %>% mean(na.rm = T) %>% round(ROUND_NUM)
       value_2016 <- data[[var]][data$year %in% 2016] %>% mean(na.rm = T) %>% round(ROUND_NUM) %>% if_na_return()
     }
     
     if(fun %in% "N_g0"){
       value_1996 <- sum(data[[var]][data$year %in% 1996] > 0, na.rm = T) 
-      value_2013 <- sum(data[[var]][data$year %in% 2013] > 0, na.rm = T) 
+      value_2010 <- sum(data[[var]][data$year %in% 2010] > 0, na.rm = T) 
       value_2016 <- sum(data[[var]][data$year %in% 2016] > 0, na.rm = T) %>% if_zero_return()
     }
     
     if(dataset_type %in% "kebele" & grepl("globcover", var) & fun %in% "mean"){
       value_1996 <- (300*value_1996) / 1000
-      value_2013 <- (300*value_2013) / 1000
+      value_2010 <- (300*value_2010) / 1000
       value_2016 <- (300*value_2016) / 1000
     }
     
@@ -89,11 +89,11 @@ make_sum_stats <- function(var,
     if(tex_position %in% "left"){
       cat(var_name, " & ",
           value_1996 %>% prettyNum(big.mark=",",scientific=FALSE), " & ",
-          value_2013 %>% prettyNum(big.mark=",",scientific=FALSE), " & ",
+          value_2010 %>% prettyNum(big.mark=",",scientific=FALSE), " & ",
           value_2016 %>% prettyNum(big.mark=",",scientific=FALSE), tex_end_txt)
     } else{
       cat(value_1996 %>% prettyNum(big.mark=",",scientific=FALSE), " & ",
-          value_2013 %>% prettyNum(big.mark=",",scientific=FALSE), " & ",
+          value_2010 %>% prettyNum(big.mark=",",scientific=FALSE), " & ",
           value_2016 %>% prettyNum(big.mark=",",scientific=FALSE), tex_end_txt)
     }
     
@@ -135,9 +135,9 @@ for(dataset_type in c("kebele")){
     & \\multicolumn{3}{c|}{(Within 5km of Improved Road)}
     & \\multicolumn{3}{c}{($>$5km of Improved Road)} \\\\ \n")
   cat(" \\hline ")
-  cat(" & 1996 & 2013 & 2016        
-      & 1996 & 2013 & 2016   
-      & 1996 & 2013 & 2016 \\\\ \n")
+  cat(" & 1996 & 2010 & 2016        
+      & 1996 & 2010 & 2016   
+      & 1996 & 2010 & 2016 \\\\ \n")
   cat(" \\hline \n")
   
   cat("\\multicolumn{3}{l}{\\textbf{\\textit{Average across ",data_name,"}}} & & & & & & & \\\\ \n ")

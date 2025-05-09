@@ -73,75 +73,34 @@ for(log in c("_log")){
     for(exclude in c("_exclude50km")){  # "_exclude20km", "_exclude50km", "_exclude100km"
       for(time_period in c("all", "rsdpi_iii", "rsdpiv")){
         
-        data_kebele <- prep_data("kebele", log, theta, exclude, time_period)
-        data_woreda <- prep_data("woreda", log, theta, exclude, time_period)
         
-        ## OLS - Kebele
-        ols1k <- feols(dmspols_harmon_ihs ~ MA_var                            + temp_avg + precipitation | year + cell_id    , vcov = conley(50), data = data_kebele)
-        ols2k <- feols(dmspols_harmon_ihs ~ MA_var + MA_varXwor_ntlgroup_2bin + temp_avg + precipitation | year + cell_id    , vcov = conley(50), data = data_kebele)
-        
-        ols3k <- feols(globcover_urban_sum_ihs ~ MA_var                            + temp_avg + precipitation | year + cell_id                       , vcov = conley(50), data = data_kebele)
-        ols4k <- feols(globcover_urban_sum_ihs ~ MA_var + MA_varXwor_ntlgroup_2bin + temp_avg + precipitation | year + cell_id    , vcov = conley(50), data = data_kebele)
-        
-        ols5k <- feols(globcover_cropland_sum_ihs ~ MA_var                            + temp_avg + precipitation | year + cell_id                       , vcov = conley(50), data = data_kebele)
-        ols6k <- feols(globcover_cropland_sum_ihs ~ MA_var + MA_varXwor_ntlgroup_2bin + temp_avg + precipitation | year + cell_id    , vcov = conley(50), data = data_kebele)
-        
-        ## OLS - Woreda
-        ols1w <- feols(dmspols_harmon_ihs ~ MA_var                            + temp_avg + precipitation | year + cell_id                       , conley(50), data = data_woreda)
-        ols2w <- feols(dmspols_harmon_ihs ~ MA_var + MA_varXwor_ntlgroup_2bin + temp_avg + precipitation | year + cell_id    , conley(50), data = data_woreda)
-        
-        ols3w <- feols(globcover_urban_sum_ihs ~ MA_var                            + temp_avg + precipitation | year + cell_id                       , conley(50), data = data_woreda)
-        ols4w <- feols(globcover_urban_sum_ihs ~ MA_var + MA_varXwor_ntlgroup_2bin + temp_avg + precipitation | year + cell_id    , conley(50), data = data_woreda)
-        
-        ols5w <- feols(globcover_cropland_sum_ihs ~ MA_var                            + temp_avg + precipitation | year + cell_id                       , conley(50), data = data_woreda)
-        ols6w <- feols(globcover_cropland_sum_ihs ~ MA_var + MA_varXwor_ntlgroup_2bin + temp_avg + precipitation | year + cell_id    , conley(50), data = data_woreda)
-        
-        ## IV - Kebele
-        iv1k <- feols(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = conley(50), data = data_kebele) 
-        iv2k <- feols(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id | MA_var + MA_varXwor_ntlgroup_2bin ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin , vcov = conley(50), data = data_kebele) 
-        
-        iv3k <- feols(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = conley(50), data = data_kebele) 
-        iv4k <- feols(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id | MA_var + MA_varXwor_ntlgroup_2bin ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin , vcov = conley(50), data = data_kebele) 
-        
-        iv5k <- feols(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       vcov = conley(50), data = data_kebele) 
-        iv6k <- feols(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id | MA_var + MA_varXwor_ntlgroup_2bin ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin , vcov = conley(50), data = data_kebele) 
-        
-        ## IV - Woreda
-        iv1w <- feols(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       conley(50), data = data_woreda) 
-        iv2w <- feols(dmspols_harmon_ihs ~ temp_avg + precipitation           | year + cell_id | MA_var + MA_varXwor_ntlgroup_2bin ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin , conley(50), data = data_woreda) 
-        
-        iv3w <- feols(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       conley(50), data = data_woreda) 
-        iv4w <- feols(globcover_urban_sum_ihs ~ temp_avg + precipitation      | year + cell_id | MA_var + MA_varXwor_ntlgroup_2bin ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin , conley(50), data = data_woreda) 
-        
-        iv5w <- feols(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id |  MA_var ~ MA_var_exc ,                                                                       conley(50), data = data_woreda) 
-        iv6w <- feols(globcover_cropland_sum_ihs ~ temp_avg + precipitation   | year + cell_id | MA_var + MA_varXwor_ntlgroup_2bin ~ MA_var_exc + MA_var_excXwor_ntlgroup_2bin , conley(50), data = data_woreda) 
         
         ## OLS Stargazer
         modelsummary_tab(list("NTL" = ols1k,
-                          "NTL" = ols2k,
-                          "Urban" = ols3k,
-                          "Urban" = ols4k,
-                          "Cropland" = ols5k,
-                          "Cropland" = ols6k,
-                          "NTL" = ols1w,
-                          "NTL" = ols2w,
-                          "Urban" = ols3w,
-                          "Urban" = ols4w,
-                          "Cropland" = ols5w,
-                          "Cropland" = ols6w),
-                     stars = c('*' = .1, '**' = .05, "***" = 0.01),
-                     coef_map = c("MA_var" = "MA",
-                                  "MA_varXwor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit"),
-                     gof_map = c("nobs", "adj.r.squared"),
-                     escape = FALSE,
-                     add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
-                                        'Unit', "Keb.","Keb.","Keb.","Keb.","Keb.","Keb.","Wor.","Wor.","Wor.","Wor.","Wor.","Wor.",
-                                        'Year FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y",
-                                        'Unit FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y"),
-                     output = file.path(paper_tables,
-                                        paste0("MA_table",log,"_theta",theta,"_",unit,"_",time_period,"_ols_2ntlgroups.tex")))
+                              "NTL" = ols2k,
+                              "Urban" = ols3k,
+                              "Urban" = ols4k,
+                              "Cropland" = ols5k,
+                              "Cropland" = ols6k,
+                              "NTL" = ols1w,
+                              "NTL" = ols2w,
+                              "Urban" = ols3w,
+                              "Urban" = ols4w,
+                              "Cropland" = ols5w,
+                              "Cropland" = ols6w),
+                         stars = c('*' = .1, '**' = .05, "***" = 0.01),
+                         coef_map = c("MA_var" = "MA",
+                                      "MA_varXwor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit"),
+                         gof_map = c("nobs", "adj.r.squared"),
+                         escape = FALSE,
+                         add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
+                                            'Unit', "Keb.","Keb.","Keb.","Keb.","Keb.","Keb.","Wor.","Wor.","Wor.","Wor.","Wor.","Wor.",
+                                            'Year FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y",
+                                            'Unit FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y"),
+                         output = file.path(paper_tables,
+                                            paste0("MA_table",log,"_theta",theta,"_",unit,"_",time_period,"_ols_2ntlgroups.tex")))
         
-
+        
         # stargazer(ols1k,
         #           ols2k,
         #           ols3k,
@@ -180,42 +139,42 @@ for(log in c("_log")){
         
         ## IV Stargazer
         modelsummary_tab(list("NTL" = iv1k,
-                          "NTL" = iv2k,
-                          "Urban" = iv3k,
-                          "Urban" = iv4k,
-                          "Cropland" = iv5k,
-                          "Cropland" = iv6k,
-                          "NTL" = iv1w,
-                          "NTL" = iv2w,
-                          "Urban" = iv3w,
-                          "Urban" = iv4w,
-                          "Cropland" = iv5w,
-                          "Cropland" = iv6w),
-                     stars = c('*' = .1, '**' = .05, "***" = 0.01),
-                     coef_map = c("fit_MA_var" = "MA",
-                                  "fit_MA_varXwor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit"),
-                     gof_map = c("nobs", "adj.r.squared"),
-                     escape = FALSE,
-                     add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
-                                        'Unit', "Keb.","Keb.","Keb.","Keb.","Keb.","Keb.","Wor.","Wor.","Wor.","Wor.","Wor.","Wor.",
-                                        'Year FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y",
-                                        'Unit FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y",
-                                        "1st Stage F-Stat",
-                                        fitstat(iv1k, type = "ivf", simplify = T)$stat %>% round_char(),
-                                        fitstat(iv2k, type = "ivf", simplify = T)$stat %>% round_char(),
-                                        fitstat(iv3k, type = "ivf", simplify = T)$stat %>% round_char(),
-                                        fitstat(iv4k, type = "ivf", simplify = T)$stat %>% round_char(),
-                                        fitstat(iv5k, type = "ivf", simplify = T)$stat %>% round_char(),
-                                        fitstat(iv6k, type = "ivf", simplify = T)$stat %>% round_char(),
-                                        fitstat(iv1w, type = "ivf", simplify = T)$stat %>% round_char(),
-                                        fitstat(iv2w, type = "ivf", simplify = T)$stat %>% round_char(),
-                                        fitstat(iv3w, type = "ivf", simplify = T)$stat %>% round_char(),
-                                        fitstat(iv4w, type = "ivf", simplify = T)$stat %>% round_char(),
-                                        fitstat(iv5w, type = "ivf", simplify = T)$stat %>% round_char(),
-                                        fitstat(iv6w, type = "ivf", simplify = T)$stat %>% round_char()
-                                        ),
-                     output = file.path(paper_tables,
-                                        paste0("MA_table",log,"_theta",theta,exclude,"_",unit,"_",time_period,"_iv_2ntlgroups.tex")))
+                              "NTL" = iv2k,
+                              "Urban" = iv3k,
+                              "Urban" = iv4k,
+                              "Cropland" = iv5k,
+                              "Cropland" = iv6k,
+                              "NTL" = iv1w,
+                              "NTL" = iv2w,
+                              "Urban" = iv3w,
+                              "Urban" = iv4w,
+                              "Cropland" = iv5w,
+                              "Cropland" = iv6w),
+                         stars = c('*' = .1, '**' = .05, "***" = 0.01),
+                         coef_map = c("fit_MA_var" = "MA",
+                                      "fit_MA_varXwor_ntlgroup_2bin" = "MA$\\times NTL_{96}$ Lit"),
+                         gof_map = c("nobs", "adj.r.squared"),
+                         escape = FALSE,
+                         add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
+                                            'Unit', "Keb.","Keb.","Keb.","Keb.","Keb.","Keb.","Wor.","Wor.","Wor.","Wor.","Wor.","Wor.",
+                                            'Year FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y",
+                                            'Unit FE', "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y",
+                                            "1st Stage F-Stat",
+                                            fitstat(iv1k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                            fitstat(iv2k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                            fitstat(iv3k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                            fitstat(iv4k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                            fitstat(iv5k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                            fitstat(iv6k, type = "ivf", simplify = T)$stat %>% round_char(),
+                                            fitstat(iv1w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                            fitstat(iv2w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                            fitstat(iv3w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                            fitstat(iv4w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                            fitstat(iv5w, type = "ivf", simplify = T)$stat %>% round_char(),
+                                            fitstat(iv6w, type = "ivf", simplify = T)$stat %>% round_char()
+                         ),
+                         output = file.path(paper_tables,
+                                            paste0("MA_table",log,"_theta",theta,exclude,"_",unit,"_",time_period,"_iv_2ntlgroups.tex")))
         
         # stargazer(iv1k,
         #           iv2k,
@@ -252,10 +211,13 @@ for(log in c("_log")){
         #           out=file.path(paper_tables,
         #                         paste0("MA_table",log,"_theta",theta,exclude,"_",unit,"_",time_period,"_iv_2ntlgroups.tex")))
         
+        #saveRDS(results_df, OUT_PATH)
+        
       }
     }
   }
 }
+#}
 
 # Cleanup ----------------------------------------------------------------------
 OBJECTS_AFTER_CODE <- ls()

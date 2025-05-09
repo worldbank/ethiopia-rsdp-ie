@@ -10,8 +10,8 @@ NEAR_THRESHOLD <- 0
 # - DMSP-OLS until 2012
 # - Globcover until 2018
 # - Roads until 2016 (for globcover, could use roads in 2016 and globcover in 2018)
-base_end_df <- data.frame(baseline = c(1996, 1996, 1996, 1996, 2012, 2012),
-                          endline =  c(2012, 2009, 2016, 2018, 2016, 2018))
+base_end_df <- data.frame(baseline = c(1996, 1996, 1996, 1996, 2012, 2013, 2012),
+                          endline =  c(2012, 2009, 2016, 2018, 2016, 2016, 2018))
 
 # Load Data --------------------------------------------------------------------
 data <- readRDS(file.path(panel_rsdp_imp_dir, "woreda", "merged_datasets", "panel_data_clean.Rds"))

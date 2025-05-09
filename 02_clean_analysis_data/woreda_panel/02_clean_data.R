@@ -71,6 +71,28 @@ ntl_var <- data %>% names() %>% str_subset("dmspols|globcover|viirs")
 for(var in ntl_var) data[[paste0(var, "_log")]] <- log(data[[var]] + 1)
 for(var in ntl_var) data[[paste0(var, "_ihs")]] <- calc_ihs(data[[var]])
 
+# Roth: Normalized log ---------------------------------------------------------
+dep_vars <- c("dmspols_harmon", "globcover_urban_sum", "globcover_cropland_sum")
+
+for(dep_var_i in dep_vars){
+  
+  data[[paste0(dep_var_i, "_lognorm")]] <- data[[paste0(dep_var_i)]]
+  data[[paste0(dep_var_i, "_lognorm")]] <- data[[paste0(dep_var_i, "_lognorm")]] / min(data[[paste0(dep_var_i)]][data[[paste0(dep_var_i)]] > 0], na.rm = T)
+  
+  x_values <- c(0, 0.1, 1, 3, 5, 10)
+  
+  for(x_i in x_values){
+    x_i_str <- x_i %>% str_replace_all("\\.", "_")
+    
+    data[[paste0(dep_var_i, "_lognorm", "_x", x_i_str)]] <- data[[paste0(dep_var_i, "_lognorm")]]
+    
+    orig_values <- data[[paste0(dep_var_i, "_lognorm", "_x", x_i_str)]] 
+    
+    data[[paste0(dep_var_i, "_lognorm", "_x", x_i_str)]][orig_values %in% 0] <- -x_i
+    data[[paste0(dep_var_i, "_lognorm", "_x", x_i_str)]][which(orig_values > 0)] <- log(orig_values[which(orig_values > 0)])
+  }
+}
+
 # Baseline Dependent Variables -------------------------------------------------
 data <- data %>%
   dplyr::group_by(cell_id) %>%

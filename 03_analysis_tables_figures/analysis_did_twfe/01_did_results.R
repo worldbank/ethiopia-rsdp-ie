@@ -40,8 +40,13 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){ # dmspols_grid_nearroad
   
   # Define Dependent Variables -------------------------------------------------
   if(dataset %in% "kebele"){
+    lognorm_x <- c("0", "0_1", "1", "3")
+    
     dep_var_vec <- c("globcover_urban_sum_ihs", "globcover_cropland_sum_ihs", "dmspols_harmon_ihs", "dmspols_harmon_viirs_ihs",
-                     "globcover_urban_sum_log", "globcover_cropland_sum_log", "dmspols_harmon_log", "dmspols_harmon_viirs_log") # "viirs_bm_ihs", "viirs_bm_log"
+                     "globcover_urban_sum_log", "globcover_cropland_sum_log", "dmspols_harmon_log", "dmspols_harmon_viirs_log",
+                     paste0("dmspols_harmon_lognorm_x", lognorm_x),
+                     paste0("globcover_urban_sum_lognorm_x", lognorm_x),
+                     paste0("globcover_cropland_sum_lognorm_x", lognorm_x)) # "viirs_bm_ihs", "viirs_bm_log"
   }           
   
   if(dataset %in% "dmspols_grid_nearroad"){
@@ -104,6 +109,10 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){ # dmspols_grid_nearroad
                 next
               }
               
+              if((dataset == "dmspols_grid_nearroad") & (dep_var %>% str_detect("lognorm"))){
+                next
+              }
+              
               if((dataset == "dmspols_grid_nearroad") & (ntl_num_groups == 2)){
                 next
               }
@@ -146,6 +155,23 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){ # dmspols_grid_nearroad
               }
               
               if( (addis_distance == "Far") & (str_detect(indep_var, "_rand")) ){
+                next
+              }
+              
+              ### Log Norm
+              if((addis_distance == "Far") & (dep_var %>% str_detect("lognorm"))){
+                next
+              }
+              
+              if((ntl_num_groups == 2) & (dep_var %>% str_detect("lognorm"))){
+                next
+              }
+              
+              if((indep_var %>% str_detect("rand")) & (dep_var %>% str_detect("lognorm"))){
+                next
+              }
+              
+              if((indep_var %>% str_detect("km")) & (dep_var %>% str_detect("lognorm"))){
                 next
               }
               
@@ -404,3 +430,27 @@ for(dataset in c("kebele", "dmspols_grid_nearroad")){ # dmspols_grid_nearroad
     }
   }
 }
+
+df <- readRDS("~/Desktop/panel_data_clean.Rds")
+df_clean <- df %>%
+  dplyr::select(cell_id,
+                year,
+                dmspols_harmon,
+                dmspols_harmon_log,
+                dmspols_harmon_ihs,
+                globcover_urban_sum,
+                globcover_cropland_sum,
+                year_improvedroad,
+                year_improvedroad_50aboveafter,
+                year_improvedroad_below50after,
+                wor_ntlgroup_2bin,
+                wor_ntlgroup_4bin,
+                far_addis,
+                latitude,
+                longitude,
+                W_CODE,
+                Z_CODE)
+
+write_dta(df_clean, "~/Desktop/panel_data_clean.dta")
+
+nchar(names(df)) %>% table()

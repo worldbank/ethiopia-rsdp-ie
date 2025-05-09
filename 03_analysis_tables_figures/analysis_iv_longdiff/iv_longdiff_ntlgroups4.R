@@ -129,7 +129,45 @@ lm_dmspols_ihs_basentl_k     <- feols(dv_dmspols ~ near_rsdp123 + distance_rsdp1
 lm_globcover_urban_basentl_k <- feols(dv_gcurban ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
 lm_globcover_crop_basentl_k  <- feols(dv_gccrop ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
 
-# MST - Cost Distance --------------------------------------------------------
+# OLS - Roth, normalized -------------------------------------------------------
+
+## _lognorm_x0
+lm_dmspols_ihs_k_lognorm_x0     <- feols(dmspols_harmon_lognorm_x0 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log, vcov = conley(50), data = df_kebele)
+lm_globcover_urban_k_lognorm_x0 <- feols(globcover_urban_sum_lognorm_x0 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log, vcov = conley(50), data = df_kebele)
+lm_globcover_crop_k_lognorm_x0  <- feols(globcover_cropland_sum_lognorm_x0 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log, vcov = conley(50), data = df_kebele)
+
+lm_dmspols_ihs_basentl_k_lognorm_x0     <- feols(dmspols_harmon_lognorm_x0 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
+lm_globcover_urban_basentl_k_lognorm_x0 <- feols(globcover_urban_sum_lognorm_x0 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
+lm_globcover_crop_basentl_k_lognorm_x0 <- feols(globcover_cropland_sum_lognorm_x0 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
+
+## _lognorm_x0_1
+lm_dmspols_ihs_k_lognorm_x0_1     <- feols(dmspols_harmon_lognorm_x0_1 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log, vcov = conley(50), data = df_kebele)
+lm_globcover_urban_k_lognorm_x0_1 <- feols(globcover_urban_sum_lognorm_x0_1 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log, vcov = conley(50), data = df_kebele)
+lm_globcover_crop_k_lognorm_x0_1  <- feols(globcover_cropland_sum_lognorm_x0_1 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log, vcov = conley(50), data = df_kebele)
+
+lm_dmspols_ihs_basentl_k_lognorm_x0_1     <- feols(dmspols_harmon_lognorm_x0_1 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
+lm_globcover_urban_basentl_k_lognorm_x0_1 <- feols(globcover_urban_sum_lognorm_x0_1 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
+lm_globcover_crop_basentl_k_lognorm_x0_1 <- feols(globcover_cropland_sum_lognorm_x0_1 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
+
+## _lognorm_x1
+lm_dmspols_ihs_k_lognorm_x1     <- feols(dmspols_harmon_lognorm_x1 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log, vcov = conley(50), data = df_kebele)
+lm_globcover_urban_k_lognorm_x1 <- feols(globcover_urban_sum_lognorm_x1 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log, vcov = conley(50), data = df_kebele)
+lm_globcover_crop_k_lognorm_x1  <- feols(globcover_cropland_sum_lognorm_x1 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log, vcov = conley(50), data = df_kebele)
+
+lm_dmspols_ihs_basentl_k_lognorm_x1     <- feols(dmspols_harmon_lognorm_x1 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
+lm_globcover_urban_basentl_k_lognorm_x1 <- feols(globcover_urban_sum_lognorm_x1 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
+lm_globcover_crop_basentl_k_lognorm_x1 <- feols(globcover_cropland_sum_lognorm_x1 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
+
+## _lognorm_x3
+lm_dmspols_ihs_k_lognorm_x3     <- feols(dmspols_harmon_lognorm_x3 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log, vcov = conley(50), data = df_kebele)
+lm_globcover_urban_k_lognorm_x3 <- feols(globcover_urban_sum_lognorm_x3 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log, vcov = conley(50), data = df_kebele)
+lm_globcover_crop_k_lognorm_x3  <- feols(globcover_cropland_sum_lognorm_x3 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log, vcov = conley(50), data = df_kebele)
+
+lm_dmspols_ihs_basentl_k_lognorm_x3     <- feols(dmspols_harmon_lognorm_x3 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
+lm_globcover_urban_basentl_k_lognorm_x3 <- feols(globcover_urban_sum_lognorm_x3 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
+lm_globcover_crop_basentl_k_lognorm_x3 <- feols(globcover_cropland_sum_lognorm_x3 ~ near_rsdp123 + distance_rsdp123_targettedlocs_log + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4, data = df_kebele, vcov = conley(50)) 
+
+# MST - Cost Distance ----------------------------------------------------------
 ## Grid
 iv_cd_dmspols_ihs_g     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc, vcov = conley(50), data = df_grid)
 iv_cd_globcover_urban_g <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc, vcov = conley(50), data = df_grid)
@@ -185,6 +223,78 @@ iv_cd_globcover_crop_regions_k  <- feols(dv_gccrop ~ distance_rsdp123_targettedl
 iv_cd_dmspols_ihs_basentl_regions_k     <- feols(dv_dmspols ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
 iv_cd_globcover_urban_basentl_regions_k <- feols(dv_gcurban ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
 iv_cd_globcover_crop_basentl_regions_k  <- feols(dv_gccrop ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
+
+# MST Regions - Cost Distance: Roth, normalized --------------------------------
+
+## _lognorm_x0
+iv_cd_dmspols_ihs_regions_k_lognorm_x0     <- feols(dmspols_harmon_lognorm_x0 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_urban_regions_k_lognorm_x0 <- feols(globcover_urban_sum_lognorm_x0 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_crop_regions_k_lognorm_x0  <- feols(globcover_cropland_sum_lognorm_x0 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele) 
+
+iv_cd_dmspols_ihs_basentl_regions_k_lognorm_x0     <- feols(dmspols_harmon_lognorm_x0 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_urban_basentl_regions_k_lognorm_x0 <- feols(globcover_urban_sum_lognorm_x0 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_crop_basentl_regions_k_lognorm_x0  <- feols(globcover_cropland_sum_lognorm_x0 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
+
+## _lognorm_x0_1
+iv_cd_dmspols_ihs_regions_k_lognorm_x0_1     <- feols(dmspols_harmon_lognorm_x0_1 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_urban_regions_k_lognorm_x0_1 <- feols(globcover_urban_sum_lognorm_x0_1 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_crop_regions_k_lognorm_x0_1  <- feols(globcover_cropland_sum_lognorm_x0_1 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele) 
+
+iv_cd_dmspols_ihs_basentl_regions_k_lognorm_x0_1     <- feols(dmspols_harmon_lognorm_x0_1 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_urban_basentl_regions_k_lognorm_x0_1 <- feols(globcover_urban_sum_lognorm_x0_1 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_crop_basentl_regions_k_lognorm_x0_1  <- feols(globcover_cropland_sum_lognorm_x0_1 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
+
+## _lognorm_x1
+iv_cd_dmspols_ihs_regions_k_lognorm_x1     <- feols(dmspols_harmon_lognorm_x1 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_urban_regions_k_lognorm_x1 <- feols(globcover_urban_sum_lognorm_x1 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_crop_regions_k_lognorm_x1  <- feols(globcover_cropland_sum_lognorm_x1 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele) 
+
+iv_cd_dmspols_ihs_basentl_regions_k_lognorm_x1     <- feols(dmspols_harmon_lognorm_x1 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_urban_basentl_regions_k_lognorm_x1 <- feols(globcover_urban_sum_lognorm_x1 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_crop_basentl_regions_k_lognorm_x1  <- feols(globcover_cropland_sum_lognorm_x1 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
+
+## _lognorm_x3
+iv_cd_dmspols_ihs_regions_k_lognorm_x3     <- feols(dmspols_harmon_lognorm_x3 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_urban_regions_k_lognorm_x3 <- feols(globcover_urban_sum_lognorm_x3 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_crop_regions_k_lognorm_x3  <- feols(globcover_cropland_sum_lognorm_x3 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele) 
+
+iv_cd_dmspols_ihs_basentl_regions_k_lognorm_x3     <- feols(dmspols_harmon_lognorm_x3 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_urban_basentl_regions_k_lognorm_x3 <- feols(globcover_urban_sum_lognorm_x3 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
+iv_cd_globcover_crop_basentl_regions_k_lognorm_x3  <- feols(globcover_cropland_sum_lognorm_x3 ~ distance_rsdp123_targettedlocs_log | near_rsdp123 + near_rsdp123Xdmspols_1996_bin4_2 + near_rsdp123Xdmspols_1996_bin4_3 + near_rsdp123Xdmspols_1996_bin4_4 ~ near_mst_lc_region + near_mst_lc_regionXdmspols_1996_bin4_2 + near_mst_lc_regionXdmspols_1996_bin4_3 + near_mst_lc_regionXdmspols_1996_bin4_4, vcov = conley(50), data = df_kebele) 
+
+
+# 
+# # Vector of all variables used across the models
+# vars_needed <- c(
+#   "dv_dmspols", "dv_gcurban", "dv_gccrop",
+#   "distance_rsdp123_targettedlocs_log",
+#   "near_rsdp123", "near_mst_lc_region",
+#   "near_rsdp123Xdmspols_1996_bin4_2",
+#   "near_rsdp123Xdmspols_1996_bin4_3",
+#   "near_rsdp123Xdmspols_1996_bin4_4",
+#   "near_mst_lc_regionXdmspols_1996_bin4_2",
+#   "near_mst_lc_regionXdmspols_1996_bin4_3",
+#   "near_mst_lc_regionXdmspols_1996_bin4_4",
+#   "latitude", "longitude"
+# )
+# 
+# # Subset the dataset
+# df_kebele_subset <- df_kebele[, vars_needed] %>%
+#   dplyr::rename(near_mst_lcXdmspols_1996_bin4_2 = near_mst_lc_regionXdmspols_1996_bin4_2,
+#                 near_mst_lcXdmspols_1996_bin4_3 = near_mst_lc_regionXdmspols_1996_bin4_3,
+#                 near_mst_lcXdmspols_1996_bin4_4 = near_mst_lc_regionXdmspols_1996_bin4_4,
+#                 dist_rsdp123_targettedlocs_log = distance_rsdp123_targettedlocs_log)
+# 
+# write_dta(df_kebele_subset, "~/Desktop/diff_kebele.dta")
+# 
+# iv_cd_dmspols_ihs_regions_k     <- feols(dv_dmspols ~ dist_rsdp123_targettedlocs_log | near_rsdp123 ~ near_mst_lc_region, vcov = conley(50), data = df_kebele_subset) 
+# iv_cd_dmspols_ihs_regions_k
+# 
+# # df_kebele_diff <- df_kebele %>%
+# #   dplyr::select(dv_dmspols, dv_gcurban, dv_gccrop, distance_rsdp123_targettedlocs_log, near_rsdp123, near_mst_lc_region,
+# #                 latitude, longitude, cell_id, distance_rsdp123, distance_rsdp123_targettedlocs) %>%
+# #   dplyr::rename(dist_rsdp123_targettedlocs_log = distance_rsdp123_targettedlocs_log)
+# # write_dta(df_kebele_diff, "~/Desktop/diff_kebele.dta")
 
 # MST Regions - Least Distance -------------------------------------------------------
 ## Grid
@@ -787,6 +897,155 @@ make_stargzer(iv_ld_dmspols_ihs_regions_g,
               iv_ld_globcover_crop_basentl_regions_k,
               T,
               paste0("iv_near_mst_least_distance_5km_","1kmkebele","_results_",rsdp_type,"_regions.tex"))
+
+# Log Norm Tables --------------------------------------------------------------
+#### _lognorm_x0
+modelsummary_tab(list("NTL" = lm_dmspols_ihs_k_lognorm_x0, 
+                      "NTL" = lm_dmspols_ihs_basentl_k_lognorm_x0, 
+                      "Urban" = lm_globcover_urban_k_lognorm_x0,
+                      "Urban" = lm_globcover_urban_basentl_k_lognorm_x0, 
+                      "Cropland" = lm_globcover_crop_k_lognorm_x0, 
+                      "Cropland" = lm_globcover_crop_basentl_k_lognorm_x0,
+                      
+                      "NTL" = iv_cd_dmspols_ihs_regions_k_lognorm_x0, 
+                      "NTL" = iv_cd_dmspols_ihs_basentl_regions_k_lognorm_x0, 
+                      "Urban" = iv_cd_globcover_urban_regions_k_lognorm_x0, 
+                      "Urban" = iv_cd_globcover_urban_basentl_regions_k_lognorm_x0, 
+                      "Cropland" = iv_cd_globcover_crop_regions_k_lognorm_x0, 
+                      "Cropland" = iv_cd_globcover_crop_basentl_regions_k_lognorm_x0),
+                 stars = c('*' = .1, '**' = .05, "***" = 0.01),
+                 coef_map = c("near_rsdp123" = "Imp Rd",
+                              "near_rsdp123Xdmspols_1996_bin4_2" = "Imp Rd.$\\times NTL_{96}$ Low",
+                              "near_rsdp123Xdmspols_1996_bin4_3" = "Imp Rd.$\\times NTL_{96}$ Medium",
+                              "near_rsdp123Xdmspols_1996_bin4_4" = "Imp Rd.$\\times NTL_{96}$ High",
+                              "fit_near_rsdp123" = "Imp Rd",
+                              "fit_near_rsdp123Xdmspols_1996_bin4_2" = "Imp Rd.$\\times NTL_{96}$ Low",
+                              "fit_near_rsdp123Xdmspols_1996_bin4_3" = "Imp Rd.$\\times NTL_{96}$ Medium",
+                              "fit_near_rsdp123Xdmspols_1996_bin4_4" = "Imp Rd.$\\times NTL_{96}$ High"),
+                 gof_map = c("nobs", "adj.r.squared"),
+                 escape = FALSE,
+                 add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
+                                    'Type', "OLS","OLS","OLS","OLS","OLS","OLS","IV","IV","IV","IV","IV","IV",
+                                    '1st Stage F-Stat',"NA","NA","NA","NA","NA","NA",
+                                    fitstat(iv_cd_dmspols_ihs_regions_k_lognorm_x0, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_dmspols_ihs_basentl_regions_k_lognorm_x0, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_urban_regions_k_lognorm_x0, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_urban_basentl_regions_k_lognorm_x0, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_crop_regions_k_lognorm_x0, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_crop_basentl_regions_k_lognorm_x0, type = "ivf", simplify = T)$stat %>% round_char()),
+                 output = file.path(paper_tables, 
+                                    paste0("ols_iv_near_mst_cost_distance_5km_","kebele","_results_",rsdp_type,"_regions_lognorm_x0.tex")))
+
+#### _lognorm_x0_1
+modelsummary_tab(list("NTL" = lm_dmspols_ihs_k_lognorm_x0_1, 
+                      "NTL" = lm_dmspols_ihs_basentl_k_lognorm_x0_1, 
+                      "Urban" = lm_globcover_urban_k_lognorm_x0_1,
+                      "Urban" = lm_globcover_urban_basentl_k_lognorm_x0_1, 
+                      "Cropland" = lm_globcover_crop_k_lognorm_x0_1, 
+                      "Cropland" = lm_globcover_crop_basentl_k_lognorm_x0_1,
+                      
+                      "NTL" = iv_cd_dmspols_ihs_regions_k_lognorm_x0_1, 
+                      "NTL" = iv_cd_dmspols_ihs_basentl_regions_k_lognorm_x0_1, 
+                      "Urban" = iv_cd_globcover_urban_regions_k_lognorm_x0_1, 
+                      "Urban" = iv_cd_globcover_urban_basentl_regions_k_lognorm_x0_1, 
+                      "Cropland" = iv_cd_globcover_crop_regions_k_lognorm_x0_1, 
+                      "Cropland" = iv_cd_globcover_crop_basentl_regions_k_lognorm_x0_1),
+                 stars = c('*' = .1, '**' = .05, "***" = 0.01),
+                 coef_map = c("near_rsdp123" = "Imp Rd",
+                              "near_rsdp123Xdmspols_1996_bin4_2" = "Imp Rd.$\\times NTL_{96}$ Low",
+                              "near_rsdp123Xdmspols_1996_bin4_3" = "Imp Rd.$\\times NTL_{96}$ Medium",
+                              "near_rsdp123Xdmspols_1996_bin4_4" = "Imp Rd.$\\times NTL_{96}$ High",
+                              "fit_near_rsdp123" = "Imp Rd",
+                              "fit_near_rsdp123Xdmspols_1996_bin4_2" = "Imp Rd.$\\times NTL_{96}$ Low",
+                              "fit_near_rsdp123Xdmspols_1996_bin4_3" = "Imp Rd.$\\times NTL_{96}$ Medium",
+                              "fit_near_rsdp123Xdmspols_1996_bin4_4" = "Imp Rd.$\\times NTL_{96}$ High"),
+                 gof_map = c("nobs", "adj.r.squared"),
+                 escape = FALSE,
+                 add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
+                                    'Type', "OLS","OLS","OLS","OLS","OLS","OLS","IV","IV","IV","IV","IV","IV",
+                                    '1st Stage F-Stat',"NA","NA","NA","NA","NA","NA",
+                                    fitstat(iv_cd_dmspols_ihs_regions_k_lognorm_x0_1, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_dmspols_ihs_basentl_regions_k_lognorm_x0_1, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_urban_regions_k_lognorm_x0_1, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_urban_basentl_regions_k_lognorm_x0_1, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_crop_regions_k_lognorm_x0_1, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_crop_basentl_regions_k_lognorm_x0_1, type = "ivf", simplify = T)$stat %>% round_char()),
+                 output = file.path(paper_tables, 
+                                    paste0("ols_iv_near_mst_cost_distance_5km_","kebele","_results_",rsdp_type,"_regions_lognorm_x0_1.tex")))
+
+#### _lognorm_x1
+modelsummary_tab(list("NTL" = lm_dmspols_ihs_k_lognorm_x1, 
+                      "NTL" = lm_dmspols_ihs_basentl_k_lognorm_x1, 
+                      "Urban" = lm_globcover_urban_k_lognorm_x1,
+                      "Urban" = lm_globcover_urban_basentl_k_lognorm_x1, 
+                      "Cropland" = lm_globcover_crop_k_lognorm_x1, 
+                      "Cropland" = lm_globcover_crop_basentl_k_lognorm_x1,
+                      
+                      "NTL" = iv_cd_dmspols_ihs_regions_k_lognorm_x1, 
+                      "NTL" = iv_cd_dmspols_ihs_basentl_regions_k_lognorm_x1, 
+                      "Urban" = iv_cd_globcover_urban_regions_k_lognorm_x1, 
+                      "Urban" = iv_cd_globcover_urban_basentl_regions_k_lognorm_x1, 
+                      "Cropland" = iv_cd_globcover_crop_regions_k_lognorm_x1, 
+                      "Cropland" = iv_cd_globcover_crop_basentl_regions_k_lognorm_x1),
+                 stars = c('*' = .1, '**' = .05, "***" = 0.01),
+                 coef_map = c("near_rsdp123" = "Imp Rd",
+                              "near_rsdp123Xdmspols_1996_bin4_2" = "Imp Rd.$\\times NTL_{96}$ Low",
+                              "near_rsdp123Xdmspols_1996_bin4_3" = "Imp Rd.$\\times NTL_{96}$ Medium",
+                              "near_rsdp123Xdmspols_1996_bin4_4" = "Imp Rd.$\\times NTL_{96}$ High",
+                              "fit_near_rsdp123" = "Imp Rd",
+                              "fit_near_rsdp123Xdmspols_1996_bin4_2" = "Imp Rd.$\\times NTL_{96}$ Low",
+                              "fit_near_rsdp123Xdmspols_1996_bin4_3" = "Imp Rd.$\\times NTL_{96}$ Medium",
+                              "fit_near_rsdp123Xdmspols_1996_bin4_4" = "Imp Rd.$\\times NTL_{96}$ High"),
+                 gof_map = c("nobs", "adj.r.squared"),
+                 escape = FALSE,
+                 add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
+                                    'Type', "OLS","OLS","OLS","OLS","OLS","OLS","IV","IV","IV","IV","IV","IV",
+                                    '1st Stage F-Stat',"NA","NA","NA","NA","NA","NA",
+                                    fitstat(iv_cd_dmspols_ihs_regions_k_lognorm_x1, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_dmspols_ihs_basentl_regions_k_lognorm_x1, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_urban_regions_k_lognorm_x1, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_urban_basentl_regions_k_lognorm_x1, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_crop_regions_k_lognorm_x1, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_crop_basentl_regions_k_lognorm_x1, type = "ivf", simplify = T)$stat %>% round_char()),
+                 output = file.path(paper_tables, 
+                                    paste0("ols_iv_near_mst_cost_distance_5km_","kebele","_results_",rsdp_type,"_regions_lognorm_x1.tex")))
+
+#### _lognorm_x3
+modelsummary_tab(list("NTL" = lm_dmspols_ihs_k_lognorm_x3, 
+                      "NTL" = lm_dmspols_ihs_basentl_k_lognorm_x3, 
+                      "Urban" = lm_globcover_urban_k_lognorm_x3,
+                      "Urban" = lm_globcover_urban_basentl_k_lognorm_x3, 
+                      "Cropland" = lm_globcover_crop_k_lognorm_x3, 
+                      "Cropland" = lm_globcover_crop_basentl_k_lognorm_x3,
+                      
+                      "NTL" = iv_cd_dmspols_ihs_regions_k_lognorm_x3, 
+                      "NTL" = iv_cd_dmspols_ihs_basentl_regions_k_lognorm_x3, 
+                      "Urban" = iv_cd_globcover_urban_regions_k_lognorm_x3, 
+                      "Urban" = iv_cd_globcover_urban_basentl_regions_k_lognorm_x3, 
+                      "Cropland" = iv_cd_globcover_crop_regions_k_lognorm_x3, 
+                      "Cropland" = iv_cd_globcover_crop_basentl_regions_k_lognorm_x3),
+                 stars = c('*' = .1, '**' = .05, "***" = 0.01),
+                 coef_map = c("near_rsdp123" = "Imp Rd",
+                              "near_rsdp123Xdmspols_1996_bin4_2" = "Imp Rd.$\\times NTL_{96}$ Low",
+                              "near_rsdp123Xdmspols_1996_bin4_3" = "Imp Rd.$\\times NTL_{96}$ Medium",
+                              "near_rsdp123Xdmspols_1996_bin4_4" = "Imp Rd.$\\times NTL_{96}$ High",
+                              "fit_near_rsdp123" = "Imp Rd",
+                              "fit_near_rsdp123Xdmspols_1996_bin4_2" = "Imp Rd.$\\times NTL_{96}$ Low",
+                              "fit_near_rsdp123Xdmspols_1996_bin4_3" = "Imp Rd.$\\times NTL_{96}$ Medium",
+                              "fit_near_rsdp123Xdmspols_1996_bin4_4" = "Imp Rd.$\\times NTL_{96}$ High"),
+                 gof_map = c("nobs", "adj.r.squared"),
+                 escape = FALSE,
+                 add_rows = tribble(~term, ~V1, ~V2, ~V3, ~V4, ~V5, ~V6, ~V7, ~V8, ~V9, ~V10, ~V11, ~V12,
+                                    'Type', "OLS","OLS","OLS","OLS","OLS","OLS","IV","IV","IV","IV","IV","IV",
+                                    '1st Stage F-Stat',"NA","NA","NA","NA","NA","NA",
+                                    fitstat(iv_cd_dmspols_ihs_regions_k_lognorm_x3, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_dmspols_ihs_basentl_regions_k_lognorm_x3, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_urban_regions_k_lognorm_x3, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_urban_basentl_regions_k_lognorm_x3, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_crop_regions_k_lognorm_x3, type = "ivf", simplify = T)$stat %>% round_char(),
+                                    fitstat(iv_cd_globcover_crop_basentl_regions_k_lognorm_x3, type = "ivf", simplify = T)$stat %>% round_char()),
+                 output = file.path(paper_tables, 
+                                    paste0("ols_iv_near_mst_cost_distance_5km_","kebele","_results_",rsdp_type,"_regions_lognorm_x3.tex")))
 
 # First Stage - Stargazer ------------------------------------------------------
 if(F){

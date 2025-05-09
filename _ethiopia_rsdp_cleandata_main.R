@@ -26,7 +26,6 @@ if(Sys.info()[["user"]] == "robmarty"){
   project_dir <- "~/Dropbox/World Bank/Replication Packages/Impact of Ethiopia RSDP"
 }
 
-# code_dir <- project_dir
 code_dir <- "~/Documents/Github/ethiopia-rsdp-ie"
 
 #### Paths from Root
@@ -135,62 +134,117 @@ library(riverplot)
 #### Packages from CRAN
 if(!require("pacman")) install.packages("pacman")
 
-pacman::p_load(AER, 
-               clusterSEs,
-               coefplot,
-               data.table,
-               devtools,
-               #did,
-               doBy,
-               dplyr,
-               dvmisc,
-               estimatr,
-               gdistance,
-               ggplot2,
-               ggpubr,
-               geodata,
-               haven,
-               hrbrthemes,
-               labelled,
-               leaflet,
-               lfe,
-               parallel,
-               pbmcapply,
-               purrr,
-               raster,
-               rasterVis,
-               RColorBrewer,
-               readr,
-               modelsummary,
-               reshape,
-               #rgdal,
-               #rgeos,
-               riverplot,
-               scales,
-               sf,
-               shp2graph,
-               sfdep,
-               spatialEco,
-               spdep,
-               spex,
-               stargazer,
-               stringr,
-               terra,
-               fixest,
-               tibble,
-               tidyr,
-               tidyselect,
-               TTR,
-               #velox,
-               viridis,
-               wesanderson,
-               exactextractr,
-               conleyreg,
-               blackmarbler)
+# pacman::p_load(AER, 
+#                clusterSEs,
+#                coefplot,
+#                data.table,
+#                devtools,
+#                #did,
+#                doBy,
+#                dplyr,
+#                dvmisc,
+#                estimatr,
+#                gdistance,
+#                ggplot2,
+#                ggpubr,
+#                #geodata,
+#                haven,
+#                hrbrthemes,
+#                labelled,
+#                leaflet,
+#                lfe,
+#                parallel,
+#                pbmcapply,
+#                purrr,
+#                raster,
+#                rasterVis,
+#                RColorBrewer,
+#                readr,
+#                modelsummary,
+#                reshape,
+#                #rgdal,
+#                #rgeos,
+#                riverplot,
+#                scales,
+#                sf,
+#                shp2graph,
+#                sfdep,
+#                spatialEco,
+#                spdep,
+#                spex,
+#                stargazer,
+#                stringr,
+#                #terra,
+#                fixest,
+#                tibble,
+#                tidyr,
+#                tidyselect,
+#                TTR,
+#                #velox,
+#                viridis,
+#                wesanderson,
+#                exactextractr,
+#                conleyreg)
+
+library(AER)
+library(clusterSEs)
+library(coefplot)
+library(data.table)
+library(devtools)
+# library(did)
+library(doBy)
+library(dplyr)
+library(dvmisc)
+library(estimatr)
+library(gdistance)
+library(ggplot2)
+library(ggpubr)
+# library(geodata)
+library(haven)
+library(hrbrthemes)
+library(labelled)
+library(leaflet)
+library(lfe)
+library(parallel)
+library(pbmcapply)
+library(purrr)
+library(raster)
+#library(rasterVis)
+library(RColorBrewer)
+library(readr)
+#library(modelsummary)
+library(reshape)
+# library(rgdal)
+# library(rgeos)
+library(riverplot)
+library(scales)
+library(sf)
+library(shp2graph)
+#library(sfdep)
+library(spatialEco)
+library(spdep)
+library(spex)
+library(stargazer)
+library(stringr)
+# library(terra)
+# library(fixest)
+library(tibble)
+library(tidyr)
+library(tidyselect)
+library(TTR)
+library(velox)
+library(viridis)
+library(wesanderson)
+library(exactextractr)
+#library(conleyreg)
+library(rgeos)
+library(rgdal)
+
 
 # 5. User Defined Functions ----------------------------------------------------
 
 # Functions
+source("https://raw.githubusercontent.com/ramarty/fast-functions/refs/heads/master/R/functions_in_chunks.R")
 #source("https://raw.githubusercontent.com/ramarty/fast-functions/master/R/functions_in_chunks.R")
 source(file.path(code_dir, "_functions", "clean_data_functions.R"))
 source(file.path(code_dir, "_functions", "update_iv_coef_name.R"))

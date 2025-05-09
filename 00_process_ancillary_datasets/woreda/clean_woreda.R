@@ -25,6 +25,14 @@ woreda$woreda_dmspols96_max <- dmsp96$extract(sp=woreda_wgs84,
                                               small = T,
                                               fun = max) %>% as.vector()
 
+woreda$woreda_dmspols96_mean <- dmsp96$extract(sp=woreda_wgs84, 
+                                              small = T,
+                                              fun = mean) %>% as.vector()
+
+woreda$woreda_dmspols96_sum <- dmsp96$extract(sp=woreda_wgs84, 
+                                               small = T,
+                                               fun = sum) %>% as.vector()
+
 #### Woreda NTL Groupings
 ntl_values_pos <- woreda$woreda_dmspols96_max[woreda$woreda_dmspols96_max > 0]
 
@@ -69,7 +77,13 @@ woreda$wor_ntlgroup_2011_2bin <- as.numeric(woreda$wor_ntlgroup_2011_4bin %in% c
 # ID ---------------------------------------------------------------------------
 woreda$cell_id <- 1:nrow(woreda)
 
-# Export -----------------------------------------------------------------------
-saveRDS(woreda, file.path(woreda_dir, "FinalData", "woreda.Rds"))
+# Add average and sum ----------------------------------------------------------
+saveRDS(woreda, file.path(woreda_dir, "FinalData", "woreda_mean_sum.Rds"))
 
+# Export -----------------------------------------------------------------------
+# Don't use these later on; don't need to be merged into main data
+woreda$woreda_dmspols96_mean <- NULL
+woreda$woreda_dmspols96_sum <- NULL
+
+saveRDS(woreda, file.path(woreda_dir, "FinalData", "woreda.Rds"))
 

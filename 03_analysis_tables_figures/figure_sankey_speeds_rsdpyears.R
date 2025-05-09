@@ -138,6 +138,10 @@ nodes1$y[grepl(paste0("10_",1:21,collapse="|"), nodes1$ID)] <- nodes1$y[grepl(pa
 
 nodes1 <- nodes1 %>% as.data.frame()
 edges1_2 <- edges1_2 %>% as.data.frame()
+
+labels[!(labels %in% c("No Existing\nRoad", ""))] <- paste0(labels[!(labels %in% c("No Existing\nRoad", ""))],
+                                                            " km/h")
+
 riverplot_obj <- makeRiver(nodes1, edges1_2,
                            node_labels=labels,
                            node_styles=styles)
